@@ -8,7 +8,7 @@ LOGIN VIEW
 ===============================================
 
 ===============================================
-US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01
+US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01
 MY MOOD HISTORY VIEW
   - Add a mood event
     <EDITTEXT> Current Date and Time
@@ -40,7 +40,7 @@ MOOD EVENT VIEW
 ===============================================
  
 ===============================================
-US 01.05.01 + US 01.06.01 + US 02.01.01 + US 02.02.01
+US 01.05.01 + US 01.06.01 + US 02.01.01 + US 02.02.01 + US 02.03.01
 EDIT MOOD EVENT VIEW (This view is almost like a duplicate of the MOOD EVENT VIEW, 
                       except if the current mood event belongs to the user, an edit and delete button will appear.)
   <BUTTON> Edit
