@@ -102,9 +102,9 @@ US 01.03.01 + US 01.04.01
 
 
 --  EDIT MOOD EVENT VIEW -- 
-(This view is almost like a duplicate of the MOOD EVENT VIEW, 
-except if the current mood event belongs to the user, an edit and delete button will appear.)
-(If edit is pressed, TextView will turn into Edittext. And a SAVE and CANCEL button will appear.)
+*(This view is almost like a duplicate of the MOOD EVENT VIEW, 
+  except if the current mood event belongs to the user, an edit and delete button will appear.)
+*(If edit is pressed, TextView will turn into Edittext. And a SAVE and CANCEL button will appear.)
 ===============================================
 US 01.05.01 + US 01.06.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + US 02.04.01
   <BUTTON> Edit
