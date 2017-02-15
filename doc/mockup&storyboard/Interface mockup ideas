@@ -21,7 +21,7 @@ US 05.02.01, US 05.03.01, US 05.04.01, US 05.05.01, US 05.06.01, US 06.02.01, US
 -- MY MOOD HISTORY / PROFILE VIEW --
 ===============================================
 US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + 
-US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.01 + US 06.01.01
+US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.01 + US 06.01.01 + US 06.02.01
 <TEXTVIEW> Username
 <BUTTON> Mood History Filter
   <POPUP MENU>
@@ -29,6 +29,9 @@ US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.0
     -> only mood events with a particular emotional state
     -> show only mood events whose reason why text contains a given word
 <LISTVIEW> My Mood History (sorted by date and time; most recent coming first)
+<BUTTON> Change to Map View
+  <MAP> A Map of the Mood Events from mood history list (showing their emotional states) if mood event includes a location.
+
 <BUTTON> Add
   - Add a mood event
     <EDITTEXT> Current Date and Time
