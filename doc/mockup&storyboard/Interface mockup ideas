@@ -20,7 +20,7 @@ As a participant, I want to ask another participant to follow their most recent 
 -- MY MOOD HISTORY / PROFILE VIEW --
 ===============================================
 US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + 
-US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.01
+US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.01 + US 06.01.01
 <TEXTVIEW> Username
 <BUTTON> Mood History Filter
   <POPUP MENU>
@@ -44,6 +44,9 @@ US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.0
               -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
     <EDITTEXT & EDIT-PHOTOGRAPH> Optional Trigger (no more than 20 characters or 3 words) (under 65536 bytes)
     <DROP DOWN MENU> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
+    <BUTTON> Add location? 
+      <MAP> Show location
+    <BUTTON> Clear location?
 ===============================================
 
 
@@ -58,6 +61,7 @@ US 01.03.01 + US 01.04.01
   <VIEWTEXT> Current Date and Time
   <VIEWTEXT & PHOTOGRAPH> Optional Trigger
   <VIEWTEXT> Optional Social Situation
+  <MAP> Location
 ===============================================
 
 
@@ -84,6 +88,7 @@ US 01.05.01 + US 01.06.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + US 02.04.0
   <EDITTEXT> Current Date and Time
   <EDITTEXT & EDIT-PHOTOGRAPH> Optional Trigger (no more than 20 characters or 3 words) (under 65536 bytes)
   <DROP DOWN MENU> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
+  <MAP> Location
 ===============================================
 
 
