@@ -12,6 +12,7 @@ US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + US 02.04.0
 MY MOOD HISTORY / PROFILE VIEW
 <TEXTVIEW> Username
 <LISTVIEW> My Mood History
+<BUTTON> Add
   - Add a mood event
     <EDITTEXT> Current Date and Time
     <DROP DOWN MENU> Emotional States
