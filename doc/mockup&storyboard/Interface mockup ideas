@@ -73,9 +73,9 @@ US 06.03.01 + US 06.04.01
               -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
     <EDITTEXT & EDIT-PHOTOGRAPH> Optional Trigger (no more than 20 characters or 3 words) (under 65536 bytes)
     <DROP DOWN MENU> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
-    <BUTTON> Add location? 
+    <BUTTON> Optional Add Location? 
       <MAP> Show location
-    <BUTTON> Clear location?
+    <BUTTON> Optional Clear Location?
 ===============================================
 
 
@@ -90,7 +90,7 @@ US 01.03.01 + US 01.04.01
   <VIEWTEXT> Current Date and Time
   <VIEWTEXT & PHOTOGRAPH> Optional Trigger
   <VIEWTEXT> Optional Social Situation
-  <MAP> Location
+  <MAP> Optional Location
 ===============================================
 
 
@@ -117,7 +117,7 @@ US 01.05.01 + US 01.06.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + US 02.04.0
   <EDITTEXT> Current Date and Time
   <EDITTEXT & EDIT-PHOTOGRAPH> Optional Trigger (no more than 20 characters or 3 words) (under 65536 bytes)
   <DROP DOWN MENU> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
-  <MAP> Location
+  <MAP> Optional Location
 ===============================================
 
 
