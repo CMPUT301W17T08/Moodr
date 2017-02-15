@@ -20,6 +20,8 @@ MY MOOD HISTORY VIEW
             - Sadness
             - Shame
             - Surprise
+            -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
+              -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
     <EDITTEXT> Optional Trigger
     <EDITTEXT> Optional Social Situation
 ===============================================
@@ -31,22 +33,28 @@ MOOD EVENT VIEW
   <TEXTVIEW> Emotional States
   -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
     -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
-    
   <VIEWTEXT> Current Date and Time
   <VIEWTEXT> Optional Trigger
   <VIEWTEXT> Optional Social Situation
 ===============================================
  
 ===============================================
-US 01.05.01
-EDIT MOOD EVENT VIEW
-MOOD EVENT VIEW
+US 01.05.01 + US 01.06.01
+EDIT MOOD EVENT VIEW (This view is almost like a duplicate of the MOOD EVENT VIEW, 
+                      except if the current mood event belongs to the user, an edit and delete button will appear.)
   <BUTTON> Edit
   <PICTURE> Emoticon
-  <EDITVIEW> Emotional States
-  -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
-    -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
-    
+  <DROP DOWN MENU> Emotional States
+            - Anger
+            - Confusion
+            - Disgust
+            - Fear
+            - Happiness
+            - Sadness
+            - Shame
+            - Surprise
+            -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
+              -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
   <EDITTEXT> Current Date and Time
   <EDITTEXT> Optional Trigger
   <EDITTEXT> Optional Social Situation
