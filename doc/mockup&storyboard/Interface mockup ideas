@@ -8,10 +8,16 @@ LOGIN VIEW
 ===============================================
 
 ===============================================
-US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + US 02.04.01 + US 03.01.01
+US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + 
+US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.01
 MY MOOD HISTORY / PROFILE VIEW
 <TEXTVIEW> Username
-<LISTVIEW> My Mood History
+<BUTTON> Mood History Filter
+  <POPUP MENU>
+    -> show only mood events in the most recent week
+    -> only mood events with a particular emotional state
+    -> show only mood events whose reason why text contains a given word
+<LISTVIEW> My Mood History (sorted by date and time; most recent coming first)
 <BUTTON> Add
   - Add a mood event
     <EDITTEXT> Current Date and Time
