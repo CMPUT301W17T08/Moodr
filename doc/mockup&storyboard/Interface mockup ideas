@@ -30,5 +30,5 @@ MOOD EVENT VIEW
   <PICTURE> Emoticon
   <TEXTVIEW> Emotional States
   -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
-  {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
+  {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow} #subject to chnage
   
