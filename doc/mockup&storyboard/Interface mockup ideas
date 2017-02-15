@@ -5,18 +5,21 @@ US 05.01.01
 As a participant, I want to ask another participant to follow their most recent mood event.
 
 *Assume all emoticons are under 65536 bytes.
+
+
+-- LOGIN VIEW --
 ===============================================
-LOGIN VIEW
   <TEXTVIEW> Moodr
   <EDITEXT> Username
   <BUTTON> Login
   <BUTTON> No account yet? Create one
 ===============================================
 
+
+-- MY MOOD HISTORY / PROFILE VIEW --
 ===============================================
 US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + 
 US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.01
-MY MOOD HISTORY / PROFILE VIEW
 <TEXTVIEW> Username
 <BUTTON> Mood History Filter
   <POPUP MENU>
@@ -42,9 +45,10 @@ MY MOOD HISTORY / PROFILE VIEW
     <DROP DOWN MENU> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
 ===============================================
 
+
+-- MOOD EVENT VIEW --
 ===============================================
 US 01.03.01 + US 01.04.01
-MOOD EVENT VIEW
   <TEXTVIEW> Username
   <PICTURE> Emoticon
   <TEXTVIEW> Emotional States
@@ -54,11 +58,13 @@ MOOD EVENT VIEW
   <VIEWTEXT & PHOTOGRAPH> Optional Trigger
   <VIEWTEXT> Optional Social Situation
 ===============================================
- 
+
+
+--  EDIT MOOD EVENT VIEW -- 
+(This view is almost like a duplicate of the MOOD EVENT VIEW, 
+except if the current mood event belongs to the user, an edit and delete button will appear.)
 ===============================================
 US 01.05.01 + US 01.06.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + US 02.04.01
-EDIT MOOD EVENT VIEW (This view is almost like a duplicate of the MOOD EVENT VIEW, 
-                      except if the current mood event belongs to the user, an edit and delete button will appear.)
   <BUTTON> Edit
   <TEXTVIEW> Username
   <PICTURE> Emoticon
