@@ -1,6 +1,25 @@
+===============================================
 LOGIN ACTIVITY
   <TEXTVIEW> Moodr
   <EDITEXT> Username
   <BUTTON> Login
   <BUTTON> No account yet? Create one
-  
+===============================================
+US 01.01.01
+US 01.02.01
+MY MOOD HISTORY ACTIVITY
+  - Add a mood event
+    <EDITTEXT> Current Date and Time
+    <DROP DOWN MENU> Emotional States
+            - Anger
+            - Confusion
+            - Disgust
+            - Fear
+            - Happiness
+            - Sadness
+            - Shame
+            - Surprise
+    <EDITTEXT> Optional Trigger
+    <EDITTEXT> Optional Social Situation
+==============================================
+US 01.03.01
