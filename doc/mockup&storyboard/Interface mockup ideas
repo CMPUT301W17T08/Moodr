@@ -8,7 +8,7 @@ LOGIN VIEW
 ===============================================
 
 ===============================================
-US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01
+US 01.01.01 + US 01.02.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + US 02.04.01
 MY MOOD HISTORY VIEW
   - Add a mood event
     <EDITTEXT> Current Date and Time
@@ -24,7 +24,7 @@ MY MOOD HISTORY VIEW
             -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
               -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
     <EDITTEXT & EDIT-PHOTOGRAPH> Optional Trigger (no more than 20 characters or 3 words) (under 65536 bytes)
-    <EDITTEXT> Optional Social Situation
+    <EDITTEXT> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
 ===============================================
 
 ===============================================
@@ -40,7 +40,7 @@ MOOD EVENT VIEW
 ===============================================
  
 ===============================================
-US 01.05.01 + US 01.06.01 + US 02.01.01 + US 02.02.01 + US 02.03.01
+US 01.05.01 + US 01.06.01 + US 02.01.01 + US 02.02.01 + US 02.03.01 + US 02.04.01
 EDIT MOOD EVENT VIEW (This view is almost like a duplicate of the MOOD EVENT VIEW, 
                       except if the current mood event belongs to the user, an edit and delete button will appear.)
   <BUTTON> Edit
@@ -58,7 +58,7 @@ EDIT MOOD EVENT VIEW (This view is almost like a duplicate of the MOOD EVENT VIE
               -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
   <EDITTEXT> Current Date and Time
   <EDITTEXT & EDIT-PHOTOGRAPH> Optional Trigger (no more than 20 characters or 3 words) (under 65536 bytes)
-  <EDITTEXT> Optional Social Situation
+  <EDITTEXT> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
 ===============================================
 
 
