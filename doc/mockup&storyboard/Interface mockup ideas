@@ -1,0 +1,6 @@
+LOGIN ACTIVITY
+  <TEXTVIEW> Moodr
+  <EDITEXT> Username
+  <BUTTON> Login
+  <BUTTON> No account yet? Create one
+  
