@@ -4,6 +4,7 @@ US 03.01.01
 As a user, I want a profile with a unique username.
 US 05.01.01
 As a participant, I want to ask another participant to follow their most recent mood event.
+US 05.02.01, US 05.03.01, US 05.04.01, US 05.05.01, US 05.06.01, US 06.02.01, US 06.03.01, US 06.04.01
 
 *Assume all emoticons are under 65536 bytes.
 
