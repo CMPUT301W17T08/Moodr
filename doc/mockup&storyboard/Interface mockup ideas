@@ -18,6 +18,10 @@ Add, edit, or delete a mood event while offline. Synchronized once I get connect
   <EDITEXT> Username
   <BUTTON> Login
   <BUTTON> No account yet? Create one
+    <POPUP MENU>
+      <EDITTEXT> Username
+      <BUTTON> Create
+      <BUTTON> Cancel
 ===============================================
 
 
