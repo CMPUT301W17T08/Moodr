@@ -15,12 +15,14 @@ Add, edit, or delete a mood event while offline. Synchronized once I get connect
 -- LOGIN VIEW --
 ===============================================
   <TEXTVIEW> Moodr
-  <EDITEXT> Username
+  <EDITEXT> Email
   <BUTTON> Login
   <BUTTON> No account yet? Create one
     <POPUP MENU>
-      <EDITTEXT> Username
+      <EDITTEXT> Email
       <BUTTON> Create
+        <POPUP MENU>
+          <EDITTEXT> Enter a unique username!
       <BUTTON> Cancel
 ===============================================
 
