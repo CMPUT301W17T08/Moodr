@@ -4,7 +4,7 @@ US 03.01.01
 As a user, I want a profile with a unique username.
 US 05.01.01
 As a participant, I want to ask another participant to follow their most recent mood event.
-US 05.02.01, US 05.03.01, US 05.04.01, US 05.05.01, US 05.06.01, US 06.03.01, US 06.04.01, US 07.01.01
+US 05.02.01, US 05.03.01, US 05.04.01, US 05.05.01, US 05.06.01, US 06.04.01, US 07.01.01
 
 *Assume all emoticons are under 65536 bytes.
 
@@ -30,8 +30,20 @@ US 02.04.01 + US 03.01.01 + US 04.01.01 + US 04.02.01 + US 04.03.01 + US 04.04.0
     -> show only mood events whose reason why text contains a given word
 <LISTVIEW> My Mood History (sorted by date and time; most recent coming first)
 <BUTTON> Change to Map View
-  <MAP> A Map of the Mood Events from mood history list (showing their emotional states) if mood event includes a location.
+  <MAP> A Map of the Mood Events from my filtered mood history list (showing their emotional states) if mood event includes a location.
 <BUTTON> Add -> Go to ADD MOOD EVENT VIEW.
+===============================================
+
+
+-- FOLLOWING LIST VIEW --
+===============================================
+US 06.03.01 + US 06.04.01
+<BUTTON> Change to Map View
+  SWITCH:
+    NO.1 <MAP> A map of the Most Recent Mood Rvent of Every Participant within 5 km of my current location 
+               if mood event includes a location..
+    NO.2 <MAP> A Map of the Mood Events from my filtered mood following list (showing their emotional states and the username) 
+               if mood event includes a location.
 ===============================================
 
 
