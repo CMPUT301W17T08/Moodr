@@ -53,7 +53,7 @@ US 06.03.01 + US 06.04.01
     -> show only mood events in the most recent week
     -> only mood events with a particular emotional state
     -> show only mood events whose reason why text contains a given word
-<LISTVIEW> Most Recent Following Mood Event List (sorted by date and time; most recent coming first)
+<LISTVIEW> Most Recent Mood Event List of the participants I am granted to follow (sorted by date and time; most recent coming first)
 <BUTTON> Change to Map View
   SWITCH:
     NO.1 <MAP> A map of the Most Recent Mood Rvent of Every Participant within 5 km of my current location 
