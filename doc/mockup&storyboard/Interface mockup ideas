@@ -1,8 +1,8 @@
 NOT SURE AND NEED TO ASK TA:
 1. Differences between user and particiant.
-2. US 03.01.01
-3. US 05.01.01
-4. US 05.02.01
+2. US 03.01.01  As a user, I want a profile with a unique username.
+3. US 05.01.01  As a participant, I want to ask another participant to follow their most recent mood event.
+4. US 05.02.01  As a participant, I want to grant another participant permission to follow my most recent mood event.
 
 ========================================================================================
 US 07.01.01
