@@ -22,13 +22,42 @@ MY MOOD HISTORY VIEW
             - Surprise
     <EDITTEXT> Optional Trigger
     <EDITTEXT> Optional Social Situation
-==============================================
+===============================================
 
 ===============================================
-US 01.03.01
+US 01.03.01 + US 01.04.01
 MOOD EVENT VIEW
   <PICTURE> Emoticon
   <TEXTVIEW> Emotional States
   -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
     -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
-  
+    
+  <VIEWTEXT> Current Date and Time
+  <VIEWTEXT> Optional Trigger
+  <VIEWTEXT> Optional Social Situation
+===============================================
+ 
+===============================================
+US 01.05.01
+EDIT MOOD EVENT VIEW
+MOOD EVENT VIEW
+  <BUTTON> Edit
+  <PICTURE> Emoticon
+  <EDITVIEW> Emotional States
+  -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
+    -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
+    
+  <EDITTEXT> Current Date and Time
+  <EDITTEXT> Optional Trigger
+  <EDITTEXT> Optional Social Situation
+===============================================
+
+
+
+
+
+
+
+
+
+
