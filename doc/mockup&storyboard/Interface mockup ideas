@@ -39,7 +39,7 @@ MY MOOD HISTORY / PROFILE VIEW
             -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
               -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
     <EDITTEXT & EDIT-PHOTOGRAPH> Optional Trigger (no more than 20 characters or 3 words) (under 65536 bytes)
-    <EDITTEXT> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
+    <DROP DOWN MENU> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
 ===============================================
 
 ===============================================
@@ -75,7 +75,7 @@ EDIT MOOD EVENT VIEW (This view is almost like a duplicate of the MOOD EVENT VIE
               -> {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
   <EDITTEXT> Current Date and Time
   <EDITTEXT & EDIT-PHOTOGRAPH> Optional Trigger (no more than 20 characters or 3 words) (under 65536 bytes)
-  <EDITTEXT> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
+  <DROP DOWN MENU> Optional Social Situation (alone, with one other person, with two to several people, or with a crowd)
 ===============================================
 
 
