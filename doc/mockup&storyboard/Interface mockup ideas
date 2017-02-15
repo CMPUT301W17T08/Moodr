@@ -1,13 +1,14 @@
 ===============================================
-LOGIN ACTIVITY
+LOGIN VIEW
   <TEXTVIEW> Moodr
   <EDITEXT> Username
   <BUTTON> Login
   <BUTTON> No account yet? Create one
 ===============================================
-US 01.01.01
-US 01.02.01
-MY MOOD HISTORY ACTIVITY
+
+===============================================
+US 01.01.01 + US 01.02.01
+MY MOOD HISTORY VIEW
   - Add a mood event
     <EDITTEXT> Current Date and Time
     <DROP DOWN MENU> Emotional States
@@ -22,4 +23,12 @@ MY MOOD HISTORY ACTIVITY
     <EDITTEXT> Optional Trigger
     <EDITTEXT> Optional Social Situation
 ==============================================
+
+===============================================
 US 01.03.01
+MOOD EVENT VIEW
+  <PICTURE> Emoticon
+  <TEXTVIEW> Emotional States
+  -> BACKGROUND COLOR SHOULD CHANGE ACCORDINGLY
+  {ANGER:red, CONFUSION:purple, DIGUST:bright green, FEAR:maroon, HAPPY:yellow, SADNESS:blue, SHAME:pink, SURPRISE:yellow}
+  
