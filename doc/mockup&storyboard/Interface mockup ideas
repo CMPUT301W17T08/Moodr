@@ -1,3 +1,9 @@
+NOT SURE AND NEED TO ASK TA: 
+US 03.01.01
+As a user, I want a profile with a unique username.
+US 05.01.01
+As a participant, I want to ask another participant to follow their most recent mood event.
+
 *Assume all emoticons are under 65536 bytes.
 ===============================================
 LOGIN VIEW
