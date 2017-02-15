@@ -1,3 +1,4 @@
+*Assume all emoticons are under 65536 bytes.
 ===============================================
 LOGIN VIEW
   <TEXTVIEW> Moodr
