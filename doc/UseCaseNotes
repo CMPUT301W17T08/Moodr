@@ -7,3 +7,35 @@ forgot username? -> send an email to user.
 --------------------------
 What leads to another state. Deadend?
 :)
+
+
+
+### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
+1. Log in scenario          
+   
+   U: User  
+
+   S: System   
+
+   
+Main:  
+
+   Step(1) S: Showing startup screen and prompt the user to enter their email address  
+
+   Step(2) U: Enter email address  
+
+   Step(3) S: Validates email address  
+
+   Step(4) U: Allows access to account  
+
+
+Extensions:  
+
+   Step(3a) [email address not valid]    
+
+
+            S: Display message and reject login  
+
+               Ask user re-enter the email address or sign up    
+  
+### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
