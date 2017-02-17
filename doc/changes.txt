@@ -1,2 +1,3 @@
 # Whenver a change is made that is not on commit please place short summary here
 # 2017-02-17 "Back to Top" bottom added in Use Cases Wiki page
+# 2017-02-17 Added basic flow, yet to add offline and Add/Refresh real-time location flow
