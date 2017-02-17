@@ -1,2 +1,2 @@
-# Whenver a change is made please place short summary here
+# Whenver a change is made that is not on commit please place short summary here
 # 2017-02-17 "Back to Top" bottom added in Use Cases Wiki page
