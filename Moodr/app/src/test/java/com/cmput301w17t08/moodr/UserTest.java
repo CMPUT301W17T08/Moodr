@@ -6,7 +6,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Created by MauriceG on 2017/2/27.
+ * Created by yunzhi on 2/27/17.
  */
 
 public class UserTest {
@@ -20,28 +20,28 @@ public class UserTest {
     public void getEmail(){
         User user;
         user = new User();
-        assertEquals(User.getEmail(), "name");
+        assertEquals(User.getEmail(), "email");
+
     }
+
 
     public void getMyFriendList(){
         User user;
         user = new User();
         ArrayList<String> testArray = new ArrayList<String>();
-        assertEquals(null, user.getMyFriendList());
+        assertEquals(null, User.getMyFrinedList());
+
         user.addFriend("friends");
         testArray.add("friends");
-        assertEquals(user.getMyFriendList(), testArray);
+        assertEquals(user.getMyFrinedList(), testArray);
+
     }
 
     public void addFriend(){
         User user;
         user = new User();
-
         user.addFriend("friends");
-        assertTrue(user.getMyFriendList() != null);
-    }
-
-    public void removeFriend(){
+        assertTrue(user.getMyFrinedList() != null);
 
     }
 

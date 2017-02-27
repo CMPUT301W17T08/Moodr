@@ -12,4 +12,18 @@ public class User {
     private ArrayList<String> friends;
     private ArrayList<String> pending;
 
+    public static String getUsername() {
+        return null;
+    }
+
+    public static String getEmail() {
+        return null;
+    }
+
+    public static String getMyFrinedList() {
+        return null;
+    }
+
+    public void addFriend(String friends) {
+    }
 }
