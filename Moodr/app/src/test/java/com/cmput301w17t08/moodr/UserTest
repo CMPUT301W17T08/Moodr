@@ -1,0 +1,49 @@
+package com.cmput301w17t08.moodr;
+
+import java.util.ArrayList;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
+/**
+ * Created by MauriceG on 2017/2/27.
+ */
+
+public class UserTest {
+
+    public void getUsername(){
+        User user;
+        user = new User();
+        assertEquals("name", user.getUsername());
+    }
+
+    public void getEmail(){
+        User user;
+        user = new User();
+        assertEquals("email", user.getEmail());
+    }
+
+    public void getMyFriendList(){
+        User user;
+        user = new User();
+        ArrayList<String> testArray = new ArrayList<String>();
+        assertEquals(null, user.getMyFriendList());
+        user.addFriend("friends");
+        testArray.add("friends");
+        assertEquals(user.getMyFriendList(), testArray);
+    }
+
+    public void addFriend(){
+        User user;
+        user = new User();
+
+        user.addFriend("friends");
+        assertTrue(user.getMyFriendList() != null);
+    }
+
+    public void removeFriend(){
+
+    }
+
+
+}
