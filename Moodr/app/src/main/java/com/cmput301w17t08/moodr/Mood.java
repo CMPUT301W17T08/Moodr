@@ -9,7 +9,7 @@ public class Mood {
     private Date date;
     private String owner;
     private String id;
-    private String emotion;
+    private Emotion emotion;
     private String imgurl;
     private String trigger;
     private String situation;
