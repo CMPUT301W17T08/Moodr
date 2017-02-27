@@ -14,13 +14,13 @@ public class UserTest {
     public void getUsername(){
         User user;
         user = new User();
-        assertEquals("name", user.getUsername());
+        assertEquals(User.getUsername(), "name");
     }
 
     public void getEmail(){
         User user;
         user = new User();
-        assertEquals("email", user.getEmail());
+        assertEquals(User.getEmail(), "name");
     }
 
     public void getMyFriendList(){
