@@ -12,28 +12,32 @@ import static junit.framework.Assert.assertTrue;
 public class UserTest {
 
     public void getUsername(){
-        User user = new User("Username");
-        assertEquals("Username", user.getUsername());
+        User user;
+        user = new User();
+        assertEquals("name", user.getUsername());
     }
 
     public void getEmail(){
-        User user = new User("Email");
-        assertEquals("Email", user.getEmail());
+        User user;
+        user = new User();
+        assertEquals("email", user.getEmail());
     }
 
     public void getMyFriendList(){
-        User user = new User("Username");
+        User user;
+        user = new User();
         ArrayList<String> testArray = new ArrayList<String>();
         assertEquals(null, user.getMyFriendList());
-        user.addFriend("FriendName");
-        testArray.add("FriendName");
+        user.addFriend("friends");
+        testArray.add("friends");
         assertEquals(user.getMyFriendList(), testArray);
     }
 
     public void addFriend(){
-        User user = new User("Username");
+        User user;
+        user = new User();
 
-        user.addFriend("FriendName");
+        user.addFriend("friends");
         assertTrue(user.getMyFriendList() != null);
     }
 
