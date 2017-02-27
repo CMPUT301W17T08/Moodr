@@ -13,22 +13,29 @@ public class OfflineMode {
     private ArrayList<Mood> addedMoodList;
     private ArrayList<Mood> editedMoodList;
     private ArrayList<Mood> deletedMoodList;
-    private Mood mood;
 
 
     public ArrayList getAddedMoodList(){
-            return this.addedMoodList;
+        return this.addedMoodList;
     }
 
     public ArrayList getEditMoodList(){
-            return this.editedMoodList;
+        return this.editedMoodList;
     }
 
     public ArrayList getDeleteMoodList(){
-            return this.deletedMoodList;
+        return this.deletedMoodList;
     }
 
+    public void addMoodWhileOffline(){
 
+    }
 
+    public void editMoodWhileOffline(){
 
+    }
+
+    public void deleteMoodWhileOffline(){
+
+    }
 }
