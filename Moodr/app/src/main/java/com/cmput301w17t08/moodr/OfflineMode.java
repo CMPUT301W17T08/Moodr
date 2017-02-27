@@ -27,15 +27,17 @@ public class OfflineMode {
         return this.deletedMoodList;
     }
 
-    public void addMoodWhileOffline(){
+    public void addMoodWhileOffline(Mood m){
+        addedMoodList.add(m);
+    }
+
+    public void editMoodWhileOffline(Mood m){
+        editedMoodList.add(m);
 
     }
 
-    public void editMoodWhileOffline(){
-
-    }
-
-    public void deleteMoodWhileOffline(){
+    public void deleteMoodWhileOffline(Mood m){
+        deletedMoodList.add(m);
 
     }
 }

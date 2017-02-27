@@ -1,7 +1,10 @@
 package com.cmput301w17t08.moodr;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -12,34 +15,32 @@ public class OfflineModeUnitTest {
 
     @Test
     public void testGetAddedMoodList(){
-        Date date = null;
-        String owner = "testusername";
-        int id = 1;
-        Emotion emotion = Emotion.happy;
-        String imgurl = "www.google.ca";
-        String trigger = "It rained";
-        String situation = "Alone";
+        //Mood(owner,emotion)
+        Mood m = new Mood("newowner", Emotion.sad);
+        OfflineMode offlineMode = new OfflineMode();
+        offlineMode.addMoodWhileOffline(m);
+        ArrayList<Mood> retrievedList =  offlineMode.getAddedMoodList();
 
+        Assert.assertEquals(retrievedList.get(0), m);
     }
 
     public void testGetEditedMoodList(){
-        Date date = null;
-        String owner = "testusername";
-        int id = 1;
-        Emotion emotion = Emotion.happy;
-        String imgurl = "www.google.ca";
-        String trigger = "It rained";
-        String situation = "Alone";
+        Mood m = new Mood("newowner", Emotion.sad);
+        OfflineMode offlineMode = new OfflineMode();
+        offlineMode.editMoodWhileOffline(m);
+        ArrayList<Mood> retrievedList =  offlineMode.getEditMoodList();
+
+        Assert.assertEquals(retrievedList.get(0), m);
+
     }
 
     public void testGetDeletedMoodList(){
-        Date date = null;
-        String owner = "testusername";
-        int id = 1;
-        Emotion emotion = Emotion.happy;
-        String imgurl = "www.google.ca";
-        String trigger = "It rained";
-        String situation = "Alone";
+        Mood m = new Mood("newowner", Emotion.sad);
+        OfflineMode offlineMode = new OfflineMode();
+        offlineMode.deleteMoodWhileOffline(m);
+        ArrayList<Mood> retrievedList =  offlineMode.getDeleteMoodList();
+
+        Assert.assertEquals(retrievedList.get(0), m);
     }
 
     public void testaddwhileOffline(){
