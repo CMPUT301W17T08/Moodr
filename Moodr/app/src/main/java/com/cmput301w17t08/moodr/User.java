@@ -12,18 +12,24 @@ public class User {
     private ArrayList<String> friends;
     private ArrayList<String> pending;
 
-    public static String getUsername() {
-        return null;
+    public User(String name, String email){
+        this.name = name;
+        this.email = email;
     }
 
-    public static String getEmail() {
-        return null;
+    public String getUsername() {
+        return name;
     }
 
-    public static String getMyFrinedList() {
-        return null;
+    public String getEmail() {
+        return email;
     }
 
-    public void addFriend(String friends) {
+    public ArrayList<String> getMyFrinedList() {
+        return friends;
+    }
+
+    public void addFriend(String friend) {
+        friends.add(friend);
     }
 }
