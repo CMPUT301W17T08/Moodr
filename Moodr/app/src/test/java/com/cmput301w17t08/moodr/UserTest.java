@@ -19,6 +19,7 @@ public class UserTest {
         assertEquals(user.getUsername(), "john");
     }
 
+    @Test
     public void getEmail(){
         User user;
         user = new User("steve","stevetest@gmail.ca");
@@ -26,7 +27,7 @@ public class UserTest {
 
     }
 
-
+    @Test
     public void getMyFriendList(){
         User user;
         user = new User("test3","test3@email.email");
@@ -39,6 +40,7 @@ public class UserTest {
 
     }
 
+    @Test
     public void addFriend(){
         User user;
         user = new User("something","email1");

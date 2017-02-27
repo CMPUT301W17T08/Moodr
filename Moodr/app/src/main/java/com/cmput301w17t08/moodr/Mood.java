@@ -55,7 +55,10 @@ public class Mood {
     public String getImgurl(){
         return imgurl;
     }
-    public void setImgurl(String imgurl){
+    public void setImgurl(String imgurl) throws InvalidEntryException{
+        if(imgurl.length()>254){
+            throw new InvalidEntryException();
+        }
         this.imgurl=imgurl;
     }
 
