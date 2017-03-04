@@ -6,21 +6,23 @@ package com.cmput301w17t08.moodr;
 
 public enum Emotion {
 //    anger, confusion, disgust, fear, happiness, sadness, shame, and surprise.
-    happy ("Yellow", ":)"),
-    sad ("Blue", ":("),
-    angry ("Red", "D:<"),
-    confused("Purple", "???"),
-    disgust("Green", "disgust"),
-    fear("Maroon", "D:"),
-    shame("Pink", ".////."),
-    surprise ("yellow", "!!!");
+    happy ("Yellow", ":)", "Happy"),
+    sad ("Blue", ":(", "Sad"),
+    angry ("Red", "D:<", "Angry"),
+    confused("Purple", "???", "Confused"),
+    disgust("Green", "disgust", "Disgust"),
+    fear("Maroon", "D:", "Scared"),
+    shame("Pink", ".////.", "Shame"),
+    surprise ("yellow", "!!!", "Surprise");
 
     private final String color;
     private final String emoticon;
+    private final String name;
 
-    Emotion(String color, String emoticon){
+    Emotion(String color, String emoticon, String name){
         this.color = color;
         this.emoticon = emoticon;
+        this.name = name;
     }
 
     public String getColor() {
@@ -30,4 +32,6 @@ public enum Emotion {
     public String getEmoticon() {
         return emoticon;
     }
+
+    public String getName() {return name; }
 }

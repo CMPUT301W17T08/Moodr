@@ -11,7 +11,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class LatestActivity extends AppCompatActivity {
-    private ArrayAdapter<Mood> adapter;
+    private LatestMoodListAdapter adapter;
     private ListView moods_listview;
     private ArrayList<Mood> latest_moods; // will update type later?
 
@@ -19,8 +19,6 @@ public class LatestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_latest);
-
-        moods_listview = (ListView) findViewById(R.id.latest_list);
 
         moods_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -38,7 +36,9 @@ public class LatestActivity extends AppCompatActivity {
     public void onStart() {
         latest_moods = getLatest();
 
-        adapter = new ArrayAdapter<Mood>(this, R.layout.latest_mood_item, latest_moods);
+        adapter = new LatestMoodListAdapter(this, latest_moods);
+
+        moods_listview = (ListView) findViewById(R.id.latest_list);
         moods_listview.setAdapter(adapter);
     }
 
