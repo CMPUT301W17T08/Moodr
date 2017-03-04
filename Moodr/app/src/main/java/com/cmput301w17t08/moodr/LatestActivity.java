@@ -19,7 +19,6 @@ public class LatestActivity extends AppCompatActivity {
 
         moods_listview = (ListView) findViewById(R.id.latest_list);
 
-
     }
 
     private ArrayList<Mood> getLatest(){
