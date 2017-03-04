@@ -1,7 +1,10 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -19,6 +22,12 @@ public class LatestActivity extends AppCompatActivity {
 
         moods_listview = (ListView) findViewById(R.id.latest_list);
 
+        moods_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // go to mood
+            }
+        });
     }
 
     private ArrayList<Mood> getLatest(){
@@ -27,8 +36,18 @@ public class LatestActivity extends AppCompatActivity {
     }
 
     public void onStart() {
-        // fill later.
+        latest_moods = getLatest();
+
+        adapter = new ArrayAdapter<Mood>(this, R.layout.latest_mood_item, latest_moods);
+        moods_listview.setAdapter(adapter);
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+
 
 
 }
