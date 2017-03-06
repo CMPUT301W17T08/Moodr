@@ -8,6 +8,14 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Sign in</string>
 
+    <!-- Strings related to mood records -->
+    <!-- tv = textView -->
+    <string name="tv_emotion">Mood</string>
+    <string name="tv_social_situation">Social Situation</string>
+    <string name="tv_trigger">Trigger</string>
+    <string name="btn_picture">ADD PICTURE</string>
+    <string name="btn_location">ADD LOCATION</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
