@@ -19,67 +19,86 @@ import io.searchbox.core.SearchResult;
  * Created by Canopy on 2017-03-04.
  */
 
-public class ElasticSearchUserController {
+public class ElasticSearchMoodController {
     private  static JestDroidClient client;
 
-    // adds user to elasticsearch
-    public static class AddUserTask extends AsyncTask<User, Void, Void> {
+    // adds mood to elasticsearch
+    public static class AddUserTask extends AsyncTask<Mood, Void, Void> {
 
         @Override
-        protected Void doInBackground(User... users) {
+        protected Void doInBackground(Mood... moods) {
             verifySettings();
 
-            for (User user:users) {
-                Index index = new Index.Builder(user).index("cmput301w17t8").type("user").build();
+            for (Mood mood:moods) {
+                Index index = new Index.Builder(mood).index("cmput301w17t8").type("mood").build();
 
                 try {
                     DocumentResult result = client.execute(index);
                     if (!result.isSucceeded()) {
-                        Log.i("Error", "Elasticsearch was not able to add user.");
+                        Log.i("Error", "Elasticsearch was not able to add mood.");
                     }
                 }
                 catch (Exception e) {
-                    Log.i("Error", "The application failed to build and send user.");
+                    Log.i("Error", "The application failed to build and send mood.");
                 }
             }
             return null;
         }
     }
 
-    // gets users from elasticsearch
-    public static class GetUserTask extends AsyncTask<String, Void, ArrayList<User>> {
+    // gets moods from elasticsearch
+    public static class GetMoodTask extends AsyncTask<String, Void, ArrayList<Mood>> {
 
         @Override
-        protected  ArrayList<User> doInBackground(String... search_parameters) {
+        protected  ArrayList<Mood> doInBackground(String... search_parameters) {
             verifySettings();
 
-            ArrayList<User> users = new ArrayList<User>();
+            ArrayList<Mood> moods = new ArrayList<Mood>();
 
             String query =  "{\"query\" : {\"term\" : { \"username\" : \"" +search_parameters[0] + "\" }}}";
 
             // Build the query
             Search search = new Search.Builder(query)
                     .addIndex("cmput301w17t8")
-                    .addType("user")
+                    .addType("mood")
                     .build();
 
             try {
                 // gets result
                 SearchResult result = client.execute(search);
                 if (result.isSucceeded()) {
-                    List<User> foundUsers = result.getSourceAsObjectList(User.class);
-                    users.addAll(foundUsers);
+                    List<Mood> foundMoods = result.getSourceAsObjectList(Mood.class);
+                    moods.addAll(foundMoods);
                 }
                 else {
-                    Log.i("Error", "The search query failed to find any user that matched.");
+                    Log.i("Error", "The search query failed to find any mood that matched.");
                 }
             }
             catch (Exception e) {
                 Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
             }
-            return users;
+            return moods;
         }
     }
+
+    // delete moods from elasticsearch
+    public static class DeleteMoodTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... search_parameters) {
+            verifySettings();
+
+            String query =  "{\"query\" : {\"term\" : { \"username\" : \"" +search_parameters[0] + "\" }}}";
+
+            // Build the query
+            Search search = new Search.Builder(query)
+                    .addIndex("cmput301w17t8")
+                    .addType("mood")
+                    .build();
+        }
+    }
+
+
 
     public static void verifySettings() {
         if (client == null) {
