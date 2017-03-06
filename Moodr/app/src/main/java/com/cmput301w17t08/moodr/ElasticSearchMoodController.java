@@ -10,6 +10,7 @@ import com.searchly.jestdroid.JestDroidClient;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.searchbox.core.Delete;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
@@ -91,10 +92,18 @@ public class ElasticSearchMoodController {
             String query =  "{\"query\" : {\"term\" : { \"username\" : \"" +search_parameters[0] + "\" }}}";
 
             // Build the query
-            Search search = new Search.Builder(query)
-                    .addIndex("cmput301w17t8")
-                    .addType("mood")
+            Delete delete = new Delete.Builder(query)
+                    .index("cmput301w17t8")
+                    .type("mood")
                     .build();
+
+            try {
+                client.execute(delete);
+            }
+            catch (Exception e) {
+                Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
+            }
+            return null;
         }
     }
 
