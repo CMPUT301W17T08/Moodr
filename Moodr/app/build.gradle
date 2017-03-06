@@ -25,4 +25,6 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'com.google.android.gms:play-services:10.2.0'
     testCompile 'junit:junit:4.12'
+    compile 'com.jayway.android.robotium:robotium-solo:5.6.3'
+    compile files('src/include/jest-droid-2.0.1-SNAPSHOT.jar')
 }
