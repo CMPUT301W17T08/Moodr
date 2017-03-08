@@ -6,10 +6,16 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sal on 2017-03-06.
@@ -19,18 +25,45 @@ public abstract class MoodPage extends AppCompatActivity {
     private static final int PICK_IMAGE = 100;
     ImageView imageView;
     Button button;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle SavedInstanceState) {
-        //super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mood);
+
+        addItemsOnSpinner();
     }
+
+    public void addItemsOnSpinner(){
+
+
+        spinner = (Spinner) findViewById(R.id.sp_emotion);
+        List<String> categories = new ArrayList<String>();
+        // Add the strings to the drop-down
+        categories.add("Happy");
+        categories.add("Sad");
+        categories.add("Angry");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, categories);
+
+        dataAdapter.setDropDownViewResource(android.R.layout.
+        simple_spinner_dropdown_item);
+
+        spinner.setAdapter(dataAdapter);
+
+        // what goes here???
+        Emotion emotion = new Emotion(spinner.getSelectedItem(), ?, ?);
+
+    }
+
+
+
 
     public Mood grabVariables(String owner) {
 
-        Spinner emotion = (Spinner) findViewById(R.id.sp_emotion);
-
-        //Mood mood = new Mood(owner, emotion);
+        Mood mood = new Mood(owner, addItemsOnSpinner(). );
 
         EditText socialSituation = (EditText) findViewById(R.id.et_social_situation);
         EditText trigger = (EditText) findViewById(R.id.et_trigger);
@@ -45,6 +78,17 @@ public abstract class MoodPage extends AppCompatActivity {
         });
 
         return mood;
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+    }
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
     }
 
     private void openGallery() {
