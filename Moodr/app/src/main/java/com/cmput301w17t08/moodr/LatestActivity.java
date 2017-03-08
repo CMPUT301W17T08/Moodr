@@ -3,6 +3,7 @@ package com.cmput301w17t08.moodr;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,15 +13,16 @@ import java.util.ArrayList;
 
 public class LatestActivity extends AppCompatActivity {
     private LatestMoodListAdapter adapter;
-    private ListView moods_listview;
-    private ArrayList<Mood> latest_moods; // will update type later?
+    private ListView moodsListview;
+    private ArrayList<Mood> latestMoods; // will update type later?
+    private User currentUser; // need to get from intent OR from global.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_latest);
 
-        moods_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // go to mood
@@ -30,24 +32,45 @@ public class LatestActivity extends AppCompatActivity {
 
     private ArrayList<Mood> getLatest(){
         // need elastic search to implement
+        ArrayList<String> friendsList= currentUser.getMyFriendList();
+
+        // create a GetLatestMoodsTask later?
+        ElasticSearchMoodController.GetMoodTask getMoodTask = new ElasticSearchMoodController.GetMoodTask();
+
+        for (String friend : friendsList){
+            getMoodTask.execute(friend);
+
+            try {
+                latestMoods.addAll(getMoodTask.get());
+            }
+            catch(Exception e){
+                Log.i("Error", "Failed to get the moods out of the async object");
+            }
+        }
+
         return null;
     }
 
+    // don't know how this is triggered...
+    private void refreshMoods(){
+        latestMoods.clear();
+        getLatest();
+        adapter.notifyDataSetChanged();
+    }
+
     public void onStart() {
-        latest_moods = getLatest();
+        latestMoods = getLatest();
 
-        adapter = new LatestMoodListAdapter(this, latest_moods);
+        adapter = new LatestMoodListAdapter(this, latestMoods);
 
-        moods_listview = (ListView) findViewById(R.id.latest_list);
-        moods_listview.setAdapter(adapter);
+        moodsListview = (ListView) findViewById(R.id.latest_list);
+        moodsListview.setAdapter(adapter);
     }
 
     @Override
     public void onStop() {
         super.onStop();
     }
-
-
 
 
 }
