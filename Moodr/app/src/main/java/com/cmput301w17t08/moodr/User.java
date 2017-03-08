@@ -8,13 +8,14 @@ import java.util.ArrayList;
 public class User {
     private String name;
     private String email;
-    private MoodList moodlist;
     private ArrayList<String> friends;
     private ArrayList<String> pending;
 
     public User(String name, String email){
         this.name = name;
         this.email = email;
+        this.friends = new ArrayList<String>();
+        this.pending = new ArrayList<String>();
     }
 
     public String getUsername() {
@@ -31,5 +32,21 @@ public class User {
 
     public void addFriend(String friend) {
         friends.add(friend);
+    }
+
+    public void addPending(String pending){
+        this.pending.add(pending);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<String> getFriends() {
+        return friends;
+    }
+
+    public ArrayList<String> getPending() {
+        return pending;
     }
 }

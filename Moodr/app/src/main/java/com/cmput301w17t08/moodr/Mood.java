@@ -12,7 +12,7 @@ public class Mood {
     private String owner;
     private int id;
     private Emotion emotion;
-    private String imgurl;
+    private String imgUrl;
     private String trigger;
     private String situation;
     private Location location;
@@ -52,14 +52,14 @@ public class Mood {
         this.id=lastid+1;
     }
 
-    public String getImgurl(){
-        return imgurl;
+    public String getImgUrl(){
+        return imgUrl;
     }
-    public void setImgurl(String imgurl) throws InvalidEntryException{
-        if(imgurl.length()>254){
+    public void setImgUrl(String imgUrl) throws InvalidEntryException{
+        if(imgUrl.length()>254){
             throw new InvalidEntryException();
         }
-        this.imgurl=imgurl;
+        this.imgUrl = imgUrl;
     }
 
     public String getTrigger(){
