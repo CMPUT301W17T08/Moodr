@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class User {
     private String name;
     private String email;
-    private ArrayList<String> moodslist;
+    private MoodList moodlist;
     private ArrayList<String> friends;
     private ArrayList<String> pending;
 
@@ -25,7 +25,7 @@ public class User {
         return email;
     }
 
-    public ArrayList<String> getMyFrinedList() {
+    public ArrayList<String> getMyFriendList() {
         return friends;
     }
 
