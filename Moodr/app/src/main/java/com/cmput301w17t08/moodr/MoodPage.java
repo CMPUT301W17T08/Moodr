@@ -28,7 +28,7 @@ public abstract class MoodPage extends AppCompatActivity {
     Spinner spinner;
 
     @Override
-    protected void onCreate(Bundle SavedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mood);
 
@@ -53,44 +53,18 @@ public abstract class MoodPage extends AppCompatActivity {
 
         spinner.setAdapter(dataAdapter);
 
-        // what goes here???
-        Emotion emotion = new Emotion(spinner.getSelectedItem(), ?, ?);
-
-
 
     }
 
-
-
-
-    public Mood grabVariables(String owner) {
-
-        Mood mood = new Mood(owner, addItemsOnSpinner(). );
-
-        EditText socialSituation = (EditText) findViewById(R.id.et_social_situation);
-        EditText trigger = (EditText) findViewById(R.id.et_trigger);
-
-        button = (Button) findViewById(R.id.btn_location);
-        imageView = (ImageView) findViewById(R.id.iv_imageview);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
-
-        return mood;
-    }
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
 
-        // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
-    public void onNothingSelected(AdapterView<?> arg0) {
+    public void onNothingSelected(AdapterView<?> parent, View view) {
         // TODO Auto-generated method stub
+        Toast.makeText(parent.getContext(), "Please select a mood!", Toast.LENGTH_LONG).show();
     }
 
     private void openGallery() {
@@ -106,4 +80,21 @@ public abstract class MoodPage extends AppCompatActivity {
             imageView.setImageURI(imageUri);
         }
     }
+
+
+   /* public Mood grabVariables(String owner) {
+
+        EditText socialSituation = (EditText) findViewById(R.id.et_social_situation);
+        EditText trigger = (EditText) findViewById(R.id.et_trigger);
+
+        button = (Button) findViewById(R.id.btn_location);
+        imageView = (ImageView) findViewById(R.id.iv_imageview);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+    }
+    */
 }
