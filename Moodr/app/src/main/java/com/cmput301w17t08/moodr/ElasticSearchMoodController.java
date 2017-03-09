@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.searchbox.core.Delete;
+import io.searchbox.core.DeleteByQuery;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
@@ -92,9 +93,9 @@ public class ElasticSearchMoodController {
             String query =  "{\"query\" : {\"term\" : { \"username\" : \"" +search_parameters[0] + "\" }}}";
 
             // Build the query
-            Delete delete = new Delete.Builder(query)
-                    .index("cmput301w17t8")
-                    .type("mood")
+            DeleteByQuery delete = new DeleteByQuery.Builder(query)
+                    .addIndex("cmput301w17t8")
+                    .addType("mood")
                     .build();
 
             try {
