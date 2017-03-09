@@ -19,16 +19,13 @@ import android.view.ViewGroup;
  */
 public class FriendsActivity extends AppCompatActivity {
 
-//    AppSectionsPagerAdapter mAppSectionsPagerAdapter;
-//    ViewPager mViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Friends"));
