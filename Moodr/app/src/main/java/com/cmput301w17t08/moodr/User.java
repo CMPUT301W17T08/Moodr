@@ -49,4 +49,12 @@ public class User {
     public ArrayList<String> getPending() {
         return pending;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

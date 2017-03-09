@@ -15,17 +15,18 @@ public class LatestActivity extends AppCompatActivity {
     private LatestMoodListAdapter adapter;
     private ListView moodsListview;
     private ArrayList<Mood> latestMoods; // will update type later?
-    private User currentUser; // need to get from intent OR from global.
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_latest);
+        currentUser = CurrentUserSingleton.getInstance().getUser();
 
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // go to mood
+                // go to the mood
             }
         });
     }
@@ -51,11 +52,15 @@ public class LatestActivity extends AppCompatActivity {
         return null;
     }
 
-    // don't know how this is triggered...
     private void refreshMoods(){
         latestMoods.clear();
         getLatest();
         adapter.notifyDataSetChanged();
+    }
+
+    private void goToMood(Mood mood){
+        Intent intent = new Intent(this, MoodPage.class);
+        startActivity(intent);
     }
 
     public void onStart() {

@@ -56,6 +56,8 @@ public abstract class MoodPage extends AppCompatActivity {
         // what goes here???
         Emotion emotion = new Emotion(spinner.getSelectedItem(), ?, ?);
 
+
+
     }
 
 
