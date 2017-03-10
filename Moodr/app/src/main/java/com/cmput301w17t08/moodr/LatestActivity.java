@@ -23,6 +23,8 @@ public class LatestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_latest);
         currentUser = CurrentUserSingleton.getInstance().getUser();
 
+        Intent intent = getIntent();
+
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -32,10 +34,8 @@ public class LatestActivity extends AppCompatActivity {
     }
 
     private ArrayList<Mood> getLatest(){
-        // need elastic search to implement
         ArrayList<String> friendsList= currentUser.getMyFriendList();
 
-        // create a GetLatestMoodsTask later?
         ElasticSearchMoodController.GetMoodTask getMoodTask = new ElasticSearchMoodController.GetMoodTask();
 
         for (String friend : friendsList){
