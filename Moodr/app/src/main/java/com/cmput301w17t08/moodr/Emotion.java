@@ -7,8 +7,6 @@ import android.graphics.Color;
  */
 
 public enum Emotion {
-//    FIXME: fix all the colours and icon ids.
-//    anger, confusion, disgust, fear, happiness, sadness, shame, and surprise.
     happy (Color.rgb(250, 255, 168), R.drawable.happy, "Happy"),
     sad (Color.rgb(204, 223, 255), R.drawable.sad, "Sad"),
     angry (Color.rgb(229, 103, 103), R.drawable.angry, "Angry"),

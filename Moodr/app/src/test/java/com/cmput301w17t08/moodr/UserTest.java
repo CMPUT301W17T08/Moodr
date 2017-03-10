@@ -32,11 +32,11 @@ public class UserTest {
         User user;
         user = new User("test3","test3@email.email");
         ArrayList<String> testArray = new ArrayList<String>();
-        assertEquals(null, user.getMyFrinedList());
+        assertEquals(null, user.getMyFriendList());
 
         user.addFriend("friends");
         testArray.add("friends");
-        assertEquals(user.getMyFrinedList(), testArray);
+        assertEquals(user.getMyFriendList(), testArray);
 
     }
 
@@ -45,7 +45,7 @@ public class UserTest {
         User user;
         user = new User("something","email1");
         user.addFriend("friends");
-        assertTrue(user.getMyFrinedList() != null);
+        assertTrue(user.getMyFriendList() != null);
 
     }
 

@@ -58,19 +58,11 @@ public class LatestActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-
-//    private void goToMood(Mood mood){
-//        Intent intent = new Intent(this, .class);
-//        // pass mood into
-//        startActivity(intent);
-//    /
-
     private void goToMood(Mood mood){
         Intent intent = new Intent(this, ViewFriendMoodActivity.class);
         // pass mood into
         //startActivity(intent);
     }
-
 
     public void onStart() {
         latestMoods = getLatest();
