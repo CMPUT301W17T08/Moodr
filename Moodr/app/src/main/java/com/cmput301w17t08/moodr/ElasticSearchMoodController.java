@@ -24,7 +24,7 @@ public class ElasticSearchMoodController {
     private  static JestDroidClient client;
 
     // adds mood to elasticsearch
-    public static class AddUserTask extends AsyncTask<Mood, Void, Void> {
+    public static class AddMoodTask extends AsyncTask<Mood, Void, Void> {
 
         @Override
         protected Void doInBackground(Mood... moods) {
