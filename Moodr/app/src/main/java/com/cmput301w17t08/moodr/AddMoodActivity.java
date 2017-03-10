@@ -7,6 +7,7 @@ import android.os.Bundle;
 import java.util.ArrayList;
 
 public class AddMoodActivity extends MoodPage {
+    private ArrayList<Mood> moodArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

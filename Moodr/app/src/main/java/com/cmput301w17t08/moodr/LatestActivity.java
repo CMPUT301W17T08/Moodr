@@ -68,7 +68,7 @@ public class LatestActivity extends AppCompatActivity {
     private void goToMood(Mood mood){
         Intent intent = new Intent(this, ViewFriendMoodActivity.class);
         // pass mood into
-        startActivity(intent);
+        //startActivity(intent);
     }
 
 
