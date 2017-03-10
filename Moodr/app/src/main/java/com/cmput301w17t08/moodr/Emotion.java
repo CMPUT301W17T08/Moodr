@@ -5,6 +5,7 @@ package com.cmput301w17t08.moodr;
  */
 
 public enum Emotion {
+//    FIXME: fix all the colours and icon ids.
 //    anger, confusion, disgust, fear, happiness, sadness, shame, and surprise.
     happy ("Yellow", ":)", "Happy"),
     sad ("Blue", ":(", "Sad"),
