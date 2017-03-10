@@ -91,7 +91,7 @@ public class FriendsActivity extends AppCompatActivity {
         String search_string;
         boolean isSearching = false;
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){\
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
 
             if (isSearching == false){
