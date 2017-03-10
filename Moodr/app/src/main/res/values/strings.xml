@@ -29,4 +29,8 @@
         completions."
     </string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_view_friend_mood">ViewFriendMoodActivity</string>
+    <string name="title_activity_view_my_mood">ViewMyMoodActivity</string>
+
 </resources>

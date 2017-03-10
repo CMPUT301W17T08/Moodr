@@ -28,10 +28,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".LatestActivity" />
         <activity
-            android:name=".SideMenu"
-            android:label="@string/title_activity_side_menu"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
 
@@ -50,7 +46,10 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,9 +58,10 @@
         </activity>
 
         <activity android:name=".AddMoodActivity" />
-        <activity android:name=".EditMoodActivity"></activity>
-
-        <activity android:name=".ViewMoodActivity"></activity>
+        <activity android:name=".EditMoodActivity" />
+        <activity android:name=".ViewMoodActivity" />
+        <activity android:name=".ViewMyMoodActivity" />
+        <activity android:name=".ViewFriendMoodActivity"></activity>
 
     </application>
 

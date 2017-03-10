@@ -3,28 +3,28 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:icon="@drawable/googleg_standard_color_18"
             android:id="@+id/nav_home"
+            android:icon="@drawable/home"
             android:title="Home" />
         <item
-            android:icon="@drawable/places_ic_search"
             android:id="@+id/nav_friends"
+            android:icon="@drawable/places_ic_search"
             android:title="Friends" />
         <item
             android:id="@+id/nav_near"
-            android:icon="@android:drawable/ic_menu_mylocation"
+            android:icon="@android:drawable/ic_dialog_map"
             android:title="Near Me" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="System">
         <menu>
             <item
                 android:id="@+id/nav_offline"
-                android:icon="?android:attr/fingerprintAuthDrawable"
+                android:icon="@drawable/cast_ic_notification_disconnect"
                 android:title="Offline Mode" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/mr_ic_close_light"
+                android:icon="@drawable/common_google_signin_btn_icon_dark"
                 android:title="Log Out" />
         </menu>
     </item>

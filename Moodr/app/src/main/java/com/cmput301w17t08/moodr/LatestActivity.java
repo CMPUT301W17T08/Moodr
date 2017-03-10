@@ -26,7 +26,7 @@ public class LatestActivity extends AppCompatActivity {
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToMood(latestMoods.get(position));
+//                goToMood(latestMoods.get(position));
             }
         });
     }
@@ -58,11 +58,19 @@ public class LatestActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+
+//    private void goToMood(Mood mood){
+//        Intent intent = new Intent(this, .class);
+//        // pass mood into
+//        startActivity(intent);
+//    /
+
     private void goToMood(Mood mood){
-        //Intent intent = new Intent(this, .class);
+        Intent intent = new Intent(this, ViewFriendMoodActivity.class);
         // pass mood into
         //startActivity(intent);
     }
+
 
     public void onStart() {
         latestMoods = getLatest();
