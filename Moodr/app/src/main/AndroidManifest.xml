@@ -25,10 +25,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".LatestActivity" />
         <activity
-            android:name=".SideMenu"
-            android:label="@string/title_activity_side_menu"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
 
