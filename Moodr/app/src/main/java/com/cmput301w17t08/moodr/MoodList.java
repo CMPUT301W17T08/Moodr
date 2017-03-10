@@ -20,4 +20,8 @@ public class MoodList {
     public void delete(Mood mood){
         moodlist.remove(mood);
     }
+
+    public Mood getMood(int index){
+        return moodlist.get(index);
+    }
 }
