@@ -1,0 +1,10 @@
+Everyone is here.
+
+focus on getting the use cases/requirements done
+documentation: comment in every file saying its purpose. document important methods. ignore getters and setters
+release plan: update to say what is done and what is pushed back to part 5 
+
+Respond to part 2 feedback
+abstract work in activity into controller classes
+
+Wow factor use case
