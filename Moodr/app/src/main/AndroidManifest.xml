@@ -47,19 +47,19 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".AddMoodActivity" />
-        <activity android:name=".EditMoodActivity"></activity>
-
-        <activity android:name=".ViewMoodActivity"></activity>
-
+        <activity android:name=".EditMoodActivity" />
+        <activity android:name=".ViewMoodActivity" />
     </application>
 
 </manifest>
