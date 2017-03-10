@@ -4,15 +4,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/home"
             android:title="Home" />
         <item
             android:id="@+id/nav_friends"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/places_ic_search"
             android:title="Friends" />
         <item
             android:id="@+id/nav_near"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@android:drawable/ic_dialog_map"
             android:title="Near Me" />
     </group>
 
@@ -20,11 +20,11 @@
         <menu>
             <item
                 android:id="@+id/nav_offline"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/cast_ic_notification_disconnect"
                 android:title="Offline Mode" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/common_google_signin_btn_icon_dark"
                 android:title="Log Out" />
         </menu>
     </item>

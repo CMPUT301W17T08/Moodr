@@ -34,6 +34,7 @@ public class ViewMoodActivity extends AppCompatActivity {
         ImageView image = (ImageView) findViewById(R.id.viewMoodImage);
 
 
+        layout.setBackgroundColor(mood.getEmotion().getColor());
 
         mood_name.setText(mood.getEmotion().getName());
 
@@ -45,9 +46,9 @@ public class ViewMoodActivity extends AppCompatActivity {
 
         date.setText(dateFormat.format(mood.getDate()));
 
-        String social_sit= mood.getSituation();
-        if (social_sit != null){
-            social.setText(social_sit);
+        String situation = mood.getSituation();
+        if (situation != null){
+            social.setText(situation);
         }
 
         String trig = mood.getTrigger();

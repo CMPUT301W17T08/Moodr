@@ -22,7 +22,7 @@
                 android:layout_width="34sp"
                 android:layout_height="match_parent"
                 android:id="@+id/search_icon"
-                android:src="@drawable/Search-48"
+                android:src="@drawable/search48"
                 android:scaleType="centerInside"/>
 
 

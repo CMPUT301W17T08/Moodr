@@ -1,5 +1,6 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,8 +28,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), AddMoodActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -81,14 +84,24 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_friends) {
+            Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_near) {
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_offline) {
+            Intent intent = new Intent(MainActivity.this, OfflineMode.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
 
 
         }
