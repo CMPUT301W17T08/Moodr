@@ -10,7 +10,6 @@ import com.searchly.jestdroid.JestDroidClient;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.searchbox.core.Delete;
 import io.searchbox.core.DeleteByQuery;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
@@ -55,9 +54,14 @@ public class ElasticSearchMoodController {
         protected  ArrayList<Mood> doInBackground(String... search_parameters) {
             verifySettings();
 
+            String query;
             ArrayList<Mood> moods = new ArrayList<Mood>();
 
-            String query =  "{\"query\" : {\"term\" : { \"username\" : \"" +search_parameters[0] + "\" }}}";
+            if (search_parameters.length == 2) {
+                query = "{\"query\": {\"bool\": {\"must\": [{\"term\": {\"owner\": \""+ search_parameters[0] +"\"}}, {\"term\": {\"id\": \""+ search_parameters[1] +"\"}}]}}}";
+            } else {
+                query =  "{\"query\" : {\"term\" : { \"owner\" : \"" + search_parameters[0] + "\" }}}";
+            }
 
             // Build the query
             Search search = new Search.Builder(query)
@@ -83,6 +87,40 @@ public class ElasticSearchMoodController {
         }
     }
 
+    // get a list of latest moods.
+    public static class GetLatestMoodsTask extends AsyncTask<String, Void, ArrayList<Mood>> {
+
+        @Override
+        protected ArrayList<Mood> doInBackground(String... search_parameters) {
+            verifySettings();
+
+            ArrayList<Mood> moods = new ArrayList<Mood>();
+
+            for (String sp : search_parameters) {
+                String query = "{ \"query\" : { \"filtered\" : { \"filter\" : { \"term\" : { \"owner\" : \"" + sp + "\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"size\" : 1}";
+
+                Search search = new Search.Builder(query)
+                        .addIndex("cmput301w17t8")
+                        .addType("mood")
+                        .build();
+
+                try {
+                    // get result
+                    SearchResult result = client.execute(search);
+                    if (result.isSucceeded()) {
+                        List<Mood> foundMoods = result.getSourceAsObjectList(Mood.class);
+                        moods.addAll(foundMoods);
+                    } else {
+                        Log.i("Error", "The search query failed to find any mood that matched.");
+                    }
+                } catch (Exception e) {
+                    Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
+                }
+            }
+            return moods;
+        }
+    }
+
     // delete moods from elasticsearch
     public static class DeleteMoodTask extends AsyncTask<String, Void, Void> {
 
@@ -90,7 +128,7 @@ public class ElasticSearchMoodController {
         protected Void doInBackground(String... search_parameters) {
             verifySettings();
 
-            String query =  "{\"query\" : {\"term\" : { \"username\" : \"" +search_parameters[0] + "\" }}}";
+            String query = "{\"query\": {\"bool\": {\"must\": [{\"term\": {\"owner\": \""+ search_parameters[0] +"\"}}, {\"term\": {\"id\": \""+ search_parameters[1] +"\"}}]}}}";
 
             // Build the query
             DeleteByQuery delete = new DeleteByQuery.Builder(query)
