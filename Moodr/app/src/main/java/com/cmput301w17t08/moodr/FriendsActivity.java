@@ -12,9 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -90,11 +95,14 @@ public class FriendsActivity extends AppCompatActivity {
     public static class FriendsFragment extends Fragment {
         String search_string;
         boolean isSearching = false;
+        ArrayList<String> searchResults;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
 
             if (isSearching == false){
+
                 View rootView = inflater.inflate(R.layout.fragment_friends_nosearch, container, false);
                 final EditText searchBar = (EditText)rootView.findViewById(R.id.search_bar);
                 ImageView searchIcon = (ImageView)rootView.findViewById(R.id.search_icon);
@@ -102,14 +110,43 @@ public class FriendsActivity extends AppCompatActivity {
                 searchIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        isSearching = true;
-                        search_string=searchBar.getText().toString();
-                        //Search
+                        if(!searchBar.getText().toString().isEmpty()) {
+                            isSearching = true;
+                            search_string = searchBar.getText().toString();
+                            //Search
+                            //Populate searchResults
+                            // refresh
+                        }
                     }
                 });
 
+                ListView friendsList = (ListView) rootView.findViewById(R.id.curFriends_list);
+                ListView pendingList = (ListView) rootView.findViewById(R.id.pending_list);
+
+                friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View v, int position, long id){
+                        //go into friends profile
+                    }
+                });
+
+                pendingList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View v,int position,long id){
+                        // go into pending stranger profile
+                    }
+                });
+
+                ArrayList<String> curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
+                ArrayList<String> Pending = CurrentUserSingleton.getInstance().getUser().getPending();
+
+
+
+
                 return rootView;
+
             }else {
+
                 View rootView = inflater.inflate(R.layout.fragment_friends_search,container,false);
                 final EditText searchBar = (EditText)rootView.findViewById(R.id.search_bar);
                 searchBar.setText(search_string);
@@ -119,9 +156,16 @@ public class FriendsActivity extends AppCompatActivity {
                 searchIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if(searchBar.getText().toString().isEmpty()){
+                            isSearching=false;
+                            search_string="";
+                            searchResults = new ArrayList<String>();
+                            //refresh
+                        }
                         isSearching = true;
                         search_string=searchBar.getText().toString();
                         //Search
+                        // populate searchResults
                     }
                 });
 
@@ -131,9 +175,22 @@ public class FriendsActivity extends AppCompatActivity {
                         isSearching = false;
                         search_string="";
                         searchBar.setText("");
+                        searchResults = new ArrayList<String>();
                         //refresh
+                        //notify list changed
                     }
                 });
+
+                ListView searchReturnList = (ListView) rootView.findViewById(R.id.search_return_list);
+
+                searchReturnList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View v,int position,long id){
+                        // go into search return stranger profile
+                    }
+                });
+
+
                 return rootView;
             }
 
