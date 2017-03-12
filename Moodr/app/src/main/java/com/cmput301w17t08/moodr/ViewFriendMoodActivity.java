@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * This activity shows the mood of a friend. The mood is read only and does not allow editing or
+ * deleting.
+ */
 public class ViewFriendMoodActivity extends ViewMoodActivity {
 
     @Override
@@ -13,7 +17,6 @@ public class ViewFriendMoodActivity extends ViewMoodActivity {
 
         Intent intent = getIntent();
         Mood mood = (Mood) intent.getSerializableExtra("mood"); // assuming that actually exists.
-
 
         loadMood(mood);
     }

@@ -1,8 +1,5 @@
 package com.cmput301w17t08.moodr;
 
-/*
-Parent Class for moods. Implements the main functionality for viewing individual moods.
- */
 
 import android.content.Intent;
 import android.location.Location;
@@ -19,6 +16,12 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * This is an abstract activity for viewing details of individual moods.
+ * Because the user can edit their own mood, but not others' moods, we created an abstract class
+ * for the viewing moods in general.
+ *
+ */
 public abstract class ViewMoodActivity extends AppCompatActivity {
 
     @Override
@@ -27,8 +30,11 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
     }
 
 
-//     Loads the mood information. Non-mandatory fields are checked if they exist first.
-
+    /**
+     * Loads the information contained in the mood. Anything that is blank is left blank.
+     *
+     * @param mood the mood to be loaded
+     */
     protected void loadMood(Mood mood){
         LinearLayout layout = (LinearLayout) findViewById(R.id.activity_view_mood);
         TextView mood_name = (TextView) findViewById(R.id.viewMoodMood);

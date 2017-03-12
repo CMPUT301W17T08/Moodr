@@ -2,12 +2,13 @@ package com.cmput301w17t08.moodr;
 
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by ZL on 2/25/2017.
  */
-public class Mood {
+public class Mood implements Serializable{
     private Date date;
     private String owner;
     private int id;

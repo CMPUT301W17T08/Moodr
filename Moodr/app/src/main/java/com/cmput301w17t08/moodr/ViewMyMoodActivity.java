@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-// assumes that the index of the mood clicked is passed in.
-
+/**
+ * This activity displays a selected mood of user who is logged into the app. In his activity, the
+ * user can choose to edit or delete the mood. On delete, the user is returned to the list of their
+ * moods.
+ */
 public class ViewMyMoodActivity extends ViewMoodActivity {
     Mood mood;
     int index;
@@ -19,8 +22,9 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
 
         Intent intent = getIntent();
 
-        mood = CurrentUserSingleton.getInstance().getMyMoodList()
-                .getMood(intent.getIntExtra("index", -1));
+        index = intent.getIntExtra("index", -1);
+
+        mood = CurrentUserSingleton.getInstance().getMyMoodList().getMood(index);
 
 
         // if for some reason the index is -1
@@ -33,14 +37,21 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
 
     }
 
+    /**
+     * deletes the current mood the user is viewing.
+     */
     private void deleteMood(){
         CurrentUserSingleton.getInstance().getMyMoodList().delete(mood);
         finish();
     }
 
+    /**
+     * starts EditMoodActivity to allow the user to edit the mood.
+     */
     private void editMood(){
-        // goes to edit mood page.
-
+        Intent intent = new Intent(this, EditMoodActivity.class);
+        intent.putExtra("index", index);
+        startActivity(intent);
     }
 
 

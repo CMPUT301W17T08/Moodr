@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,6 +13,11 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+
+/**
+ * This activity displays the latest mood of all friends on the user's friends list. It finds
+ * the latest moods using elastic search.
+ */
 public class LatestActivity extends AppCompatActivity {
     private LatestMoodListAdapter adapter;
     private ListView moodsListview;
@@ -30,12 +37,16 @@ public class LatestActivity extends AppCompatActivity {
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                goToMood(latestMoods.get(position));
+                goToMood(latestMoods.get(position));
             }
         });
     }
 
-    // gets the latest mood for each person on the user's friends list
+    /**
+     * Gets the latest moods of all friends of the user.
+     * @return a list of moods
+     */
+
     private ArrayList<Mood> getLatest(){
         ArrayList<String> friendsList= currentUser.getMyFriendList();
         ArrayList<Mood> latest = new ArrayList<>();
@@ -56,18 +67,24 @@ public class LatestActivity extends AppCompatActivity {
         return latest;
     }
 
-    // refresh the latest moods list
+    /**
+     * Reloads the latest mood list.
+     */
     private void refreshMoods(){
         latestMoods.clear();
         getLatest();
         adapter.notifyDataSetChanged();
     }
 
-    // goes to the mood clicked.
+    /**
+     * goes to the mood selected
+     * @param mood the mood selected
+     */
     private void goToMood(Mood mood){
         Intent intent = new Intent(this, ViewFriendMoodActivity.class);
-        // pass mood into
-        //startActivity(intent);
+        intent.putExtra("mood", mood);
+
+        startActivity(intent);
     }
 
     @Override
@@ -86,4 +103,22 @@ public class LatestActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mood_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.latest_refresh:
+                refreshMoods();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
