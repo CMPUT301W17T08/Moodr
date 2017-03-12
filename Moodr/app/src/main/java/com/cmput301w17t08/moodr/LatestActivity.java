@@ -20,10 +20,12 @@ public class LatestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_latest);
+
         currentUser = CurrentUserSingleton.getInstance().getUser();
 
-        Intent intent = getIntent();
+        moodsListview = (ListView) findViewById(R.id.latest_list);
 
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -33,8 +35,10 @@ public class LatestActivity extends AppCompatActivity {
         });
     }
 
+    // gets the latest mood for each person on the user's friends list
     private ArrayList<Mood> getLatest(){
         ArrayList<String> friendsList= currentUser.getMyFriendList();
+        ArrayList<Mood> latest = new ArrayList<>();
 
         ElasticSearchMoodController.GetMoodTask getMoodTask = new ElasticSearchMoodController.GetMoodTask();
 
@@ -42,34 +46,37 @@ public class LatestActivity extends AppCompatActivity {
             getMoodTask.execute(friend);
 
             try {
-                latestMoods.addAll(getMoodTask.get());
+                latest.addAll(getMoodTask.get());
             }
             catch(Exception e){
                 Log.i("Error", "Failed to get the moods out of the async object");
             }
         }
 
-        return null;
+        return latest;
     }
 
+    // refresh the latest moods list
     private void refreshMoods(){
         latestMoods.clear();
         getLatest();
         adapter.notifyDataSetChanged();
     }
 
+    // goes to the mood clicked.
     private void goToMood(Mood mood){
         Intent intent = new Intent(this, ViewFriendMoodActivity.class);
         // pass mood into
         //startActivity(intent);
     }
 
+    @Override
     public void onStart() {
+        super.onStart();
         latestMoods = getLatest();
 
         adapter = new LatestMoodListAdapter(this, latestMoods);
 
-        moodsListview = (ListView) findViewById(R.id.latest_list);
         moodsListview.setAdapter(adapter);
     }
 

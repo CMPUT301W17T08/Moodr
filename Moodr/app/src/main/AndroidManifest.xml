@@ -56,9 +56,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewMoodActivity" />
         <activity android:name=".ViewMyMoodActivity" />
-        <activity android:name=".ViewFriendMoodActivity"></activity>
+        <activity android:name=".ViewFriendMoodActivity"/>
 
     </application>
 
