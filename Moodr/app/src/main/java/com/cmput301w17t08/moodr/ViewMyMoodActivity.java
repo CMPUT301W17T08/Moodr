@@ -35,6 +35,7 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
 
     private void deleteMood(){
         CurrentUserSingleton.getInstance().getMyMoodList().delete(mood);
+        finish();
     }
 
     private void editMood(){
