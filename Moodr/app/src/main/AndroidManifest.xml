@@ -58,6 +58,7 @@
         </activity>
         <activity android:name=".ViewMoodActivity" />
         <activity android:name=".ViewMyMoodActivity" />
+        <activity android:name=".AddMoodActivity" />
         <activity android:name=".ViewFriendMoodActivity"></activity>
 
     </application>
