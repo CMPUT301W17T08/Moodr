@@ -57,7 +57,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ViewMyMoodActivity" />
-        <activity android:name=".ViewFriendMoodActivity"/>
+        <activity android:name=".AddMoodActivity" />
+        <activity android:name=".ViewFriendMoodActivity"></activity>
 
     </application>
 
