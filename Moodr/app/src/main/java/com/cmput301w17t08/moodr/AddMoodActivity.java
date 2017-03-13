@@ -275,7 +275,7 @@ public class AddMoodActivity extends AppCompatActivity {
 
         ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
         CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-        addMoodTask.execute(mood);bob
+        addMoodTask.execute(mood);
 
     }
 

@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
                 if(validUser(UserName)){
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                     CurrentUserSingleton.getInstance().getUser().setName(UserName);
                     startActivity(intent);
                 }
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
             CurrentUserSingleton.getInstance().getUser().setName(Username);
             startActivity(intent);
             return true;

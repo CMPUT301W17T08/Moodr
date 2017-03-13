@@ -56,9 +56,6 @@ public class MyProfileActivity extends Profile {
     private void addMood(){
         Intent intent  = new Intent(this, AddMoodActivity.class);
         startActivity(intent);
-        // notify adapter
-        moods.clear();
-        moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
         adapter.notifyDataSetChanged();
     }
 
@@ -67,7 +64,7 @@ public class MyProfileActivity extends Profile {
      * @param i index of the mood in moodList
      */
     private void goToMood(int i){
-        Intent intent = new Intent(this, ViewMoodActivity.class);
+        Intent intent = new Intent(this, ViewMyMoodActivity.class);
         intent.putExtra("index", i);
         startActivity(intent);
         adapter.notifyDataSetChanged(); // in case the user edits or deletes a mood
