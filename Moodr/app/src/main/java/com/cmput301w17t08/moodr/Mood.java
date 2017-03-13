@@ -4,6 +4,7 @@ import android.location.Location;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 /**
  * Created by ZL on 2/25/2017.
@@ -18,11 +19,16 @@ public class Mood implements Serializable{
     private String situation;
     private Location location;
 
-    public Mood(String owner, Emotion emotion)
+    public Mood(Date date, String owner, Emotion emotion, String imgUrl,  String trigger, String situation, Location location)
     {
-        this.owner = owner;
-        this.emotion = emotion;
         this.date = new Date(System.currentTimeMillis());
+        setUsername(owner);
+        setEmotion(emotion);
+        //setImgUrl(imgUrl);
+        //setTrigger(trigger);
+        setSituation(situation);
+        setLocation(location);
+
     }
 
     public String getUsername(){
@@ -32,12 +38,14 @@ public class Mood implements Serializable{
         this.owner=Username;
     }
 
+
     public Date getDate(){
         return date;
     }
     public void setDate(Date date){
         this.date = date;
     }
+
 
     public Emotion getEmotion(){
         return emotion;

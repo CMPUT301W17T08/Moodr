@@ -29,10 +29,15 @@
         completions."
     </string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Moodr</string>
     <string name="title_activity_view_friend_mood">ViewFriendMoodActivity</string>
     <string name="title_activity_view_my_mood">ViewMyMoodActivity</string>
     <string name="title_activity_my_moods">MyMoodsActivity</string>
     <string name="title_activity_profile">Profile</string>
+
+
+    <!-- Strings related to add/edit Mood -->
+    <string name="action_add_complete">Done</string>
+    <string name="action_add_cancel">Cancel</string>
 
 </resources>
