@@ -61,13 +61,14 @@ public class AddMoodActivity extends AppCompatActivity {
     private ArrayAdapter<String> situationAdapter;
     private EditText editTrigger;
     private InputFilter filter;
+    private String selected_emotion;
 
 
 
     private Date date;
     private String owner;
     private int id;
-    private String emotion;
+    private Emotion emotion;
     private String imgUrl;
     private String trigger;
     private String situation;
@@ -123,7 +124,7 @@ public class AddMoodActivity extends AppCompatActivity {
         emotion_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                emotion = parent.getItemAtPosition(position).toString();
+                selected_emotion = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -254,9 +255,11 @@ public class AddMoodActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void createMood(String emotion, String situation, String trigger){
+    public void createMood(Emotion emotion, String situation, String trigger){
         // Grab owner
         owner = CurrentUserSingleton.getInstance().getUser().getName();
+        // Grab emotion
+        emotion = Emotion.happy;
         // Create the mood
         Mood mood = new Mood(owner, emotion);
 
