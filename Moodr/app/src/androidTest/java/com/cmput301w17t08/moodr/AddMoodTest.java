@@ -7,8 +7,6 @@ package com.cmput301w17t08.moodr;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.ListView;
 
 import com.robotium.solo.Solo;
 

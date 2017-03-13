@@ -22,6 +22,7 @@ public class LatestActivityTest extends ActivityInstrumentationTestCase2<LatestA
     }
 
     public void testStart() throws Exception {
+        CurrentUserSingleton.getInstance().getUser().setName("bob");
         Activity activity = getActivity();
     }
 

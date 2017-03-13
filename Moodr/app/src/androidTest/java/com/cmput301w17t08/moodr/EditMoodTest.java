@@ -7,9 +7,7 @@ package com.cmput301w17t08.moodr;
 import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
-import android.widget.EditText;
-import android.widget.ListView;
+
 
 import com.robotium.solo.Solo;
 
@@ -33,6 +31,7 @@ public class EditMoodTest extends ActivityInstrumentationTestCase2<EditMoodActiv
     }
 
     public void testStart() throws Exception {
+        CurrentUserSingleton.getInstance().getMyMoodList().add(new Mood("bob", Emotion.sad));
         Intent intent = new Intent();
         intent.putExtra("index", 0);
         setActivityIntent(intent);
@@ -41,9 +40,25 @@ public class EditMoodTest extends ActivityInstrumentationTestCase2<EditMoodActiv
     }
 
     // test loading
+    public  void testLoad(){
+        solo.searchText("sad");
+
+    }
     // test editing emotion
+    public void testEditEmotion(){
+        solo.pressSpinnerItem(0,1); // no idea what this is, actually.
+
+    }
     // test saving
-    // test adding a situation
+
+    public void testSave(){
+
+    }
+
+    // test adding a field.
+    public void testAddField(){
+
+    }
 
 
     @Override
