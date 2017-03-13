@@ -256,7 +256,7 @@ public class AddMoodActivity extends AppCompatActivity {
 
     public void createMood(String emotion, String situation, String trigger){
         // Grab owner
-        owner = "TestSUBJECT";
+        owner = CurrentUserSingleton.getInstance().getUser().getName();
         // Create the mood
         Mood mood = new Mood(owner, emotion);
 
