@@ -42,6 +42,11 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
      */
     private void deleteMood(){
         CurrentUserSingleton.getInstance().getMyMoodList().delete(mood);
+
+        //update on server
+        ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
+        deleteMoodTask.execute(mood.getUsername(), Integer.toString(mood.getId()));
+
         finish();
     }
 
