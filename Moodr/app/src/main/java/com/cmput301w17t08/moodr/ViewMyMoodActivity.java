@@ -54,7 +54,7 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
         startActivity(intent);
     }
 
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mood_menu, menu);
@@ -75,4 +75,5 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    */
 }

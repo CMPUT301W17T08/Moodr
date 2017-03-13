@@ -1,7 +1,5 @@
 package com.cmput301w17t08.moodr;
 
-import android.*;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,6 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -136,6 +136,28 @@ public class AddMoodActivity extends AppCompatActivity {
             acquireLocation();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu){
+        // Adds the icons to the action bar is it present
+        getMenuInflater().inflate(R.menu.menu_add_mood, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_cancel:
+                finish();
+                return true;
+
+            case R.id.action_add_complete:
+                // Add the mood to MoodList
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
