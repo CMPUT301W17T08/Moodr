@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -135,12 +136,19 @@ public class FriendsActivity extends AppCompatActivity {
                 ArrayList<String> curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
                 ArrayList<String> Pending = CurrentUserSingleton.getInstance().getUser().getPending();
 
+                ArrayAdapter<String> friendsAdapter = new ArrayAdapter<String>(getActivity(),R.layout.curfriends_list_items,curFriends);
+                friendsList.setAdapter(friendsAdapter);
+
+                ArrayAdapter<String> pendingAdapter = new ArrayAdapter<String>(getActivity(),R.layout.pending_list_item,Pending);
+                pendingList.setAdapter(pendingAdapter);
+
 
 
 
                 return rootView;
 
             }else {
+
 
                 View rootView = inflater.inflate(R.layout.fragment_friends_search,container,false);
                 final EditText searchBar = (EditText)rootView.findViewById(R.id.search_bar);
@@ -184,6 +192,9 @@ public class FriendsActivity extends AppCompatActivity {
                         // go into search return stranger profile
                     }
                 });
+
+                ArrayAdapter<String> resultAdapter = new ArrayAdapter<String>(getActivity(),R.layout.search_return_list_item,searchResults);
+                searchReturnList.setAdapter(resultAdapter);
 
 
                 return rootView;
