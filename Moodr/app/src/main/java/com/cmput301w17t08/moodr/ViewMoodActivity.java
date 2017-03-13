@@ -47,12 +47,12 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
 
         setTitle(mood.getUsername());
 
-        layout.setBackgroundColor(mood.getEmotion().getColor());
+        //layout.setBackgroundColor(mood.getEmotion().getColor());
 
-        mood_name.setText(mood.getEmotion().getName());
+       // mood_name.setText(mood.getEmotion().getName());
 
         // set emoticon
-        mood_icon.setImageResource(mood.getEmotion().getEmoticon());
+        //mood_icon.setImageResource(mood.getEmotion().getEmoticon());
 
         // date needs to be converted to a string
         java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy", Locale.US);
@@ -70,12 +70,12 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
             trigger.setText(trig);
         }
 
-
+/*
         Location loc = mood.getLocation();
         if (loc != null){
            location.setText(loc.toString());
         }
-
+*/
 
         String imgURL = mood.getImgUrl();
         if (imgURL != null){

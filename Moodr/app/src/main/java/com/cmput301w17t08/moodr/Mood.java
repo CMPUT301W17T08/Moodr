@@ -13,19 +13,20 @@ public class Mood implements Serializable{
     private Date date;
     private String owner;
     private int id;
-    private Emotion emotion;
+    //private Emotion emotion;
+    private String emotion; // Change later
     private String imgUrl;
     private String trigger;
     private String situation;
-    private Location location;
+    private String location;
 
-    public Mood(Date date, String owner, Emotion emotion, String imgUrl,  String trigger, String situation, Location location)
+    public Mood(String owner, String emotion)
     {
         this.date = new Date(System.currentTimeMillis());
         setUsername(owner);
         setEmotion(emotion);
-        //setImgUrl(imgUrl);
-        //setTrigger(trigger);
+        setImgUrl(imgUrl);
+        setTrigger(trigger);
         setSituation(situation);
         setLocation(location);
 
@@ -47,12 +48,20 @@ public class Mood implements Serializable{
     }
 
 
+    public String getEmotion(){
+        return emotion;
+    }
+    public void setEmotion(String emotion){
+        this.emotion=emotion;
+    }
+/*
     public Emotion getEmotion(){
         return emotion;
     }
     public void setEmotion(Emotion emotion){
         this.emotion=emotion;
     }
+*/
 
     public int getId(){
         return id;
@@ -64,21 +73,14 @@ public class Mood implements Serializable{
     public String getImgUrl(){
         return imgUrl;
     }
-    public void setImgUrl(String imgUrl) throws InvalidEntryException{
-        if(imgUrl.length()>254){
-            throw new InvalidEntryException();
-        }
+    public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
 
     public String getTrigger(){
         return trigger;
     }
-    public void setTrigger(String trigger) throws InvalidEntryException {
-        if ((trigger.length() > 20) || ((trigger.length() - trigger.replace(".", "").length())>=3)){
-            throw new InvalidEntryException();
-        }
-
+    public void setTrigger(String trigger){
             this.trigger=trigger;
     }
 
@@ -89,10 +91,10 @@ public class Mood implements Serializable{
         this.situation=situation;
     }
 
-    public Location getLocation(){
+    public String getLocation(){
         return location;
     }
-    public void setLocation(Location location){
+    public void setLocation(String location){
         this.location=location;
     }
 }
