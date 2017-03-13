@@ -37,7 +37,7 @@ import java.util.List;
  */
 
 
-public class EditMoodActivity extends Activity {
+public class EditMoodActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
     private ImageView imageView;
     private Button locationButton;
@@ -58,8 +58,6 @@ public class EditMoodActivity extends Activity {
     private String trigger;
     private String situation;
     private String location;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +103,7 @@ public class EditMoodActivity extends Activity {
         emotion_spinner.setAdapter(emotionAdapter);
         situation_spinner.setAdapter(situationAdapter);
 
-
+        // Do something when user selects an emotion
         emotion_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -118,6 +116,8 @@ public class EditMoodActivity extends Activity {
             }
         });
 
+
+        // Do something when user selects a situation
         situation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
