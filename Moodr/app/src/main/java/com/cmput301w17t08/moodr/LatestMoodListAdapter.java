@@ -10,9 +10,12 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by kirsten on 3/4/17.
+ *
+ * This class is the custom ArrayAdapter used to display the moods on the Latest Moods List.
  *
  * Taken from https://github.com/codepath/android_guides/wiki/Using-an-ArrayAdapter-with-ListView
  * 03-04-2017
@@ -41,7 +44,7 @@ public class LatestMoodListAdapter extends ArrayAdapter<Mood> {
         moodName.setText(mood.getEmotion().getName());
         friendName.setText(mood.getUsername());
 
-        java.text.DateFormat format = new SimpleDateFormat("mm-dd-yyyy");
+        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);
         date.setText(format.format(mood.getDate()));
 
         // Return the completed view to render on screen

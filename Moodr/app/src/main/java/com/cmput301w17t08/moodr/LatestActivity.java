@@ -51,7 +51,8 @@ public class LatestActivity extends AppCompatActivity {
         ArrayList<String> friendsList= currentUser.getMyFriendList();
         ArrayList<Mood> latest = new ArrayList<>();
 
-        ElasticSearchMoodController.GetMoodTask getMoodTask = new ElasticSearchMoodController.GetMoodTask();
+        ElasticSearchMoodController.GetLatestMoodsTask getMoodTask
+                = new ElasticSearchMoodController.GetLatestMoodsTask();
 
         for (String friend : friendsList){
             getMoodTask.execute(friend);
