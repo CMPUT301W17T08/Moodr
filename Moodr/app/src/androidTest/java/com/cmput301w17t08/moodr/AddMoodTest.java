@@ -33,7 +33,7 @@ public class AddMoodTest extends ActivityInstrumentationTestCase2<AddMoodActivit
         Activity activity = getActivity();
     }
 
-    public void testAdd(){
+    public void testAddMoodOnly(){
         ArrayList<Mood> moods = new ArrayList<Mood>();
 
         ElasticSearchMoodController.GetMoodTask getMoodTask
@@ -67,6 +67,7 @@ public class AddMoodTest extends ActivityInstrumentationTestCase2<AddMoodActivit
 
         assertNotSame(length, moods.size());
     }
+
 
     @Override
     public void tearDown() throws Exception{

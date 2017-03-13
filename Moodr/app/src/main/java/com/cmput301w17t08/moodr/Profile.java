@@ -104,7 +104,7 @@ public class Profile extends AppCompatActivity {
     private void unfollowUser(String name) throws Exception{
         // remove from own list
         CurrentUserSingleton.getInstance().getUser().removeFriend(name);
-        // update on ElasticSearch
+        // update on ElasticSearch - implement later
 
         //remove from follow list of user 2
         User user2;
@@ -123,7 +123,7 @@ public class Profile extends AppCompatActivity {
 
 
         user2.removeFriend(CurrentUserSingleton.getInstance().getUser().getName());
-        // update on elastic search
+        // update on elastic search - implement later
 
     }
 

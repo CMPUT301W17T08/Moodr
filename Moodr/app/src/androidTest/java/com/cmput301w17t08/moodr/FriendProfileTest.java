@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 
 public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile> {
     private Solo solo;
+    String name = CurrentUserSingleton.getInstance().getUser().getFriends().get(0);
 
     public FriendProfileTest() {
         super(com.cmput301w17t08.moodr.Profile.class);
@@ -32,17 +33,27 @@ public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile>
 
     public void testStart() throws Exception {
         Intent intent = new Intent();
-        intent.putExtra("name", "bob");
+        intent.putExtra("name", name);
         setActivityIntent(intent);
         Activity activity = getActivity();
     }
 
-    public void testViewMood() throws Exception{
+    public void testViewMood() {
         solo.assertCurrentActivity("Wrong Activity", Profile.class);
 
         solo.clickInList(1);
 
         solo.assertCurrentActivity("Wrong Activity", ViewFriendMoodActivity.class);
+    }
+
+    public void testUnfollow(){
+        solo.assertCurrentActivity("Wrong Activity", Profile.class);
+
+        solo.clickOnButton("Unfollow");
+
+        solo.assertCurrentActivity("Wrong Activity", FriendsActivity.class);
+
+        assert(CurrentUserSingleton.getInstance().getUser().getFriends().contains(name));
     }
 
     @Override
