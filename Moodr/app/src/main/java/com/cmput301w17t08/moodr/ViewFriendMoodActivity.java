@@ -16,7 +16,7 @@ public class ViewFriendMoodActivity extends ViewMoodActivity {
         setContentView(R.layout.activity_view_friend_mood);
 
         Intent intent = getIntent();
-        Mood mood = (Mood) intent.getSerializableExtra("mood"); // assuming that actually exists.
+        Mood mood = (Mood) intent.getSerializableExtra("mood");
 
         loadMood(mood);
     }

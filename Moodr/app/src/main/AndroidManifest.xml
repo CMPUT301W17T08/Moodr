@@ -50,15 +50,34 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity android:name=".ViewMyMoodActivity"/>
+        <activity android:name=".AddMoodActivity" />
+        <activity android:name=".ViewFriendMoodActivity" />
+        <activity
+            android:name=".StrangerProfile"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".Profile"
+            android:theme="@style/AppTheme.NoActionBar" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ViewMyMoodActivity" />
-        <activity android:name=".AddMoodActivity" />
-        <activity android:name=".ViewFriendMoodActivity" />
+            </activity>
+
+        <activity
+            android:name=".MyProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -10,13 +10,15 @@ import com.searchly.jestdroid.JestDroidClient;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
+import io.searchbox.core.Get;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 
 /**
- * Created by Canopy on 2017-03-04.
+ *
  */
 
 public class ElasticSearchUserController {
@@ -80,6 +82,33 @@ public class ElasticSearchUserController {
             return users;
         }
     }
+
+    public static class IsExist extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... params){
+            verifySettings();
+
+            User user = new User();
+
+            Get get = new Get.Builder("cmput301w17t01", params[0]).type("user").build();
+
+            try {
+                JestResult result = client.execute(get);
+                user = result.getSourceAsObject(User.class);
+            } catch (Exception e) {
+                Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
+            }
+
+            if (user == null) {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+
+
 
     public static void verifySettings() {
         if (client == null) {

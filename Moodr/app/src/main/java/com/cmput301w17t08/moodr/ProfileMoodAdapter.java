@@ -1,11 +1,11 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -13,34 +13,37 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
+ * This class is a custom adapter for the profile pages.
+ * @see Profile
+ * @see MyProfileActivity
  *
- * This class is the custom ArrayAdapter used to display the moods on the Latest Moods List.
- * Taken from https://github.com/codepath/android_guides/wiki/Using-an-ArrayAdapter-with-ListView
- *
+ * Created by kirsten on 13/03/17.
  */
 
-public class LatestMoodListAdapter extends ArrayAdapter<Mood> {
-    public LatestMoodListAdapter(Context context, ArrayList<Mood> moods) {
+
+public class ProfileMoodAdapter extends ArrayAdapter<Mood> {
+    public ProfileMoodAdapter(Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
         Mood mood = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.latest_mood_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.profile_mood_item, parent, false);
         }
         // Lookup view for data population
-        TextView moodName = (TextView) convertView.findViewById(R.id.moodName);
-        TextView friendName = (TextView) convertView.findViewById(R.id.friendName);
-        TextView date = (TextView) convertView.findViewById(R.id.postDate);
+        TextView moodName = (TextView) convertView.findViewById(R.id.profileMood);
+        TextView date = (TextView) convertView.findViewById(R.id.profilePostDate);
+        ImageView icon = (ImageView) convertView.findViewById(R.id.profileMoodIcon);
 
         // Populate the data into the template view using the data object
 
-        //moodName.setText(mood.getEmotion().getName());
-        friendName.setText(mood.getUsername());
+        icon.setImageResource(mood.getEmotion().getEmoticon());
+
+        moodName.setText(mood.getEmotion().getName());
 
         java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);
         date.setText(format.format(mood.getDate()));
@@ -48,5 +51,4 @@ public class LatestMoodListAdapter extends ArrayAdapter<Mood> {
         // Return the completed view to render on screen
         return convertView;
     }
-
 }

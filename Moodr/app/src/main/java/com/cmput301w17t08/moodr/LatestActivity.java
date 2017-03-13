@@ -15,8 +15,10 @@ import java.util.ArrayList;
 
 
 /**
+ *
  * This activity displays the latest mood of all friends on the user's friends list. It finds
  * the latest moods using elastic search.
+ *
  */
 public class LatestActivity extends AppCompatActivity {
     private LatestMoodListAdapter adapter;
