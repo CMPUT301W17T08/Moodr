@@ -31,6 +31,12 @@ public class Mood implements Serializable{
 
     }
 
+    public Mood(String owner, Emotion emotion){
+        this.owner = owner;
+        this.emotion = emotion;
+        this.date = new Date(System.currentTimeMillis());
+    }
+
     public String getUsername(){
         return owner;
     }

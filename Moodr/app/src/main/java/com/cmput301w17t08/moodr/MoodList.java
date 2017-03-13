@@ -24,4 +24,9 @@ public class MoodList {
     public Mood getMood(int index){
         return moodlist.get(index);
     }
+
+    public ArrayList<Mood> getMoodlist(){
+        return moodlist;
+    }
+
 }
