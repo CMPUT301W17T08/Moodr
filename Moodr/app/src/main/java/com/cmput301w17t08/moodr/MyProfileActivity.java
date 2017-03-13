@@ -57,6 +57,8 @@ public class MyProfileActivity extends Profile {
         Intent intent  = new Intent(this, AddMoodActivity.class);
         startActivity(intent);
         // notify adapter
+        moods.clear();
+        moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
         adapter.notifyDataSetChanged();
     }
 

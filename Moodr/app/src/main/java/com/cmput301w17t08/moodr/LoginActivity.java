@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                 UserName = loginText.getText().toString();
                 if(validUser(UserName)){
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    CurrentUserSingleton.getInstance().getUser().setName(UserName);
                     startActivity(intent);
                 }
             }
@@ -69,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            CurrentUserSingleton.getInstance().getUser().setName(Username);
             startActivity(intent);
             return true;
         }catch (Exception e){

@@ -10,6 +10,8 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
 
+import junit.framework.TestCase;
+
 /**
  * Created by kskwong on 3/13/17.
  */

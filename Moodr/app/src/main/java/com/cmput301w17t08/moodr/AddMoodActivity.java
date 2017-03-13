@@ -274,7 +274,8 @@ public class AddMoodActivity extends AppCompatActivity {
         mood.setImgUrl("PLACEHOLDER");
 
         ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
-        addMoodTask.execute(mood);
+        CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+        addMoodTask.execute(mood);bob
 
     }
 

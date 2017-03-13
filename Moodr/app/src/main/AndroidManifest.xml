@@ -29,7 +29,15 @@
         <activity android:name=".LatestActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            </activity>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -68,11 +76,7 @@
             android:name=".Profile"
             android:theme="@style/AppTheme.NoActionBar" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             </activity>
 
         <activity
