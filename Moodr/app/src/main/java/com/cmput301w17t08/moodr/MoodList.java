@@ -6,6 +6,8 @@ import java.util.ArrayList;
  * Created by ZL on 3/4/2017.
  */
 public class MoodList {
+    private ArrayList<Mood> listOfMoods;
+
     private ArrayList<Mood> moodlist = new ArrayList<Mood>();
 
     public void add(Mood mood){
@@ -27,6 +29,15 @@ public class MoodList {
 
     public ArrayList<Mood> getMoodlist(){
         return moodlist;
+    }
+
+
+    public void setListOfMoods (ArrayList<Mood> listOfMoods){
+        this.listOfMoods = listOfMoods;
+    }
+
+    public ArrayList<Mood> getListOfMoods(){
+        return this.listOfMoods;
     }
 
 }
