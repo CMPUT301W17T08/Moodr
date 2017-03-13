@@ -7,13 +7,8 @@ package com.cmput301w17t08.moodr;
 import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
-import android.widget.EditText;
-import android.widget.ListView;
 
 import com.robotium.solo.Solo;
-
-import junit.framework.TestCase;
 
 /**
  * Created by kskwong on 3/13/17.
