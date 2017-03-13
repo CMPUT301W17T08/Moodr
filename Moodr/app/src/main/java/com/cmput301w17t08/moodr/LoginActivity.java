@@ -12,7 +12,9 @@ import android.widget.Toast;
 
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via user/password.
+ * Current issue: Screen does not exit immediately, user must manually press the back button on
+ * the phone.
  */
 public class LoginActivity extends AppCompatActivity {
 
