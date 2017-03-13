@@ -18,6 +18,15 @@ public class User {
         this.pending = new ArrayList<String>();
     }
 
+    public User() {
+
+    }
+
+    public User(String username) {
+
+    }
+
+
     public String getUsername() {
         return name;
     }
