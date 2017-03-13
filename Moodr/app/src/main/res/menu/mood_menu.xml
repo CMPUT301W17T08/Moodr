@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="Edit Mood"
+        android:id="@+id/edit_mood"
+        android:icon="@drawable/ic_mode_edit_black_24dp"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:title="Delete"
+        android:id="@+id/delete_mood"
+        android:icon="@drawable/ic_delete_black_24dp"
+        app:showAsAction="always"
+        />
+
+</menu>
