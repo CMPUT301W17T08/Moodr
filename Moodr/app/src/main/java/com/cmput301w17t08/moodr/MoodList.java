@@ -3,7 +3,9 @@ package com.cmput301w17t08.moodr;
 import java.util.ArrayList;
 
 /**
- * Created by ZL on 3/4/2017.
+ *
+ * The superclass of the MoodLists. This class holds the necessary functions to add and delete
+ * moods on the list.
  */
 public class MoodList {
     private ArrayList<Mood> listOfMoods;
@@ -27,11 +29,6 @@ public class MoodList {
         return moodlist.get(index);
     }
 
-    public ArrayList<Mood> getMoodlist(){
-        return moodlist;
-    }
-
-
     public void setListOfMoods (ArrayList<Mood> listOfMoods){
         this.listOfMoods = listOfMoods;
     }
@@ -39,5 +36,4 @@ public class MoodList {
     public ArrayList<Mood> getListOfMoods(){
         return this.listOfMoods;
     }
-
 }

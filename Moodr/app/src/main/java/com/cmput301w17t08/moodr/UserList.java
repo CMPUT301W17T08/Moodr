@@ -1,7 +1,9 @@
 package com.cmput301w17t08.moodr;
 
 /**
- * Created by ZL on 3/4/2017.
+ *
+ * List of the current logged in user's moods.
+ *
  */
 public class UserList {
 }

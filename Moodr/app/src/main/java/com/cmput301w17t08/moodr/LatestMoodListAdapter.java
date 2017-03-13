@@ -13,12 +13,10 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- * Created by kirsten on 3/4/17.
  *
  * This class is the custom ArrayAdapter used to display the moods on the Latest Moods List.
- *
  * Taken from https://github.com/codepath/android_guides/wiki/Using-an-ArrayAdapter-with-ListView
- * 03-04-2017
+ *
  */
 
 public class LatestMoodListAdapter extends ArrayAdapter<Mood> {

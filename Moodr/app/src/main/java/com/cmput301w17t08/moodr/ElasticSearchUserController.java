@@ -18,7 +18,7 @@ import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 
 /**
- * Created by Canopy on 2017-03-04.
+ *
  */
 
 public class ElasticSearchUserController {

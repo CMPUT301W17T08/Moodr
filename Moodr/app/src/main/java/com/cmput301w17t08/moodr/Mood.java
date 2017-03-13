@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 /**
- * Created by ZL on 2/25/2017.
+ *
+ * The mood class which holds all the relevant information for the mooditself
+ *
  */
 public class Mood implements Serializable{
     private Date date;

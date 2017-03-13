@@ -3,7 +3,7 @@ package com.cmput301w17t08.moodr;
 import android.graphics.Color;
 
 /**
- * Created by kirsten on 2/27/17.
+ *
  * This class stores information of all possible emotions in a Mood.
  * The separate class prevents clutter when getting information specific to the emotion portion
  * of the Mood.

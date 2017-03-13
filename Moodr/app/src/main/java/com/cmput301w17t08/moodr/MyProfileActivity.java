@@ -3,8 +3,6 @@ package com.cmput301w17t08.moodr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,7 +29,7 @@ public class MyProfileActivity extends Profile {
         setSupportActionBar(toolbar);
 
         user = CurrentUserSingleton.getInstance().getUser();
-        moods = CurrentUserSingleton.getInstance().getMyMoodList().getMoodlist();
+        moods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
         moodsListview = (ListView) findViewById(R.id.profile_moodlist);
 
         setTitle(user.getName());

@@ -6,7 +6,11 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- * Created by sal on 2/27/17.
+ *
+ * When offline the app will place any new added/edited/deleted moods onto an array stored within
+ * the device storage. When the device goes back online, this list is compared with the list
+ * on elasticsearch and changes are made accordingly.
+ *
  */
 
 public class OfflineMode {
