@@ -30,6 +30,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/*
+*
+* EditMoodActivity class edits pre-existing mood and updates it onto elasticsearch server
+*
+ */
+
+
 public class EditMoodActivity extends Activity {
     private static final int SELECT_PICTURE = 100;
     private ImageView imageView;

@@ -39,8 +39,16 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Sal on 3/10/2017.
+ *
+ * AddMoodActivity Class creates a new mood which the user can set the inputs to what they desire
+ * with some limitations.
+ * Some features do not work yet, this includes: Location reverse geocoded to actual addresses,
+ * image encoding, and character limits. Each mood is seperately added onto the elasticsearch
+ * server
+ *
  */
+
+
 
 public class AddMoodActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
@@ -217,7 +225,7 @@ public class AddMoodActivity extends AppCompatActivity {
     }
 
 
-
+    // Creates the actionbar at the top
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
         // Adds the icons to the action bar is it present
@@ -225,13 +233,16 @@ public class AddMoodActivity extends AppCompatActivity {
         return true;
     }
 
+    // When one of the buttons are selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // X button
             case R.id.action_add_cancel:
                 finish();
                 return true;
 
+            // Checkmark button
             case R.id.action_add_complete:
                 // Create mood and send it right to elasticSearch
                 createMood(emotion, situation, trigger);
@@ -294,7 +305,7 @@ public class AddMoodActivity extends AppCompatActivity {
         }
     }
 
-    /* Gets new location and makes changex to the old one if need be */
+    /* Gets new location and makes changes to the old one if need be */
     public void acquireLocation() {
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
