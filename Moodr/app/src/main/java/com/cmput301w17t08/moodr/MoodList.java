@@ -35,4 +35,8 @@ public class MoodList {
     public ArrayList<Mood> getListOfMoods(){
         return this.listOfMoods;
     }
+
+    public int getSize(){
+        return listOfMoods.size();
+    }
 }

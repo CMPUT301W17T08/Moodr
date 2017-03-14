@@ -8,16 +8,15 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,28 +29,29 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- *
  * AddMoodActivity Class creates a new mood which the user can set the inputs to what they desire
  * with some limitations.
  * Some features do not work yet, this includes: Location reverse geocoded to actual addresses,
  * image encoding, and character limits. Each mood is seperately added onto the elasticsearch
  * server
- *
  */
-
 
 
 public class AddMoodActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
+    private static final String TAG = "MainActivity";
+    /* When button for image is pressed */
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
     private ImageView imageView;
     private Button locationButton;
     private LocationManager locationManager;
@@ -62,9 +62,6 @@ public class AddMoodActivity extends AppCompatActivity {
     private EditText editTrigger;
     private InputFilter filter;
     private String selected_emotion;
-
-
-
     private Date date;
     private String owner;
     private int id;
@@ -74,8 +71,6 @@ public class AddMoodActivity extends AppCompatActivity {
     private String situation;
     private String location;
 
-    private static final String TAG = "MainActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +78,7 @@ public class AddMoodActivity extends AppCompatActivity {
 
         // Create the spinner drop-down
         Spinner emotion_spinner = (Spinner) findViewById(R.id.sp_emotion);
-        List<String> emotion_categories = new ArrayList<String>();
+        final List<String> emotion_categories = new ArrayList<String>();
         // Add the strings to the drop-down for mood
         emotion_categories.add("Happy");
         emotion_categories.add("Sad");
@@ -125,6 +120,33 @@ public class AddMoodActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected_emotion = parent.getItemAtPosition(position).toString();
+
+                switch(selected_emotion){
+                    case "Happy":
+                        emotion = Emotion.happy;
+                        break;
+                    case "Sad":
+                        emotion = Emotion.sad;
+                        break;
+                    case "Angry":
+                        emotion = Emotion.angry;
+                        break;
+                    case "Confused":
+                        emotion = Emotion.confused;
+                        break;
+                    case "Disgust":
+                        emotion = Emotion.disgust;
+                        break;
+                    case "Scared":
+                        emotion = Emotion.fear;
+                        break;
+                    case "Shame":
+                        emotion = Emotion.shame;
+                        break;
+                    case "Surprised":
+                        emotion = Emotion.surprise;
+                        break;
+                }
             }
 
             @Override
@@ -148,7 +170,7 @@ public class AddMoodActivity extends AppCompatActivity {
 
         editTrigger = (EditText) findViewById(R.id.et_trigger);
         // Need to set limit of text field to 20 characters or 3 words
-        http://stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
+//        http:stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
 
         editTrigger.addTextChangedListener(new TextWatcher() {
             @Override
@@ -225,10 +247,9 @@ public class AddMoodActivity extends AppCompatActivity {
 
     }
 
-
     // Creates the actionbar at the top
     @Override
-    public boolean onCreateOptionsMenu (Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Adds the icons to the action bar is it present
         getMenuInflater().inflate(R.menu.menu_add_mood, menu);
         return true;
@@ -255,30 +276,6 @@ public class AddMoodActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void createMood(Emotion emotion, String situation, String trigger){
-        // Grab owner
-        owner = CurrentUserSingleton.getInstance().getUser().getName();
-        // Grab emotion
-        emotion = Emotion.happy;
-        // Create the mood
-        Mood mood = new Mood(owner, emotion);
-
-        id = 1;
-        mood.setId(id);
-
-        location = locationText.getText().toString();
-        mood.setLocation(location);
-
-        mood.setTrigger(trigger);
-
-        mood.setImgUrl("PLACEHOLDER");
-
-        ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
-        CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-        addMoodTask.execute(mood);
-
-    }
-
 /*
     public String encodeIMG(Uri uri){
         InputStream inputStream = new FileInputStream(uri);
@@ -297,6 +294,31 @@ public class AddMoodActivity extends AppCompatActivity {
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
     */
+
+    public void createMood(Emotion emotion, String situation, String trigger) {
+        // Grab owner
+        owner = CurrentUserSingleton.getInstance().getUser().getName();
+        // Create the mood
+        Mood mood = new Mood(owner, emotion);
+
+        Log.d("MOOD ID", Integer.toString(id));
+        mood.setId(id);
+
+        location = locationText.getText().toString();
+
+        mood.setSituation(situation);
+
+        mood.setLocation(location);
+
+        mood.setTrigger(trigger);
+
+//        mood.setImgUrl("PLACEHOLDER");
+
+        ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
+        CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+        addMoodTask.execute(mood);
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -328,14 +350,6 @@ public class AddMoodActivity extends AppCompatActivity {
             }
         });
     }
-
-    /* When button for image is pressed */
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
 
     /* Choose an image from Gallery */
     void chooseImage() {
@@ -378,7 +392,6 @@ public class AddMoodActivity extends AppCompatActivity {
     }
 
 
-
     /* Functions for character limit on trigger, 20 characters or 3 words */
     private int countWords(String s) {
         String trim = s.trim();
@@ -389,7 +402,7 @@ public class AddMoodActivity extends AppCompatActivity {
 
     private void setCharLimit(EditText et, int max) {
         filter = new InputFilter.LengthFilter(max);
-        et.setFilters(new InputFilter[] { filter });
+        et.setFilters(new InputFilter[]{filter});
     }
 
     private void removeFilter(EditText et) {
