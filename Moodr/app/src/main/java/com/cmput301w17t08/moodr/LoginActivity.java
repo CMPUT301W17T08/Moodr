@@ -47,6 +47,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Button SignUpButton = (Button) findViewById(R.id.signup_button);
+        loginText = (EditText) findViewById(R.id.username);
+        SignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserName = loginText.getText().toString();
+                createUser(UserName);
+            }
+        });
+
+
     }
     private boolean validUser (String name){
         ElasticSearchUserController.IsExist isExist = new ElasticSearchUserController.IsExist();
@@ -55,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
             if(isExist.get()){
                 return true;
             } else{
-                createUser(UserName);
+                Toast.makeText(getApplicationContext(),
+                        "Invalid User Name. Log in failed.",
+                        Toast.LENGTH_SHORT).show();
                 return false;}
         } catch (Exception e) {
             Log.i("Error", "Failed to get the User out of the async object");
