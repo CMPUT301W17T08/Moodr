@@ -18,7 +18,7 @@ public enum CurrentUserSingleton {
     private final MoodList myMoodList;
 
     CurrentUserSingleton() {
-        user = new User("placeholder", "placeholder");
+        user = new User("placeholder");
         myMoodList = new MoodList();
     }
 

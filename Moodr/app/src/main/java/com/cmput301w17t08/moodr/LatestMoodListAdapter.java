@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -36,10 +37,12 @@ public class LatestMoodListAdapter extends ArrayAdapter<Mood> {
         TextView moodName = (TextView) convertView.findViewById(R.id.moodName);
         TextView friendName = (TextView) convertView.findViewById(R.id.friendName);
         TextView date = (TextView) convertView.findViewById(R.id.postDate);
+        ImageView icon = (ImageView) convertView.findViewById(R.id.moodIcon);
 
         // Populate the data into the template view using the data object
 
-        //moodName.setText(mood.getEmotion().getName());
+        moodName.setText(mood.getEmotion().getName());
+//        icon.setImageResource(mood.getEmotion().getEmoticon());
         friendName.setText(mood.getUsername());
 
         java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);

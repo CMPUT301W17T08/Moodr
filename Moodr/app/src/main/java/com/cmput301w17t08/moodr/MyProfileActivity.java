@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -48,7 +50,15 @@ public class MyProfileActivity extends Profile {
                 goToMood(i);
             }
         });
+
     }
+
+
+
+
+
+
+
 
     /**
      * goes to add mood activity to add a mood
@@ -56,7 +66,6 @@ public class MyProfileActivity extends Profile {
     private void addMood(){
         Intent intent  = new Intent(this, AddMoodActivity.class);
         startActivity(intent);
-        // notify adapter
         adapter.notifyDataSetChanged();
     }
 
@@ -65,11 +74,14 @@ public class MyProfileActivity extends Profile {
      * @param i index of the mood in moodList
      */
     private void goToMood(int i){
-        Intent intent = new Intent(this, ViewMoodActivity.class);
+        Intent intent = new Intent(this, ViewMyMoodActivity.class);
         intent.putExtra("index", i);
         startActivity(intent);
         adapter.notifyDataSetChanged(); // in case the user edits or deletes a mood
     }
+
+
+
 
     @Override
     public void onStart() {
@@ -81,6 +93,11 @@ public class MyProfileActivity extends Profile {
         adapter = new ProfileMoodAdapter(this, moods);
 
         moodsListview.setAdapter(adapter);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
     }
 
     @Override

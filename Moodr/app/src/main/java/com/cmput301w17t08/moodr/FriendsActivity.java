@@ -26,6 +26,10 @@ import java.util.ArrayList;
 
 /**
  *
+ * The FriendsActivity class displays a list of current friends that are following you and
+ * you are following back. It also shows list of pending friend requests. Either can be accessed
+ * by pressing one of the tabs
+ *
  */
 public class FriendsActivity extends AppCompatActivity {
 

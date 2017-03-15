@@ -15,14 +15,13 @@ public class Mood implements Serializable{
     private Date date;
     private String owner;
     private int id;
-    //private Emotion emotion;
-    private String emotion; // Change later
+    private Emotion emotion;
     private String imgUrl;
     private String trigger;
     private String situation;
     private String location;
 
-    public Mood(String owner, String emotion)
+    public Mood(String owner, Emotion emotion)
     {
         this.date = new Date(System.currentTimeMillis());
         setUsername(owner);
@@ -49,21 +48,12 @@ public class Mood implements Serializable{
         this.date = date;
     }
 
-
-    public String getEmotion(){
-        return emotion;
-    }
-    public void setEmotion(String emotion){
-        this.emotion=emotion;
-    }
-/*
     public Emotion getEmotion(){
         return emotion;
     }
     public void setEmotion(Emotion emotion){
         this.emotion=emotion;
     }
-*/
 
     public int getId(){
         return id;

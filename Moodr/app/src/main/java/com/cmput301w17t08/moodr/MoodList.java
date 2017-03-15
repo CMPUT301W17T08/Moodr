@@ -8,25 +8,24 @@ import java.util.ArrayList;
  * moods on the list.
  */
 public class MoodList {
-    private ArrayList<Mood> listOfMoods;
 
-    private ArrayList<Mood> moodlist = new ArrayList<Mood>();
+    private ArrayList<Mood> listOfMoods = new ArrayList<Mood>();
 
     public void add(Mood mood){
-        if(moodlist.contains(mood)){
+        if(listOfMoods.contains(mood)){
             throw new IllegalArgumentException();
         }
         else {
-            moodlist.add(mood);
+            listOfMoods.add(mood);
         }
     }
 
     public void delete(Mood mood){
-        moodlist.remove(mood);
+        listOfMoods.remove(mood);
     }
 
     public Mood getMood(int index){
-        return moodlist.get(index);
+        return listOfMoods.get(index);
     }
 
     public void setListOfMoods (ArrayList<Mood> listOfMoods){
@@ -35,5 +34,9 @@ public class MoodList {
 
     public ArrayList<Mood> getListOfMoods(){
         return this.listOfMoods;
+    }
+
+    public int getSize(){
+        return listOfMoods.size();
     }
 }

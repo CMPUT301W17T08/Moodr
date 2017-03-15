@@ -40,11 +40,23 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
                 if(validUser(UserName)){
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+                    CurrentUserSingleton.getInstance().getUser().setName(UserName);
                     startActivity(intent);
                 }
             }
         });
+
+        Button SignUpButton = (Button) findViewById(R.id.signup_button);
+        loginText = (EditText) findViewById(R.id.username);
+        SignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserName = loginText.getText().toString();
+                createUser(UserName);
+            }
+        });
+
 
     }
     private boolean validUser (String name){
@@ -54,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
             if(isExist.get()){
                 return true;
             } else{
-                createUser(UserName);
+                Toast.makeText(getApplicationContext(),
+                        "Invalid User Name. Log in failed.",
+                        Toast.LENGTH_SHORT).show();
                 return false;}
         } catch (Exception e) {
             Log.i("Error", "Failed to get the User out of the async object");
@@ -68,7 +82,8 @@ public class LoginActivity extends AppCompatActivity {
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+            CurrentUserSingleton.getInstance().getUser().setName(Username);
             startActivity(intent);
             return true;
         }catch (Exception e){
