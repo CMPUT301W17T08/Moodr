@@ -103,7 +103,7 @@ public class LatestActivity extends AppCompatActivity {
         super.onStop();
     }
 
-/*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mood_menu, menu);
@@ -122,5 +122,5 @@ public class LatestActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    */
+
 }
