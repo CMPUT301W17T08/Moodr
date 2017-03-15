@@ -51,7 +51,7 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
 
         mood_name.setText(mood.getEmotion().getName());
 
-        // set emoticon
+//         set emoticon
         mood_icon.setImageResource(mood.getEmotion().getEmoticon());
 
         // date needs to be converted to a string
@@ -70,12 +70,12 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
             trigger.setText(trig);
         }
 
-
+/*
         Location loc = mood.getLocation();
         if (loc != null){
            location.setText(loc.toString());
         }
-
+*/
 
         String imgURL = mood.getImgUrl();
         if (imgURL != null){

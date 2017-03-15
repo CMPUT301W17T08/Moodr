@@ -14,6 +14,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/*
+*
+*  The main activity of the app. The app is a social media platform which allows users to
+*  display their moods and also view the moods of their friends.
+*  Current Issues: None so far
+*
+ */
+
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -24,8 +33,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
+//         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//         startActivity(intent);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,11 +96,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            Intent intent = new Intent(MainActivity.this, Profile.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_friends) {
-            Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
+            Intent intent = new Intent(MainActivity.this, EditMoodActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_near) {

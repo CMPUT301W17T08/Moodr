@@ -3,25 +3,40 @@ package com.cmput301w17t08.moodr;
 import java.util.ArrayList;
 
 /**
- * Created by ZL on 3/4/2017.
+ *
+ * The superclass of the MoodLists. This class holds the necessary functions to add and delete
+ * moods on the list.
  */
 public class MoodList {
-    private ArrayList<Mood> moodlist = new ArrayList<Mood>();
+
+    private ArrayList<Mood> listOfMoods = new ArrayList<Mood>();
 
     public void add(Mood mood){
-        if(moodlist.contains(mood)){
+        if(listOfMoods.contains(mood)){
             throw new IllegalArgumentException();
         }
         else {
-            moodlist.add(mood);
+            listOfMoods.add(mood);
         }
     }
 
     public void delete(Mood mood){
-        moodlist.remove(mood);
+        listOfMoods.remove(mood);
     }
 
     public Mood getMood(int index){
-        return moodlist.get(index);
+        return listOfMoods.get(index);
+    }
+
+    public void setListOfMoods (ArrayList<Mood> listOfMoods){
+        this.listOfMoods = listOfMoods;
+    }
+
+    public ArrayList<Mood> getListOfMoods(){
+        return this.listOfMoods;
+    }
+
+    public int getSize(){
+        return listOfMoods.size();
     }
 }

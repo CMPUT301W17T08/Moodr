@@ -40,4 +40,8 @@
     <string name="action_add_complete">Done</string>
     <string name="action_add_cancel">Cancel</string>
 
+    <!--Strings related to profile-->
+    <string name="unfollow">Unfollow</string>
+    <string name="follow">Follow</string>
+
 </resources>

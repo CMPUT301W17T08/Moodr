@@ -3,36 +3,26 @@ package com.cmput301w17t08.moodr;
 import java.util.ArrayList;
 
 /**
- * Created by ZL on 2/25/2017.
+ * User class, holds information relaevant to the current user.
+ * TODO: Outdated, get rid of email and perhaps password,
  */
 public class User {
     private String name;
-    private String email;
     private ArrayList<String> friends;
     private ArrayList<String> pending;
 
-    public User(String name, String email){
-        this.name = name;
-        this.email = email;
-        this.friends = new ArrayList<String>();
-        this.pending = new ArrayList<String>();
-    }
-
-    public User() {
-
-    }
-
     public User(String username) {
+        this.name = username;
+        friends = new ArrayList<String>();
+        pending = new ArrayList<String>();
 
     }
 
+    public User(){
+    }
 
     public String getUsername() {
         return name;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public ArrayList<String> getMyFriendList() {
@@ -63,7 +53,7 @@ public class User {
         this.name = name;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void removeFriend(String name){
+        friends.remove(name);
     }
 }

@@ -1,7 +1,7 @@
 package com.cmput301w17t08.moodr;
 
 /**
- * Created by kirsten on 3/9/17.
+ *
  * This class is a singleton used to store an instance of the User class for the current logged in
  * user, and their mood list. The instance of this class is used throughout the app when information
  * of the user is needed.
@@ -18,7 +18,7 @@ public enum CurrentUserSingleton {
     private final MoodList myMoodList;
 
     CurrentUserSingleton() {
-        user = new User("placeholder", "placeholder");
+        user = new User("placeholder");
         myMoodList = new MoodList();
     }
 

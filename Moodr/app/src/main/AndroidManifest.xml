@@ -29,7 +29,15 @@
         <activity android:name=".LatestActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            </activity>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -47,18 +55,36 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:name=".Profile"
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
-        <activity android:name=".ViewMyMoodActivity" />
+        <activity android:name=".ViewMyMoodActivity"/>
         <activity android:name=".AddMoodActivity" />
         <activity android:name=".ViewFriendMoodActivity" />
+        <activity
+            android:name=".StrangerProfile"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" >
+
+
+            </activity>
+
+        <activity
+            android:name=".MyProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".EditMoodActivity"/>
     </application>
 
 </manifest>

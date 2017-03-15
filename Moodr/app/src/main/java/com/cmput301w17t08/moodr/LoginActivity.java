@@ -12,7 +12,9 @@ import android.widget.Toast;
 
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via user/password.
+ * Current issue: Screen does not exit immediately, user must manually press the back button on
+ * the phone.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -38,7 +40,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
                 if(validUser(UserName)){
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+                    CurrentUserSingleton.getInstance().getUser().setName(UserName);
                     startActivity(intent);
                 }
             }
@@ -66,7 +69,8 @@ public class LoginActivity extends AppCompatActivity {
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+            CurrentUserSingleton.getInstance().getUser().setName(Username);
             startActivity(intent);
             return true;
         }catch (Exception e){

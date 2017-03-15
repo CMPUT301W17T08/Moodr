@@ -3,6 +3,7 @@ package com.cmput301w17t08.moodr;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,16 +25,15 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
 
         index = intent.getIntExtra("index", -1);
 
-        mood = CurrentUserSingleton.getInstance().getMyMoodList().getMood(index);
-
-
-        // if for some reason the index is -1
+        // if for whatever reason the mood index does not exist.
         try {
-            loadMood(mood);
+            mood = CurrentUserSingleton.getInstance().getMyMoodList().getMood(index);
         }
-        catch(Exception e){
-            throw new RuntimeException(e);
+        catch (Exception e){
+            Log.d("Error", "Invalid mood index");
         }
+
+        loadMood(mood);
 
     }
 
@@ -42,6 +42,11 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
      */
     private void deleteMood(){
         CurrentUserSingleton.getInstance().getMyMoodList().delete(mood);
+
+        //update on server
+        ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
+        deleteMoodTask.execute(mood.getUsername(), Integer.toString(mood.getId()));
+
         finish();
     }
 

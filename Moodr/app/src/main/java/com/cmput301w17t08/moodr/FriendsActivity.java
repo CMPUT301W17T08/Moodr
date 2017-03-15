@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,7 +24,11 @@ import java.util.ArrayList;
 
 
 /**
- * Created by ZL on 3/4/2017.
+ *
+ * The FriendsActivity class displays a list of current friends that are following you and
+ * you are following back. It also shows list of pending friend requests. Either can be accessed
+ * by pressing one of the tabs
+ *
  */
 public class FriendsActivity extends AppCompatActivity {
 
@@ -61,11 +66,6 @@ public class FriendsActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
 
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
         int mNumOfTabs;
@@ -140,12 +140,19 @@ public class FriendsActivity extends AppCompatActivity {
                 ArrayList<String> curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
                 ArrayList<String> Pending = CurrentUserSingleton.getInstance().getUser().getPending();
 
+                ArrayAdapter<String> friendsAdapter = new ArrayAdapter<String>(getActivity(),R.layout.curfriends_list_items,curFriends);
+                friendsList.setAdapter(friendsAdapter);
+
+                ArrayAdapter<String> pendingAdapter = new ArrayAdapter<String>(getActivity(),R.layout.pending_list_item,Pending);
+                pendingList.setAdapter(pendingAdapter);
+
 
 
 
                 return rootView;
 
             }else {
+
 
                 View rootView = inflater.inflate(R.layout.fragment_friends_search,container,false);
                 final EditText searchBar = (EditText)rootView.findViewById(R.id.search_bar);
@@ -189,6 +196,9 @@ public class FriendsActivity extends AppCompatActivity {
                         // go into search return stranger profile
                     }
                 });
+
+                ArrayAdapter<String> resultAdapter = new ArrayAdapter<String>(getActivity(),R.layout.search_return_list_item,searchResults);
+                searchReturnList.setAdapter(resultAdapter);
 
 
                 return rootView;
