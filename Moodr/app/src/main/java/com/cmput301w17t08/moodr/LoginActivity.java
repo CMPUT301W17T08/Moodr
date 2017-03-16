@@ -48,8 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         Button SignUpButton = (Button) findViewById(R.id.signup_button);
-        loginText = (EditText) findViewById(R.id.username);
-        SignInButton.setOnClickListener(new View.OnClickListener() {
+
+        SignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
