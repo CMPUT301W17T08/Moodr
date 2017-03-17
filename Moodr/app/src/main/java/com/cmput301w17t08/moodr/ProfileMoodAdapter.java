@@ -4,10 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -22,8 +25,11 @@ import java.util.Locale;
 
 
 public class ProfileMoodAdapter extends ArrayAdapter<Mood> {
+    private ArrayList<Mood> moods;
+
     public ProfileMoodAdapter(Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
+        this.moods = moods;
     }
 
     @Override
@@ -51,4 +57,5 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> {
         // Return the completed view to render on screen
         return convertView;
     }
+
 }

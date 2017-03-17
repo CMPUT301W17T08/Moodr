@@ -178,6 +178,18 @@ public class Profile extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request it is that we're responding to
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+
+
+
+            }
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         moods = loadPosts(name);

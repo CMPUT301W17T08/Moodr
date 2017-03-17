@@ -12,7 +12,7 @@ import com.robotium.solo.Solo;
 public class MyProfileActivityTest extends ActivityInstrumentationTestCase2<MyProfileActivity> {
     Solo solo;
 
-    MyProfileActivityTest(){
+    public MyProfileActivityTest(){
         super(com.cmput301w17t08.moodr.MyProfileActivity.class);
     }
 

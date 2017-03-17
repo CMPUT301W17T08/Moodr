@@ -16,16 +16,9 @@ public class UserTest {
     public void getUsername(){
         User user;
         user = new User("john","john@ualberta.ca");
-        assertEquals(user.getUsername(), "john");
+        assertEquals(user.getName(), "john");
     }
 
-    @Test
-    public void getEmail(){
-        User user;
-        user = new User("steve","stevetest@gmail.ca");
-        assertEquals(user.getEmail(), "stevetest@gmail.ca");
-
-    }
 
     @Test
     public void getMyFriendList(){

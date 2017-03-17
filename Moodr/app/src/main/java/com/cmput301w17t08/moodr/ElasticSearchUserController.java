@@ -57,7 +57,7 @@ public class ElasticSearchUserController {
 
             ArrayList<User> users = new ArrayList<User>();
 
-            String query =  "{\"query\" : {\"term\" : { \"username\" : \"" +search_parameters[0] + "\" }}}";
+            String query =  "{\"query\" : {\"term\" : { \"name\" : \"" +search_parameters[0] + "\" }}}";
 
             // Build the query
             Search search = new Search.Builder(query)
@@ -90,7 +90,7 @@ public class ElasticSearchUserController {
 
             User user = new User();
 
-            Get get = new Get.Builder("cmput301w17t01", params[0]).type("user").build();
+            Get get = new Get.Builder("cmput301w17t8", params[0]).type("user").build();
 
             try {
                 JestResult result = client.execute(get);
