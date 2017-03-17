@@ -56,16 +56,15 @@ public class LatestActivity extends AppCompatActivity {
         ElasticSearchMoodController.GetLatestMoodsTask getMoodTask
                 = new ElasticSearchMoodController.GetLatestMoodsTask();
 
-        for (String friend : friendsList){
-            getMoodTask.execute(friend);
+        getMoodTask.execute(friendsList);
 
-            try {
+        try {
                 latest.addAll(getMoodTask.get());
             }
             catch(Exception e){
                 Log.i("Error", "Failed to get the moods out of the async object");
             }
-        }
+
 
         return latest;
     }
@@ -75,7 +74,7 @@ public class LatestActivity extends AppCompatActivity {
      */
     private void refreshMoods(){
         latestMoods.clear();
-        getLatest();
+        latestMoods.addAll(getLatest());
         adapter.notifyDataSetChanged();
     }
 
@@ -108,7 +107,7 @@ public class LatestActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mood_menu, menu);
+        getMenuInflater().inflate(R.menu.latest_menu, menu);
         return true;
     }
 

@@ -105,6 +105,12 @@ public class Profile extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_latest) {
+            Intent intent = new Intent(this, LatestActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -177,17 +183,6 @@ public class Profile extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request it is that we're responding to
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-
-
-
-            }
-        }
-    }
 
     @Override
     public void onStart() {

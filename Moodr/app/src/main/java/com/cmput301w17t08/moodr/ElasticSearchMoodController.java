@@ -90,15 +90,15 @@ public class ElasticSearchMoodController {
     }
 
     // get a list of latest moods.
-    public static class GetLatestMoodsTask extends AsyncTask<String, Void, ArrayList<Mood>> {
+    public static class GetLatestMoodsTask extends AsyncTask<ArrayList<String>, Void, ArrayList<Mood>> {
 
         @Override
-        protected ArrayList<Mood> doInBackground(String... search_parameters) {
+        protected ArrayList<Mood> doInBackground(ArrayList<String>... search_parameters) {
             verifySettings();
 
             ArrayList<Mood> moods = new ArrayList<Mood>();
 
-            for (String sp : search_parameters) {
+            for (String sp : search_parameters[0]) {
                 String query = "{ \"query\" : { \"filtered\" : { \"filter\" : { \"term\" : { \"owner\" : \"" + sp + "\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"size\" : 1}";
 
                 Search search = new Search.Builder(query)

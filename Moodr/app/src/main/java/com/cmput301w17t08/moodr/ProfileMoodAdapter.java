@@ -51,7 +51,7 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> {
 
         moodName.setText(mood.getEmotion().getName());
 
-        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);
+        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy hh:mm", Locale.US);
         date.setText(format.format(mood.getDate()));
 
         // Return the completed view to render on screen

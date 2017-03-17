@@ -83,33 +83,6 @@ public class ElasticSearchUserController {
         }
     }
 
-    public static class IsExist extends AsyncTask<String, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(String... params){
-            verifySettings();
-
-            User user = new User();
-
-            Get get = new Get.Builder("cmput301w17t8", params[0]).type("user").build();
-
-            try {
-                JestResult result = client.execute(get);
-                user = result.getSourceAsObject(User.class);
-            } catch (Exception e) {
-                Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
-            }
-
-            if (user == null) {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-
-
-
     public static void verifySettings() {
         if (client == null) {
             DroidClientConfig.Builder builder = new DroidClientConfig.Builder("http://cmput301.softwareprocess.es:8080");

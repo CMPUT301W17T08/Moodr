@@ -56,7 +56,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
-                createUser(UserName);
+                if (!validUser(UserName)) {
+                    createUser(UserName);
+                }
+                else{
+                    Toast.makeText(LoginActivity.this, "Username taken" , Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -95,10 +100,6 @@ public class LoginActivity extends AppCompatActivity {
         if (userList.size() == 0){
             return false;
         }
-
-        String test = userList.get(0).getName();
-
-        Toast.makeText(LoginActivity.this, test , Toast.LENGTH_SHORT).show();
 
 
         return true;

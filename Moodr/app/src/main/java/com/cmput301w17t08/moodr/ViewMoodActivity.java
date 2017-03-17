@@ -55,7 +55,7 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
         mood_icon.setImageResource(mood.getEmotion().getEmoticon());
 
         // date needs to be converted to a string
-        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy", Locale.US);
+        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy hh:mm", Locale.US);
 
         date.setText(dateFormat.format(mood.getDate()));
 

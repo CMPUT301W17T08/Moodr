@@ -42,10 +42,10 @@ public class LatestMoodListAdapter extends ArrayAdapter<Mood> {
         // Populate the data into the template view using the data object
 
         moodName.setText(mood.getEmotion().getName());
-//        icon.setImageResource(mood.getEmotion().getEmoticon());
+        icon.setImageResource(mood.getEmotion().getEmoticon());
         friendName.setText(mood.getUsername());
 
-        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);
+        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy hh:mm", Locale.US);
         date.setText(format.format(mood.getDate()));
 
         // Return the completed view to render on screen

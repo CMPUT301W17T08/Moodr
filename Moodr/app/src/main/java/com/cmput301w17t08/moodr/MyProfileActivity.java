@@ -55,13 +55,6 @@ public class MyProfileActivity extends Profile {
 
     }
 
-
-
-
-
-
-
-
     /**
      * goes to add mood activity to add a mood
      */
@@ -97,9 +90,6 @@ public class MyProfileActivity extends Profile {
             }
         }
     }
-
-
-
 
     @Override
     public void onStart() {
