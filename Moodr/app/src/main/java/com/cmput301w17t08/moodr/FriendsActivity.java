@@ -3,10 +3,13 @@ package com.cmput301w17t08.moodr;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -14,10 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -31,6 +32,11 @@ import java.util.ArrayList;
  *
  */
 public class FriendsActivity extends AppCompatActivity {
+
+    public static boolean isSearching = false;
+    public static AppSectionsPagerAdapter adapter;
+    public static String search_string;
+    public static ArrayList<String> searchResults;
 
 
 
@@ -46,7 +52,7 @@ public class FriendsActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final AppSectionsPagerAdapter adapter = new AppSectionsPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+        adapter = new AppSectionsPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
@@ -54,20 +60,17 @@ public class FriendsActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
-
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
     }
 
-    public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+
+    public static class AppSectionsPagerAdapter extends FragmentStatePagerAdapter {
         int mNumOfTabs;
         public AppSectionsPagerAdapter(FragmentManager fm, int NumOfTabs) {
             super(fm);
@@ -78,7 +81,9 @@ public class FriendsActivity extends AppCompatActivity {
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    return new FriendsFragment();
+                    if(isSearching==false){
+                    return new FriendsFragment();}
+                    else{return new FriendSearchedFragment();}
                 case 1:
                     return new MapFragment();
                 default:
@@ -87,140 +92,141 @@ public class FriendsActivity extends AppCompatActivity {
         }
 
         @Override
-        public int getCount() {return mNumOfTabs;}
+        public int getItemPosition(Object object) {
+            // Causes adapter to reload all Fragments when
+            // notifyDataSetChanged is called
+            return POSITION_NONE;
+        }
 
+        @Override
+        public int getCount() {return mNumOfTabs;}
 
     }
 
+
+
+
+
     public static class FriendsFragment extends Fragment {
-        String search_string;
-        boolean isSearching = false;
-        ArrayList<String> searchResults;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+            return inflater.inflate(R.layout.fragment_friends_nosearch, container, false);}
 
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState){
+            super.onViewCreated(view,savedInstanceState);
+            final EditText searchBar = (EditText)view.findViewById(R.id.search_bar);
+            ImageView searchIcon = (ImageView)view.findViewById(R.id.search_icon);
 
-            if (isSearching == false){
-
-                View rootView = inflater.inflate(R.layout.fragment_friends_nosearch, container, false);
-                final EditText searchBar = (EditText)rootView.findViewById(R.id.search_bar);
-                ImageView searchIcon = (ImageView)rootView.findViewById(R.id.search_icon);
-
-                searchIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(!searchBar.getText().toString().isEmpty()) {
-                            isSearching = true;
-                            search_string = searchBar.getText().toString();
-                            //Search
-                            //Populate searchResults
-                            // refresh
-                        }
-                    }
-                });
-
-                ListView friendsList = (ListView) rootView.findViewById(R.id.curFriends_list);
-                ListView pendingList = (ListView) rootView.findViewById(R.id.pending_list);
-
-                friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View v, int position, long id){
-                        //go into friends profile
-                    }
-                });
-
-                pendingList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View v,int position,long id){
-                        // go into pending stranger profile
-                    }
-                });
-
-                ArrayList<String> curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
-                ArrayList<String> Pending = CurrentUserSingleton.getInstance().getUser().getPending();
-
-                ArrayAdapter<String> friendsAdapter = new ArrayAdapter<String>(getActivity(),R.layout.curfriends_list_items,curFriends);
-                friendsList.setAdapter(friendsAdapter);
-
-                ArrayAdapter<String> pendingAdapter = new ArrayAdapter<String>(getActivity(),R.layout.pending_list_item,Pending);
-                pendingList.setAdapter(pendingAdapter);
-
-
-
-
-                return rootView;
-
-            }else {
-
-
-                View rootView = inflater.inflate(R.layout.fragment_friends_search,container,false);
-                final EditText searchBar = (EditText)rootView.findViewById(R.id.search_bar);
-                searchBar.setText(search_string);
-                ImageView searchIcon = (ImageView)rootView.findViewById(R.id.search_icon);
-                ImageView cancelIcon = (ImageView)rootView.findViewById(R.id.cancel_icon);
-
-                searchIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(searchBar.getText().toString().isEmpty()){
-                            isSearching=false;
-                            search_string="";
-                            searchResults = new ArrayList<String>();
-                            //refresh
-                        }
+            searchIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!searchBar.getText().toString().isEmpty()) {
                         isSearching = true;
-                        search_string=searchBar.getText().toString();
+                        search_string = searchBar.getText().toString();
                         //Search
-                        // populate searchResults
+                        //Populate searchResults
+                        // refresh
+
+                        adapter.notifyDataSetChanged();
                     }
-                });
+                }
+            });
 
-                cancelIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        isSearching = false;
-                        search_string="";
-                        searchBar.setText("");
-                        searchResults = new ArrayList<String>();
-                        //refresh
-                        //notify list changed
-                    }
-                });
+            ListView friendsList = (ListView) view.findViewById(R.id.curFriends_list);
+            ListView pendingList = (ListView) view.findViewById(R.id.pending_list);
 
-                ListView searchReturnList = (ListView) rootView.findViewById(R.id.search_return_list);
+            friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id){
+                    //go into friends profile
+                }
+            });
 
-                searchReturnList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View v,int position,long id){
-                        // go into search return stranger profile
-                    }
-                });
+            pendingList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v,int position,long id){
+                    // go into pending stranger profile
+                }
+            });
 
-                ArrayAdapter<String> resultAdapter = new ArrayAdapter<String>(getActivity(),R.layout.search_return_list_item,searchResults);
-                searchReturnList.setAdapter(resultAdapter);
+            ArrayList<String> curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
+            ArrayList<String> Pending = CurrentUserSingleton.getInstance().getUser().getPending();
 
+            ArrayAdapter<String> friendsAdapter = new ArrayAdapter<String>(getActivity(),R.layout.curfriends_list_items,curFriends);
+            friendsList.setAdapter(friendsAdapter);
 
-                return rootView;
-            }
+            ArrayAdapter<String> pendingAdapter = new ArrayAdapter<String>(getActivity(),R.layout.pending_list_item,Pending);
+            pendingList.setAdapter(pendingAdapter);
 
-
-//            View rootView = new View(getActivity());
-//            rootView = inflater.inflate(R.layout.fragment_friends_nosearch, container, false);
-//
-//            View l1 = rootView.findViewById(R.id.linear1);
-//
-//
-//
-////            LayoutInflater vi =(LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            View v = inflater.inflate(R.layout.inflater,null);
-//
-//
-//
-//            ((LinearLayout)l1).addView(v);
-//            return rootView;
         }
     }
+
+    public static class FriendSearchedFragment extends Fragment{
+
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+            return inflater.inflate(R.layout.fragment_friends_search, container, false);
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState){
+            super.onViewCreated(view,savedInstanceState);
+
+            final EditText searchBar = (EditText)view.findViewById(R.id.search_bar);
+            searchBar.setText(search_string);
+            ImageView searchIcon = (ImageView)view.findViewById(R.id.search_icon);
+            ImageView cancelIcon = (ImageView)view.findViewById(R.id.cancel_icon);
+
+            searchIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(searchBar.getText().toString().isEmpty()){
+                        isSearching=false;
+                        search_string="";
+                        searchResults = new ArrayList<String>();
+                        //refresh
+                        adapter.notifyDataSetChanged();
+                    }else{
+                    isSearching = true;
+                    search_string=searchBar.getText().toString();
+                    adapter.notifyDataSetChanged();
+                    //Search
+                    // populate searchResults
+                         }
+                }
+            });
+
+            cancelIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    isSearching = false;
+                    search_string="";
+                    searchBar.setText("");
+                    searchResults = new ArrayList<String>();
+                    //refresh
+                    //notify list changed
+                    adapter.notifyDataSetChanged();
+                }
+            });
+
+            ListView searchReturnList = (ListView) view.findViewById(R.id.search_return_list);
+
+            searchReturnList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v,int position,long id){
+                    // go into search return stranger profile
+                }
+            });
+
+            ArrayAdapter<String> resultAdapter = new ArrayAdapter<String>(getActivity(),R.layout.search_return_list_item,searchResults);
+//                searchReturnList.setAdapter(resultAdapter);
+        }
+    }
+
+
     public static class MapFragment extends Fragment {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -228,5 +234,6 @@ public class FriendsActivity extends AppCompatActivity {
             return rootView;
         }
     }
+
 
 }

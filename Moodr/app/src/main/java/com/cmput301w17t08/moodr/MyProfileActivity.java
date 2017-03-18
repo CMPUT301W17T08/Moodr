@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -48,7 +50,15 @@ public class MyProfileActivity extends Profile {
                 goToMood(i);
             }
         });
+
     }
+
+
+
+
+
+
+
 
     /**
      * goes to add mood activity to add a mood
@@ -69,6 +79,9 @@ public class MyProfileActivity extends Profile {
         startActivity(intent);
         adapter.notifyDataSetChanged(); // in case the user edits or deletes a mood
     }
+
+
+
 
     @Override
     public void onStart() {

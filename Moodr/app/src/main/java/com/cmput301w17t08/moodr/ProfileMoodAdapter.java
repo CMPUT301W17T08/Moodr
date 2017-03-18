@@ -42,7 +42,7 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> {
         // Populate the data into the template view using the data object
 
         icon.setImageResource(mood.getEmotion().getEmoticon());
-//
+
         moodName.setText(mood.getEmotion().getName());
 
         java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);

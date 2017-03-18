@@ -90,7 +90,7 @@ public class ElasticSearchUserController {
 
             User user = new User();
 
-            Get get = new Get.Builder("cmput301w17t01", params[0]).type("user").build();
+            Get get = new Get.Builder("cmput301w17t8", params[0]).type("user").build();
 
             try {
                 JestResult result = client.execute(get);
