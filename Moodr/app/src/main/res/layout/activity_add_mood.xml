@@ -38,11 +38,10 @@
         />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="357dp"
         android:layout_height="wrap_content"
         android:id="@+id/tv_trigger"
-        android:text="Trigger"
-
+        android:text="Trigger (3 words or 20 characters)"
 
         />
 
@@ -51,6 +50,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_trigger"
         android:inputType="text"
+        android:maxLength="20"
 
         />
 
@@ -62,23 +62,37 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="                    "
+            android:text="                                "
             />
-        <Button
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_camera"
+            android:src="@mipmap/ic_camera"
+            android:background="#80FFFFFF"
+            />
+
+
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_picture"
-            android:text="ADD PICTURE"
+            android:src="@mipmap/ic_gallery"
+            android:background="#80FFFFFF"
 
 
             />
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_location"
-            android:text="ADD LOCATIOn"
+            android:src="@mipmap/ic_map"
+            android:background="#80FFFFFF"
+
             />
+
     </LinearLayout>
 
     <ImageView
@@ -96,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_location"
-        />
+        android:layout_weight="0.52" />
 
 
 </LinearLayout>
