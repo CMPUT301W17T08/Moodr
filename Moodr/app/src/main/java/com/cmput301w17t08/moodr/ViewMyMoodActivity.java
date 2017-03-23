@@ -1,7 +1,6 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -47,7 +46,9 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
         ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
         deleteMoodTask.execute(mood.getUsername(), Integer.toString(mood.getId()));
 
-        finish();
+//        finish();
+        Intent intent  = new Intent(this, MyProfileActivity.class);
+        startActivity(intent);
     }
 
     /**

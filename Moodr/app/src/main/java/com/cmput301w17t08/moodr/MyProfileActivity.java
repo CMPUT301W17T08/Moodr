@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -35,6 +33,11 @@ public class MyProfileActivity extends Profile {
         moods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
 
         moodsListview = (ListView) findViewById(R.id.profile_moodlist);
+
+        moods.clear();
+        moods.addAll(loadPosts(user.getName()));
+        adapter = new ProfileMoodAdapter(this, moods);
+        moodsListview.setAdapter(adapter);
 
         setTitle(user.getName());
 
@@ -89,18 +92,6 @@ public class MyProfileActivity extends Profile {
                 });
             }
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        moods.clear();
-        moods.addAll(loadPosts(user.getName()));
-
-        adapter = new ProfileMoodAdapter(this, moods);
-
-        moodsListview.setAdapter(adapter);
     }
 
 
