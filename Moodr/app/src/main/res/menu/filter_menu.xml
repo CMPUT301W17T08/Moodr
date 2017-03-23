@@ -8,7 +8,7 @@
         android:title="@string/filter_emotion">
         <menu>
             <item
-                android:id="filter_angry"
+                android:id="@+id/filter_angry"
                 android:title="@string/angry" />
             <item
                 android:id="@+id/filter_confused"
@@ -27,7 +27,7 @@
                 android:title="@string/scared" />
 
             <item
-                android:id="filter_shame"
+                android:id="@+id/filter_shame"
                 android:title="@string/shame" />
             <item
                 android:id="@+id/filter_surprise"
