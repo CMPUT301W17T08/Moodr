@@ -99,7 +99,7 @@ public class ElasticSearchMoodController {
             ArrayList<Mood> moods = new ArrayList<Mood>();
 
             for (String sp : search_parameters[0]) {
-                String query = "{ \"query\" : { \"filtered\" : { \"filter\" : { \"term\" : { \"owner\" : \"" + sp + "\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"size\" : 1}";
+                String query = "{ \"query\" : { \"filtered\" : { \"Filter\" : { \"term\" : { \"owner\" : \"" + sp + "\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"size\" : 1}";
 
                 Search search = new Search.Builder(query)
                         .addIndex("cmput301w17t8")
@@ -148,7 +148,15 @@ public class ElasticSearchMoodController {
         }
     }
 
+    public static class GetLatestWeekTask extends  AsyncTask<String, Void, Void> {
 
+        @Override
+        protected Void doInBackground(String... search_parameters) {
+            verifySettings();
+            String query;
+
+        }
+    }
 
     public static void verifySettings() {
         if (client == null) {

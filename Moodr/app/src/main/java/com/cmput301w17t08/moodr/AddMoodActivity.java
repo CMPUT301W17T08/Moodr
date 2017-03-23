@@ -315,7 +315,12 @@ public class AddMoodActivity extends AppCompatActivity {
 
         mood.setLocation(location);
 
-        mood.setTrigger(trigger);
+        try {
+            mood.setTrigger(trigger);
+        }
+        catch(InvalidEntryException e){
+            throw new RuntimeException(); // Error checking should detect this before adding.
+        }
 
 //        mood.setImgUrl("PLACEHOLDER");
 
