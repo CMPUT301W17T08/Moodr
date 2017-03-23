@@ -3,6 +3,7 @@ package com.cmput301w17t08.moodr;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -195,9 +196,10 @@ public class AddMoodActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                trigger = editTrigger.getText().toString();
             }
         });
+
 
         trigger = editTrigger.getText().toString();
 
@@ -322,7 +324,6 @@ public class AddMoodActivity extends AppCompatActivity {
         mood.setSituation(situation);
 
         mood.setLocation(location);
-
         mood.setTrigger(trigger);
 
 //        mood.setImgUrl("PLACEHOLDER");
@@ -363,6 +364,14 @@ public class AddMoodActivity extends AppCompatActivity {
             }
         });
     }
+
+/*
+    public String getAddress (double latitude, double longitude){
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder
+    }
+
+*/
 
     /* Choose an image from Gallery */
     /* When button for image is pressed */
