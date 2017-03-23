@@ -83,8 +83,7 @@ public class ElasticSearchUserController {
         }
     }
 
-<<<<<<< HEAD
-=======
+
     public static class IsExist extends AsyncTask<String, Void, Boolean> {
         @Override
         protected Boolean doInBackground(String... params){
@@ -112,7 +111,6 @@ public class ElasticSearchUserController {
 
 
 
->>>>>>> b12b9057782cfc63f78fafd18c50960b222c0eb2
     public static void verifySettings() {
         if (client == null) {
             DroidClientConfig.Builder builder = new DroidClientConfig.Builder("http://cmput301.softwareprocess.es:8080");
