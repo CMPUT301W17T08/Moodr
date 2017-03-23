@@ -172,8 +172,6 @@ public class AddMoodActivity extends AppCompatActivity {
 
 
         editTrigger = (EditText) findViewById(R.id.et_trigger);
-        // Need to set limit of text field to 20 characters or 3 words
-//        http:stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
 
         editTrigger.addTextChangedListener(new TextWatcher() {
             @Override
