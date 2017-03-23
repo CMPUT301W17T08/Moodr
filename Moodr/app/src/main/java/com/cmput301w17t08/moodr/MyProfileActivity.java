@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -32,6 +33,7 @@ public class MyProfileActivity extends Profile {
 
         user = CurrentUserSingleton.getInstance().getUser();
         moods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
+
         moodsListview = (ListView) findViewById(R.id.profile_moodlist);
 
         setTitle(user.getName());
@@ -53,20 +55,12 @@ public class MyProfileActivity extends Profile {
 
     }
 
-
-
-
-
-
-
-
     /**
      * goes to add mood activity to add a mood
      */
     private void addMood(){
         Intent intent  = new Intent(this, AddMoodActivity.class);
-        startActivity(intent);
-        adapter.notifyDataSetChanged();
+        startActivityForResult(intent,1);
     }
 
     /**
@@ -76,12 +70,26 @@ public class MyProfileActivity extends Profile {
     private void goToMood(int i){
         Intent intent = new Intent(this, ViewMyMoodActivity.class);
         intent.putExtra("index", i);
-        startActivity(intent);
-        adapter.notifyDataSetChanged(); // in case the user edits or deletes a mood
+        startActivityForResult(intent, 1);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                for (Mood mood : moods){
+                    Log.d("Mood", mood.getEmotion().getName());
+                }
 
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+    }
 
     @Override
     public void onStart() {
@@ -95,14 +103,5 @@ public class MyProfileActivity extends Profile {
         moodsListview.setAdapter(adapter);
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 
 }

@@ -37,7 +37,7 @@ public class AddMoodTest extends ActivityInstrumentationTestCase2<AddMoodActivit
         ElasticSearchMoodController.GetMoodTask getMoodTask
                 = new ElasticSearchMoodController.GetMoodTask();
 
-        getMoodTask.execute(CurrentUserSingleton.getInstance().getUser().getUsername());
+        getMoodTask.execute(CurrentUserSingleton.getInstance().getUser().getName());
 
         try{
             moods = (ArrayList<Mood>) getMoodTask.get();

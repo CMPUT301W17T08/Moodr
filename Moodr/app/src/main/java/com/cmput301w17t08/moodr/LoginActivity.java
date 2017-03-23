@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 /**
  * A login screen that offers login via user/password.
@@ -40,8 +42,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
                 if(validUser(UserName)){
+                    Log.d("TEST", "THIS RUNS");
+                    setCurrentUser(UserName);
                     Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
-                    CurrentUserSingleton.getInstance().getUser().setName(UserName);
                     startActivity(intent);
                 }
             }
@@ -49,32 +52,59 @@ public class LoginActivity extends AppCompatActivity {
 
         Button SignUpButton = (Button) findViewById(R.id.signup_button);
 
+        loginText = (EditText) findViewById(R.id.username);
+
         SignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
-                createUser(UserName);
+                if (!validUser(UserName)) {
+                    createUser(UserName);
+                }
+                else{
+                    Toast.makeText(LoginActivity.this, "Username taken" , Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
 
     }
-    private boolean validUser (String name){
-        ElasticSearchUserController.IsExist isExist = new ElasticSearchUserController.IsExist();
-        isExist.execute(name);
-        try {
-            if(isExist.get()){
-                return true;
-            } else{
-                Toast.makeText(getApplicationContext(),
-                        "Invalid User Name. Log in failed.",
-                        Toast.LENGTH_SHORT).show();
-                return false;}
-        } catch (Exception e) {
-            Log.i("Error", "Failed to get the User out of the async object");
+//    private boolean validUser (String name){
+//        ElasticSearchUserController.IsExist isExist = new ElasticSearchUserController.IsExist();
+//        isExist.execute(name);
+//        try {
+//            if(isExist.get()){
+//                return true;
+//            } else{
+//                Toast.makeText(getApplicationContext(),
+//                        "Invalid User Name. Log in failed.",
+//                        Toast.LENGTH_SHORT).show();
+//                return false;}
+//        } catch (Exception e) {
+//            Log.i("Error", "Failed to get the User out of the async object");
+//
+//            return false;
+//        }
+//    }
 
+    private boolean validUser(String username){
+        ArrayList<User> userList = new ArrayList<User>();
+        ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
+        getUserTask.execute(username);
+
+        try{
+            userList = getUserTask.get();
+        }
+        catch(Exception e){
+            Log.i("Error", "Error getting users out of async object");
+        }
+
+        if (userList.size() == 0){
             return false;
         }
+
+
+        return true;
     }
 
     private boolean createUser(String Username){
@@ -93,6 +123,29 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    private void setCurrentUser(String username){
+        // populate all current user info here.
+        ElasticSearchUserController.GetUserTask getUserTask
+                = new ElasticSearchUserController.GetUserTask();
+
+        getUserTask.execute(username);
+        User user = new User();
+
+        try{
+            user = getUserTask.get().get(0);
+            Log.d("USERNAME", user.getName());
+        }
+        catch(Exception e){
+            Log.d("ERROR", "Error getting user from elastic search");
+        }
+
+        User currentUser = CurrentUserSingleton.getInstance().getUser();
+        currentUser.setName(user.getName());
+        currentUser.setPostID(user.getPostID());
+        currentUser.setFriends(user.getFriends());
+        currentUser.setPending(user.getPending());
     }
 
 }

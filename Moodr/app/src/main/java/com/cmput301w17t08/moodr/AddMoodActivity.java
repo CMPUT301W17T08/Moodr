@@ -270,6 +270,8 @@ public class AddMoodActivity extends AppCompatActivity {
                 // Create mood and send it right to elasticSearch
                 createMood(emotion, situation, trigger);
 
+                setResult(RESULT_OK);
+
                 // Add the mood to MoodList
                 finish();
                 return true;
@@ -302,8 +304,10 @@ public class AddMoodActivity extends AppCompatActivity {
         // Create the mood
         Mood mood = new Mood(owner, emotion);
 
-        Log.d("MOOD ID", Integer.toString(id));
+        id = CurrentUserSingleton.getInstance().getUser().getPostID();
         mood.setId(id);
+
+        CurrentUserSingleton.getInstance().getUser().incrementPostID();
 
         location = locationText.getText().toString();
 

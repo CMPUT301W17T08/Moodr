@@ -105,6 +105,12 @@ public class Profile extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_latest) {
+            Intent intent = new Intent(this, LatestActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -176,6 +182,7 @@ public class Profile extends AppCompatActivity {
         // update on elastic search - implement later
 
     }
+
 
     @Override
     public void onStart() {

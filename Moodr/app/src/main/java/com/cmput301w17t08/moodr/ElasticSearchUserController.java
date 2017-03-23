@@ -57,7 +57,7 @@ public class ElasticSearchUserController {
 
             ArrayList<User> users = new ArrayList<User>();
 
-            String query =  "{\"query\" : {\"term\" : { \"username\" : \"" +search_parameters[0] + "\" }}}";
+            String query =  "{\"query\" : {\"term\" : { \"name\" : \"" +search_parameters[0] + "\" }}}";
 
             // Build the query
             Search search = new Search.Builder(query)
@@ -82,6 +82,7 @@ public class ElasticSearchUserController {
             return users;
         }
     }
+
 
     public static class IsExist extends AsyncTask<String, Void, Boolean> {
         @Override
