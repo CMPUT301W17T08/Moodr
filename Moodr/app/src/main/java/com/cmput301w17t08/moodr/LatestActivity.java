@@ -123,4 +123,5 @@ public class LatestActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }
