@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -270,7 +268,9 @@ public class AddMoodActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // X button
             case R.id.action_add_cancel:
-                finish();
+//                finish();
+                Intent intent_cancel  = new Intent(this, MyProfileActivity.class);
+                startActivity(intent_cancel);
                 return true;
 
             // Checkmark button
