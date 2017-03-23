@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,15 +47,13 @@ import java.util.List;
 public class AddMoodActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
     private static final String TAG = "MainActivity";
-    /* When button for image is pressed */
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+
+
     private ImageView imageView;
-    private Button locationButton;
+    private ImageButton locationButton;
+    private ImageButton btnChoosePhoto;
+    private ImageButton btnOpenCamera;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private TextView locationText;
@@ -176,11 +176,6 @@ public class AddMoodActivity extends AppCompatActivity {
         editTrigger.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int wordsLength = countWords(s.toString());// words.length;
                 // count == 0 means a new word is going to start
                 if (count == 0 && wordsLength >= 3) {
@@ -188,6 +183,13 @@ public class AddMoodActivity extends AppCompatActivity {
                 } else {
                     removeFilter(editTrigger);
                 }
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
 
 
@@ -199,14 +201,20 @@ public class AddMoodActivity extends AppCompatActivity {
 
         trigger = editTrigger.getText().toString();
 
+        // Open camera on button click and use for the picture
+        btnOpenCamera = (ImageButton) findViewById(R.id.btn_camera);
+        imageView = (ImageView) findViewById(R.id.iv_imageview);
+        btnOpenCamera.setOnClickListener(btnOpenCameraPressed);
+
+
 
         // Get image file on button click
-        Button btn_choose_photo = (Button) findViewById(R.id.btn_picture);
+        btnChoosePhoto = (ImageButton) findViewById(R.id.btn_picture);
         imageView = (ImageView) findViewById(R.id.iv_imageview);
-        btn_choose_photo.setOnClickListener(btnChoosePhotoPressed);
+        btnChoosePhoto.setOnClickListener(btnChoosePhotoPressed);
 
         // Get user location on button click
-        locationButton = (Button) findViewById(R.id.btn_location);
+        locationButton = (ImageButton) findViewById(R.id.btn_location);
         locationText = (TextView) findViewById(R.id.tv_location);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -357,7 +365,15 @@ public class AddMoodActivity extends AppCompatActivity {
     }
 
     /* Choose an image from Gallery */
-    void chooseImage() {
+    /* When button for image is pressed */
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
+
+    public void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -393,6 +409,22 @@ public class AddMoodActivity extends AppCompatActivity {
                     imageView.setImageURI(selectedImageUri);
                 }
             }
+        }
+    }
+
+
+    /* When button for camera is pressed */
+    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            openCamera();
+        }
+    };
+
+    public void openCamera(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
