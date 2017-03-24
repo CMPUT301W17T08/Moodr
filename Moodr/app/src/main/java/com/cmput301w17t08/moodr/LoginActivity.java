@@ -44,8 +44,11 @@ public class LoginActivity extends AppCompatActivity {
                 if(validUser(UserName)){
                     Log.d("TEST", "THIS RUNS");
                     setCurrentUser(UserName);
+                    Toast.makeText(LoginActivity.this, "Logged In.", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Username doesn't exist.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -69,23 +72,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-//    private boolean validUser (String name){
-//        ElasticSearchUserController.IsExist isExist = new ElasticSearchUserController.IsExist();
-//        isExist.execute(name);
-//        try {
-//            if(isExist.get()){
-//                return true;
-//            } else{
-//                Toast.makeText(getApplicationContext(),
-//                        "Invalid User Name. Log in failed.",
-//                        Toast.LENGTH_SHORT).show();
-//                return false;}
-//        } catch (Exception e) {
-//            Log.i("Error", "Failed to get the User out of the async object");
-//
-//            return false;
-//        }
-//    }
 
     private boolean validUser(String username){
         ArrayList<User> userList = new ArrayList<User>();
@@ -112,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
+            Toast.makeText(LoginActivity.this, "Created new user." , Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
             CurrentUserSingleton.getInstance().getUser().setName(Username);
             startActivity(intent);

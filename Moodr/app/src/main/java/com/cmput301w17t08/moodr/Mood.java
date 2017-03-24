@@ -24,13 +24,8 @@ public class Mood implements Serializable{
     public Mood(String owner, Emotion emotion)
     {
         this.date = new Date(System.currentTimeMillis());
-        setUsername(owner);
-        setEmotion(emotion);
-        setImgUrl(imgUrl);
-        setTrigger(trigger);
-        setSituation(situation);
-        setLocation(location);
-
+        this.emotion = emotion;
+        this.owner = owner;
     }
 
     public String getUsername(){
@@ -72,8 +67,11 @@ public class Mood implements Serializable{
     public String getTrigger(){
         return trigger;
     }
-    public void setTrigger(String trigger){
-            this.trigger=trigger;
+    public void setTrigger(String trigger) throws InvalidEntryException{
+        if (trigger.length() > 20){
+            throw new InvalidEntryException();
+        }
+        this.trigger=trigger;
     }
 
     public String getSituation(){

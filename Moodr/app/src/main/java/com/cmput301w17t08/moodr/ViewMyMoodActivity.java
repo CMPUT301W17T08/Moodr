@@ -1,11 +1,13 @@
 package com.cmput301w17t08.moodr;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * This activity displays a selected mood of user who is logged into the app. In his activity, the
@@ -47,7 +49,9 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
         ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
         deleteMoodTask.execute(mood.getUsername(), Integer.toString(mood.getId()));
 
-        finish();
+//        finish();
+        Intent intent  = new Intent(this, MyProfileActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -74,11 +78,30 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
                 editMood();
                 return true;
             case R.id.delete_mood:
-                deleteMood();
+                deleteOption().show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private AlertDialog deleteOption() {
+        return new AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle("Delete Mood")
+                .setMessage("Are you sure you want to delete this mood?")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do something
+                        deleteMood();
+                        Intent intent = new Intent(ViewMyMoodActivity.this, MyProfileActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(ViewMyMoodActivity.this, "Mood deleted", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .create();
+    }
 }

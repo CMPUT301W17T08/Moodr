@@ -49,5 +49,17 @@
     <!--Strings related to profile-->
     <string name="unfollow">Unfollow</string>
     <string name="follow">Follow</string>
+    <string name="Recent">Recent</string>
+    <string name="filter_emotion">Filter by Emotion</string>
+    <string name="filter_keyword">Search Keyword</string>
+    <string name="angry">Angry</string>
+    <string name="confused">Confused</string>
+    <string name="disgusted">Disgusted</string>
+    <string name="happy">Happy</string>
+    <string name="scared">Scared</string>
+    <string name="shame">Shame</string>
+    <string name="surprise">Surprised</string>
+    <string name="sad">Sad</string>
+    <string name="Moodr">Moodr</string>
 
 </resources>

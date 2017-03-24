@@ -8,6 +8,8 @@ import com.searchly.jestdroid.JestClientFactory;
 import com.searchly.jestdroid.JestDroidClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.searchbox.core.DeleteByQuery;
@@ -99,7 +101,7 @@ public class ElasticSearchMoodController {
             ArrayList<Mood> moods = new ArrayList<Mood>();
 
             for (String sp : search_parameters[0]) {
-                String query = "{ \"query\" : { \"filtered\" : { \"filter\" : { \"term\" : { \"owner\" : \"" + sp + "\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"size\" : 1}";
+                String query = "{ \"query\" : { \"filtered\" : { \"Filter\" : { \"term\" : { \"owner\" : \"" + sp + "\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"size\" : 1}";
 
                 Search search = new Search.Builder(query)
                         .addIndex("cmput301w17t8")
@@ -119,6 +121,12 @@ public class ElasticSearchMoodController {
                     Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
                 }
             }
+            Collections.sort(moods, new Comparator<Mood>() {
+                @Override
+                public int compare(Mood mood, Mood t1) {
+                    return t1.getDate().compareTo(mood.getDate());
+                }
+            });
             return moods;
         }
     }
@@ -148,6 +156,113 @@ public class ElasticSearchMoodController {
         }
     }
 
+
+    public static class GetMoodEmotionTask extends AsyncTask<String, Void, ArrayList<Mood>> {
+
+        @Override
+        protected  ArrayList<Mood> doInBackground(String... search_parameters) {
+            verifySettings();
+
+            String query;
+            ArrayList<Mood> moods = new ArrayList<Mood>();
+
+            query = "{\"query\": {\"bool\": {\"must\": [{\"term\": {\"owner\": \""+ search_parameters[0] +"\"}}, {\"term\": {\"emotion\": \""+ search_parameters[1] +"\"}}]}}}";
+
+
+            // Build the query
+            Search search = new Search.Builder(query)
+                    .addIndex("cmput301w17t8")
+                    .addType("mood")
+                    .build();
+
+            try {
+                // gets result
+                SearchResult result = client.execute(search);
+                if (result.isSucceeded()) {
+                    List<Mood> foundMoods = result.getSourceAsObjectList(Mood.class);
+                    moods.addAll(foundMoods);
+                }
+                else {
+                    Log.i("Error", "The search query failed to find any mood that matched.");
+                }
+            }
+            catch (Exception e) {
+                Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
+            }
+            return moods;
+        }
+    }
+
+    public static class GetMoodKeyword extends AsyncTask<String, Void, ArrayList<Mood>> {
+
+        @Override
+        protected  ArrayList<Mood> doInBackground(String... search_parameters) {
+            verifySettings();
+
+            String query;
+            ArrayList<Mood> moods = new ArrayList<Mood>();
+
+            query = "{\"query\": {\"bool\": {\"must\": [{\"term\": {\"owner\": \""+ search_parameters[0] +"\"}}, {\"term\": {\"trigger\": \""+ search_parameters[1] +"\"}}]}}}";
+
+
+            // Build the query
+            Search search = new Search.Builder(query)
+                    .addIndex("cmput301w17t8")
+                    .addType("mood")
+                    .build();
+
+            try {
+                // gets result
+                SearchResult result = client.execute(search);
+                if (result.isSucceeded()) {
+                    List<Mood> foundMoods = result.getSourceAsObjectList(Mood.class);
+                    moods.addAll(foundMoods);
+                }
+                else {
+                    Log.i("Error", "The search query failed to find any mood that matched.");
+                }
+            }
+            catch (Exception e) {
+                Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
+            }
+            return moods;
+        }
+    }
+
+    public static class GetMostRecent extends AsyncTask<String, Void, ArrayList<Mood>> {
+
+        @Override
+        protected  ArrayList<Mood> doInBackground(String... search_parameters) {
+            verifySettings();
+
+            ArrayList<Mood> moods = new ArrayList<Mood>();
+
+            String query = String.format("{ \"query\" : { \"filtered\" : { \"filter\" : { \"term\" : { \"owner\" : \"%s\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"filter\" : {\"range\" : { \"date\" : { \"gte\" : \"now-1w\" }}}}", search_parameters[0]);
+
+
+            // Build the query
+            Search search = new Search.Builder(query)
+                    .addIndex("cmput301w17t8")
+                    .addType("mood")
+                    .build();
+
+            try {
+                // gets result
+                SearchResult result = client.execute(search);
+                if (result.isSucceeded()) {
+                    List<Mood> foundMoods = result.getSourceAsObjectList(Mood.class);
+                    moods.addAll(foundMoods);
+                }
+                else {
+                    Log.i("Error", "The search query failed to find any mood that matched.");
+                }
+            }
+            catch (Exception e) {
+                Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
+            }
+            return moods;
+        }
+    }
 
 
     public static void verifySettings() {

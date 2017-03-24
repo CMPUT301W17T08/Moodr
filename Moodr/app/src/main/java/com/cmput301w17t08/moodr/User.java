@@ -66,4 +66,10 @@ public class User {
     public void setPending(ArrayList<String> pending) {
         this.pending = pending;
     }
+
+    public void addFriend(String name){
+        if (!this.friends.contains(name)){
+            this.friends.add(name);
+        }
+    }
 }

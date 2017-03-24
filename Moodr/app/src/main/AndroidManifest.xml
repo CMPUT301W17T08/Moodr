@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -29,7 +30,7 @@
         <activity android:name=".LatestActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/Moodr" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,11 +59,11 @@
             android:name=".Profile"
 
             android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>-->
+            <!--<intent-Filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
 
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!--</intent-Filter>-->
         </activity>
         <activity android:name=".ViewMyMoodActivity"/>
         <activity android:name=".AddMoodActivity" />
