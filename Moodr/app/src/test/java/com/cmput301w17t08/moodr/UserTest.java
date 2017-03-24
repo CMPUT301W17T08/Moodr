@@ -15,7 +15,7 @@ public class UserTest {
     @Test
     public void getUsername(){
         User user;
-        user = new User("john","john@ualberta.ca");
+        user = new User("john");
         assertEquals(user.getName(), "john");
     }
 
@@ -23,22 +23,22 @@ public class UserTest {
     @Test
     public void getMyFriendList(){
         User user;
-        user = new User("test3","test3@email.email");
+        user = new User("test3");
         ArrayList<String> testArray = new ArrayList<String>();
-        assertEquals(null, user.getMyFriendList());
+        assertEquals(null, user.getFriends());
 
         user.addFriend("friends");
         testArray.add("friends");
-        assertEquals(user.getMyFriendList(), testArray);
+        assertEquals(user.getFriends(), testArray);
 
     }
 
     @Test
     public void addFriend(){
         User user;
-        user = new User("something","email1");
+        user = new User("something");
         user.addFriend("friends");
-        assertTrue(user.getMyFriendList() != null);
+        assertTrue(user.getFriends().contains("friends"));
 
     }
 

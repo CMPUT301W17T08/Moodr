@@ -12,7 +12,7 @@ import static junit.framework.TestCase.fail;
 
 public class MoodUnitTest {
     @Test
-    public void testSetTriggerChar(String trigger){
+    public void testSetTriggerChar(){
         Mood mood = new Mood("guy", Emotion.angry);
         try{
             mood.setTrigger("thisisdefinitelyovertwentycharacters");
@@ -25,7 +25,7 @@ public class MoodUnitTest {
     }
 
     @Test
-    public void testSetTriggerWord(String trigger){
+    public void testSetTriggerWord(){
         Mood mood = new Mood("guy", Emotion.angry);
         try{
             mood.setTrigger("This is more than three words");
@@ -35,17 +35,6 @@ public class MoodUnitTest {
         }
 
 
-    }
-
-    @Test
-    public void testSetIMGURL(String imgurl){
-        Mood mood = new Mood("guy", Emotion.angry);
-        try{
-            mood.setImgUrl("WWW.thisisaveryaverylongimgurlbutitisstillverylonaverylongimgurlbsaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylongthisisaverylongimgurlbutitisstillverylong.com");
-            fail();
-        } catch (InvalidEntryException e) {
-
-        }
     }
 
 
