@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 /**
@@ -69,8 +71,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     private boolean validUser(String username){
@@ -88,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
         if (userList.size() == 0){
             return false;
         }
-
 
         return true;
     }
@@ -111,7 +110,8 @@ public class LoginActivity extends AppCompatActivity {
             CurrentUserSingleton.getInstance().getUser().setName(Username);
             startActivity(intent);
             return true;
-        }catch (Exception e){
+        }
+        catch (Exception e){
             Log.i("Error", "Failed to create the User");
             Toast.makeText(getApplicationContext(),
                     "Can not create user. Internet connection Error",
@@ -124,10 +124,8 @@ public class LoginActivity extends AppCompatActivity {
         // populate all current user info here.
         ElasticSearchUserController.GetUserTask getUserTask
                 = new ElasticSearchUserController.GetUserTask();
-
         getUserTask.execute(username);
         User user = new User();
-
         try{
             user = getUserTask.get().get(0);
             Log.d("USERNAME", user.getName());
@@ -135,12 +133,30 @@ public class LoginActivity extends AppCompatActivity {
         catch(Exception e){
             Log.d("ERROR", "Error getting user from elastic search");
         }
-
         User currentUser = CurrentUserSingleton.getInstance().getUser();
         currentUser.setName(user.getName());
         currentUser.setUser_Id(user.getUser_Id());
         currentUser.setFriends(user.getFriends());
         currentUser.setPending(user.getPending());
-    }
 
+        // populate all current user's mood
+        ElasticSearchMoodController.GetMoodTask getMoodTask
+                = new ElasticSearchMoodController.GetMoodTask();
+        ArrayList<Mood> moods = new ArrayList<>();
+        getMoodTask.execute(user.getName());
+        try{
+            moods.addAll(getMoodTask.get());
+            Collections.sort(moods, new Comparator<Mood>() {
+                @Override
+                public int compare(Mood mood, Mood t1) {
+                    return t1.getDate().compareTo(mood.getDate());
+                }
+            });
+        }
+        catch(Exception e){
+            Log.d("Error", "Error getting moods from elastic search.");
+        }
+        MoodList userMoods = CurrentUserSingleton.getInstance().getMyMoodList();
+        userMoods.setListOfMoods(moods);
+    }
 }

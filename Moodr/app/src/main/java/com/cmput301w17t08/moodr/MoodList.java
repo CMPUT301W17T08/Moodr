@@ -28,6 +28,11 @@ public class MoodList {
         }
     }
 
+    public void edit(int index, Mood mood) {
+        listOfMoods.remove(index);
+        add(mood);
+    }
+
     public void delete(Mood mood){
         listOfMoods.remove(mood);
     }

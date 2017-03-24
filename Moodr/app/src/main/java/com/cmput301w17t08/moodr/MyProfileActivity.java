@@ -32,28 +32,8 @@ public class MyProfileActivity extends Profile {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        user = CurrentUserSingleton.getInstance().getUser();
         moods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
-
-        moodsListview = (ListView) findViewById(R.id.profile_moodlist);
-
-        moods.clear();
-        moods.addAll(loadPosts(user.getName()));
-
-        Collections.sort(moods, new Comparator<Mood>() {
-            @Override
-            public int compare(Mood mood, Mood t1) {
-                return t1.getDate().compareTo(mood.getDate());
-            }
-        });
-
-
-        Toast.makeText(MyProfileActivity.this, Integer.toString(moods.size()), Toast.LENGTH_SHORT).show();
-
-
-        adapter = new ProfileMoodAdapter(this, moods);
-        moodsListview.setAdapter(adapter);
-
+        user = CurrentUserSingleton.getInstance().getUser();
         setTitle(user.getName());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -63,15 +43,23 @@ public class MyProfileActivity extends Profile {
                 addMood();
             }
         });
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        moodsListview = (ListView) findViewById(R.id.profile_moodlist);
+        adapter = new ProfileMoodAdapter(this, moods);
+        moodsListview.setAdapter(adapter);
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 goToMood(i);
             }
         });
-
     }
+
 
     /**
      * goes to add mood activity to add a mood
@@ -98,7 +86,6 @@ public class MyProfileActivity extends Profile {
                 for (Mood mood : moods){
                     Log.d("Mood", mood.getEmotion().getName());
                 }
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -108,6 +95,4 @@ public class MyProfileActivity extends Profile {
             }
         }
     }
-
-
 }

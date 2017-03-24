@@ -147,9 +147,6 @@ public class AddMoodActivity extends AppCompatActivity {
                 }
             }
 
-
-
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -181,8 +178,6 @@ public class AddMoodActivity extends AppCompatActivity {
                 } else {
                     removeFilter(editTrigger);
                 }
-
-
             }
 
             @Override
@@ -461,6 +456,4 @@ public class AddMoodActivity extends AppCompatActivity {
             filter = null;
         }
     }
-
-
 }
