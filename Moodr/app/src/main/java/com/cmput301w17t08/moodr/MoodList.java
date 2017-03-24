@@ -1,6 +1,8 @@
 package com.cmput301w17t08.moodr;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *
@@ -17,6 +19,12 @@ public class MoodList {
         }
         else {
             listOfMoods.add(mood);
+            Collections.sort(listOfMoods, new Comparator<Mood>() {
+                @Override
+                public int compare(Mood mood, Mood t1) {
+                    return t1.getDate().compareTo(mood.getDate());
+                }
+            });
         }
     }
 

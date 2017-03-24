@@ -3,7 +3,6 @@ package com.cmput301w17t08.moodr;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -270,9 +269,7 @@ public class AddMoodActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // X button
             case R.id.action_add_cancel:
-//                finish();
-                Intent intent_cancel  = new Intent(this, MyProfileActivity.class);
-                startActivity(intent_cancel);
+                finish();
                 return true;
 
             // Checkmark button
@@ -334,8 +331,9 @@ public class AddMoodActivity extends AppCompatActivity {
 
 //        mood.setImgUrl("PLACEHOLDER");
 
-        ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
         CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+
+        ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
         addMoodTask.execute(mood);
 
     }

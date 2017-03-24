@@ -44,11 +44,11 @@ public class LoginActivity extends AppCompatActivity {
                 if(validUser(UserName)){
                     Log.d("TEST", "THIS RUNS");
                     setCurrentUser(UserName);
-                    Toast.makeText(LoginActivity.this, "Logged In.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Username doesn't exist.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Username doesn't exist", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
-            Toast.makeText(LoginActivity.this, "Created new user." , Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "New user created" , Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
             CurrentUserSingleton.getInstance().getUser().setName(Username);
             startActivity(intent);
