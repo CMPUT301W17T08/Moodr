@@ -315,6 +315,7 @@ public class AddMoodActivity extends AppCompatActivity {
         mood.setId(id);
 
         CurrentUserSingleton.getInstance().getUser().incrementPostID();
+        new ElasticSearchUserController.UpdateUserTask().execute(CurrentUserSingleton.getInstance().getUser());
 
         location = locationText.getText().toString();
 
