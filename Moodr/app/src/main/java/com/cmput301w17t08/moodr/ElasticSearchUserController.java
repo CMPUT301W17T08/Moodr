@@ -23,11 +23,13 @@ public class ElasticSearchUserController {
     private  static JestDroidClient client;
 
     // adds user to elasticsearch
-    public static class AddUserTask extends AsyncTask<User, Void, Void> {
+    public static class AddUserTask extends AsyncTask<User, Void, String> {
 
         @Override
-        protected Void doInBackground(User... users) {
+        protected String doInBackground(User... users) {
             verifySettings();
+
+            String user_ID = null;
 
             for (User user:users) {
                 Index index1 = new Index.Builder(user).index("cmput301w17t8").type("user").build();
@@ -38,7 +40,7 @@ public class ElasticSearchUserController {
                         Log.i("Error", "Elasticsearch was not able to add user.");
                     }
                     else {
-                        String user_ID = result1.getId();
+                        user_ID = result1.getId();
                         user.setUser_Id(user_ID);
                         Index index2 = new Index.Builder(user).index("cmput301w17t8").type("user").id(user_ID).build();
                         try {
@@ -55,7 +57,7 @@ public class ElasticSearchUserController {
                     Log.i("Error", "The application failed to build and send user.");
                 }
             }
-            return null;
+            return user_ID;
         }
     }
 

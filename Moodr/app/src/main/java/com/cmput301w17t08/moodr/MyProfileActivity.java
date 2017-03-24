@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +46,10 @@ public class MyProfileActivity extends Profile {
                 return t1.getDate().compareTo(mood.getDate());
             }
         });
+
+
+        Toast.makeText(MyProfileActivity.this, Integer.toString(moods.size()), Toast.LENGTH_SHORT).show();
+
 
         adapter = new ProfileMoodAdapter(this, moods);
         moodsListview.setAdapter(adapter);

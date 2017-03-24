@@ -311,10 +311,10 @@ public class AddMoodActivity extends AppCompatActivity {
         // Create the mood
         Mood mood = new Mood(owner, emotion);
 
-        id = CurrentUserSingleton.getInstance().getUser().getPostID();
-        mood.setId(id);
+//        id = CurrentUserSingleton.getInstance().getUser().getPostID();
+//        mood.setId(id);
 
-        CurrentUserSingleton.getInstance().getUser().incrementPostID();
+//        CurrentUserSingleton.getInstance().getUser().incrementPostID();
 
         location = locationText.getText().toString();
 
@@ -325,11 +325,17 @@ public class AddMoodActivity extends AppCompatActivity {
 
 //        mood.setImgUrl("PLACEHOLDER");
 
-        CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
 
         ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
         addMoodTask.execute(mood);
-
+        try{
+            String moodId = addMoodTask.get();
+            mood.setId(moodId);
+            CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+        }
+        catch(Exception e){
+            Log.i("Error", "Error getting moods out of async object");
+        }
     }
 
     @Override

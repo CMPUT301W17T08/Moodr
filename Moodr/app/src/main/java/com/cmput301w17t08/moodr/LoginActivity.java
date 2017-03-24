@@ -98,6 +98,14 @@ public class LoginActivity extends AppCompatActivity {
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
+            try{
+                String moodId = addUserTask.get();
+                CurrentUserSingleton.getInstance().getUser().setUser_Id(moodId);
+            }
+            catch(Exception e){
+                Log.i("Error", "Error getting user out of async object");
+            }
+
             Toast.makeText(LoginActivity.this, "New user created" , Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
             CurrentUserSingleton.getInstance().getUser().setName(Username);
@@ -130,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
 
         User currentUser = CurrentUserSingleton.getInstance().getUser();
         currentUser.setName(user.getName());
+        currentUser.setUser_Id(user.getUser_Id());
         currentUser.setPostID(user.getPostID());
         currentUser.setFriends(user.getFriends());
         currentUser.setPending(user.getPending());
