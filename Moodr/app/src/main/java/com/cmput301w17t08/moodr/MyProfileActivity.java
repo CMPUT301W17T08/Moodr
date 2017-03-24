@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * This activity displays the user's moods. The user has the option to add a mood from this activity.
@@ -36,6 +38,14 @@ public class MyProfileActivity extends Profile {
 
         moods.clear();
         moods.addAll(loadPosts(user.getName()));
+
+        Collections.sort(moods, new Comparator<Mood>() {
+            @Override
+            public int compare(Mood mood, Mood t1) {
+                return t1.getDate().compareTo(mood.getDate());
+            }
+        });
+
         adapter = new ProfileMoodAdapter(this, moods);
         moodsListview.setAdapter(adapter);
 
