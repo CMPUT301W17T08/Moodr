@@ -11,7 +11,7 @@
     <string name="action_nearme">Near Me</string>
     <string name="action_offline">Offline Mode</string>
     <string name="action_logout">Log Out</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login"> Moodr</string>
     <string name="action_latest">Latest</string>
 
     <!-- Strings related to mood records -->
