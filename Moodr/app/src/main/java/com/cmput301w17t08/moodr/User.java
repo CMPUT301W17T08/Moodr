@@ -10,17 +10,27 @@ public class User {
     private String name;
     private ArrayList<String> friends;
     private ArrayList<String> pending;
+    private String user_ID;
     private int post_ID;
 
     public User(String username) {
         this.name = username;
         friends = new ArrayList<String>();
         pending = new ArrayList<String>();
+        user_ID = "";
         post_ID = 0;
 
     }
 
     public User(){
+    }
+
+    public void setUser_Id(String id) {
+        this.user_ID = id;
+    }
+
+    public String getUser_Id() {
+        return this.user_ID;
     }
 
     public void addPending(String pending){
