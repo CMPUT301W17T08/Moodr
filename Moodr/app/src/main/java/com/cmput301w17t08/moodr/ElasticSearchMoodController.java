@@ -171,6 +171,32 @@ public class ElasticSearchMoodController {
         }
     }
 
+    // update a mood
+    public static class UpdateMoodTask extends AsyncTask<Mood, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Mood ... search_parameters) {
+            verifySettings();
+
+            Mood mood = search_parameters[0];
+            String id = mood.getId();
+
+            Index index = new Index.Builder(mood).index("cmput301w17t8").type("mood").id(id).build();
+
+            try {
+                DocumentResult result = client.execute(index);
+                if (!result.isSucceeded()) {
+                    Log.i("Error", "Elasticsearch was not able to update mood.");
+                }
+            }
+            catch (Exception e) {
+                Log.i("Error", "The application failed to build and send mood.");
+            }
+
+            return null;
+        }
+    }
+
 
 
     public static void verifySettings() {

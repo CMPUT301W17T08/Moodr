@@ -139,7 +139,6 @@ public class LoginActivity extends AppCompatActivity {
         User currentUser = CurrentUserSingleton.getInstance().getUser();
         currentUser.setName(user.getName());
         currentUser.setUser_Id(user.getUser_Id());
-        currentUser.setPostID(user.getPostID());
         currentUser.setFriends(user.getFriends());
         currentUser.setPending(user.getPending());
     }

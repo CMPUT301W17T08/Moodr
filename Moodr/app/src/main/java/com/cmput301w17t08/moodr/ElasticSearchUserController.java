@@ -111,7 +111,7 @@ public class ElasticSearchUserController {
             try {
                 DocumentResult result = client.execute(index);
                 if (!result.isSucceeded()) {
-                    Log.i("Error", "Elasticsearch was not able to add user.");
+                    Log.i("Error", "Elasticsearch was not able to update user.");
                 }
             }
             catch (Exception e) {
