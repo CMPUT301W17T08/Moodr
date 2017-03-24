@@ -8,6 +8,8 @@ import com.searchly.jestdroid.JestClientFactory;
 import com.searchly.jestdroid.JestDroidClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.searchbox.core.DeleteByQuery;
@@ -119,6 +121,12 @@ public class ElasticSearchMoodController {
                     Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
                 }
             }
+            Collections.sort(moods, new Comparator<Mood>() {
+                @Override
+                public int compare(Mood mood, Mood t1) {
+                    return t1.getDate().compareTo(mood.getDate());
+                }
+            });
             return moods;
         }
     }
