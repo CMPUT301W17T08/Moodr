@@ -15,6 +15,7 @@ import android.widget.Toast;
  * moods.
  */
 public class ViewMyMoodActivity extends ViewMoodActivity {
+
     Mood mood;
     int index;
 
@@ -24,7 +25,6 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
         setContentView(R.layout.activity_view_my_mood);
 
         Intent intent = getIntent();
-
         index = intent.getIntExtra("index", -1);
 
         // if for whatever reason the mood index does not exist.
@@ -36,7 +36,6 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
         }
 
         loadMood(mood);
-
     }
 
     /**
@@ -47,11 +46,8 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
 
         //update on server
         ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
-        deleteMoodTask.execute(mood.getUsername(), Integer.toString(mood.getId()));
-
-//        finish();
-        Intent intent  = new Intent(this, MyProfileActivity.class);
-        startActivity(intent);
+        deleteMoodTask.execute(mood.getId());
+        finish();
     }
 
     /**
@@ -99,7 +95,6 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
                         Intent intent = new Intent(ViewMyMoodActivity.this, MyProfileActivity.class);
                         startActivity(intent);
                         Toast.makeText(ViewMyMoodActivity.this, "Mood deleted", Toast.LENGTH_SHORT).show();
-
                     }
                 })
                 .create();

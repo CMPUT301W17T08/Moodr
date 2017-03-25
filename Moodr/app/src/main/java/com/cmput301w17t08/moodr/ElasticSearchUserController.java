@@ -10,9 +10,7 @@ import com.searchly.jestdroid.JestDroidClient;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
-import io.searchbox.core.Get;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
@@ -25,26 +23,41 @@ public class ElasticSearchUserController {
     private  static JestDroidClient client;
 
     // adds user to elasticsearch
-    public static class AddUserTask extends AsyncTask<User, Void, Void> {
+    public static class AddUserTask extends AsyncTask<User, Void, String> {
 
         @Override
-        protected Void doInBackground(User... users) {
+        protected String doInBackground(User... users) {
             verifySettings();
 
+            String user_ID = null;
+
             for (User user:users) {
-                Index index = new Index.Builder(user).index("cmput301w17t8").type("user").build();
+                Index index1 = new Index.Builder(user).index("cmput301w17t8").type("user").build();
 
                 try {
-                    DocumentResult result = client.execute(index);
-                    if (!result.isSucceeded()) {
+                    DocumentResult result1 = client.execute(index1);
+                    if (!result1.isSucceeded()) {
                         Log.i("Error", "Elasticsearch was not able to add user.");
+                    }
+                    else {
+                        user_ID = result1.getId();
+                        user.setUser_Id(user_ID);
+                        Index index2 = new Index.Builder(user).index("cmput301w17t8").type("user").id(user_ID).build();
+                        try {
+                            DocumentResult result2 = client.execute(index2);
+                            if (!result1.isSucceeded()) {
+                                Log.i("Error", "Elasticsearch was not able to add user.");
+                            }
+                        } catch (Exception e) {
+                            Log.i("Error", "The application failed to build and send user.");
+                        }
                     }
                 }
                 catch (Exception e) {
                     Log.i("Error", "The application failed to build and send user.");
                 }
             }
-            return null;
+            return user_ID;
         }
     }
 
@@ -83,32 +96,31 @@ public class ElasticSearchUserController {
         }
     }
 
+    // add a user to the pending list
+    public static class UpdateUserTask extends AsyncTask<User, Void, Void> {
 
-    public static class IsExist extends AsyncTask<String, Void, Boolean> {
         @Override
-        protected Boolean doInBackground(String... params){
+        protected Void doInBackground(User ... search_parameters) {
             verifySettings();
 
-            User user = new User();
+            User user = search_parameters[0];
+            String user_ID = user.getUser_Id();
 
-            Get get = new Get.Builder("cmput301w17t8", params[0]).type("user").build();
+            Index index = new Index.Builder(user).index("cmput301w17t8").type("user").id(user_ID).build();
 
             try {
-                JestResult result = client.execute(get);
-                user = result.getSourceAsObject(User.class);
-            } catch (Exception e) {
-                Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
+                DocumentResult result = client.execute(index);
+                if (!result.isSucceeded()) {
+                    Log.i("Error", "Elasticsearch was not able to update user.");
+                }
+            }
+            catch (Exception e) {
+                Log.i("Error", "The application failed to build and send user.");
             }
 
-            if (user == null) {
-                return false;
-            }
-
-            return true;
+            return null;
         }
     }
-
-
 
 
     public static void verifySettings() {

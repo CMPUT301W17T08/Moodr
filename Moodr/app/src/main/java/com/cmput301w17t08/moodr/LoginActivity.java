@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 /**
@@ -44,11 +46,11 @@ public class LoginActivity extends AppCompatActivity {
                 if(validUser(UserName)){
                     Log.d("TEST", "THIS RUNS");
                     setCurrentUser(UserName);
-                    Toast.makeText(LoginActivity.this, "Logged In.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Username doesn't exist.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Username doesn't exist", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -69,8 +71,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     private boolean validUser(String username){
@@ -89,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
 
-
         return true;
     }
 
@@ -98,12 +97,21 @@ public class LoginActivity extends AppCompatActivity {
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
-            Toast.makeText(LoginActivity.this, "Created new user." , Toast.LENGTH_SHORT).show();
+            try{
+                String moodId = addUserTask.get();
+                CurrentUserSingleton.getInstance().getUser().setUser_Id(moodId);
+            }
+            catch(Exception e){
+                Log.i("Error", "Error getting user out of async object");
+            }
+
+            Toast.makeText(LoginActivity.this, "New user created" , Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
             CurrentUserSingleton.getInstance().getUser().setName(Username);
             startActivity(intent);
             return true;
-        }catch (Exception e){
+        }
+        catch (Exception e){
             Log.i("Error", "Failed to create the User");
             Toast.makeText(getApplicationContext(),
                     "Can not create user. Internet connection Error",
@@ -116,10 +124,8 @@ public class LoginActivity extends AppCompatActivity {
         // populate all current user info here.
         ElasticSearchUserController.GetUserTask getUserTask
                 = new ElasticSearchUserController.GetUserTask();
-
         getUserTask.execute(username);
         User user = new User();
-
         try{
             user = getUserTask.get().get(0);
             Log.d("USERNAME", user.getName());
@@ -127,12 +133,30 @@ public class LoginActivity extends AppCompatActivity {
         catch(Exception e){
             Log.d("ERROR", "Error getting user from elastic search");
         }
-
         User currentUser = CurrentUserSingleton.getInstance().getUser();
         currentUser.setName(user.getName());
-        currentUser.setPostID(user.getPostID());
+        currentUser.setUser_Id(user.getUser_Id());
         currentUser.setFriends(user.getFriends());
         currentUser.setPending(user.getPending());
-    }
 
+        // populate all current user's mood
+        ElasticSearchMoodController.GetMoodTask getMoodTask
+                = new ElasticSearchMoodController.GetMoodTask();
+        ArrayList<Mood> moods = new ArrayList<>();
+        getMoodTask.execute(user.getName());
+        try{
+            moods.addAll(getMoodTask.get());
+            Collections.sort(moods, new Comparator<Mood>() {
+                @Override
+                public int compare(Mood mood, Mood t1) {
+                    return t1.getDate().compareTo(mood.getDate());
+                }
+            });
+        }
+        catch(Exception e){
+            Log.d("Error", "Error getting moods from elastic search.");
+        }
+        MoodList userMoods = CurrentUserSingleton.getInstance().getMyMoodList();
+        userMoods.setListOfMoods(moods);
+    }
 }

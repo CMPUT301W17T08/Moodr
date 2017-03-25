@@ -10,17 +10,24 @@ public class User {
     private String name;
     private ArrayList<String> friends;
     private ArrayList<String> pending;
-    private int post_ID;
+    private String user_ID;
 
     public User(String username) {
         this.name = username;
         friends = new ArrayList<String>();
         pending = new ArrayList<String>();
-        post_ID = 0;
-
+        user_ID = "";
     }
 
     public User(){
+    }
+
+    public void setUser_Id(String id) {
+        this.user_ID = id;
+    }
+
+    public String getUser_Id() {
+        return this.user_ID;
     }
 
     public void addPending(String pending){
@@ -45,18 +52,6 @@ public class User {
 
     public void removeFriend(String name){
         friends.remove(name);
-    }
-
-    public void setPostID(int id){
-        this.post_ID = id;
-    }
-
-    public int getPostID(){
-        return this.post_ID;
-    }
-
-    public void incrementPostID(){
-        this.post_ID += 1;
     }
 
     public void setFriends(ArrayList<String> friends) {
