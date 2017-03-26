@@ -17,6 +17,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -53,7 +54,8 @@ public class EditMoodActivity extends AppCompatActivity {
     private Date date;
     private String owner;
     private int id;
-    private String emotion;
+    private String selected_emotion;
+    private Emotion emotion;
     private String imgUrl;
     private String trigger;
     private String situation;
@@ -114,15 +116,41 @@ public class EditMoodActivity extends AppCompatActivity {
         emotion_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                emotion = parent.getItemAtPosition(position).toString();
+                selected_emotion = parent.getItemAtPosition(position).toString();
+                switch(selected_emotion){
+                    case "Happy":
+                        emotion = Emotion.happy;
+                        break;
+                    case "Sad":
+                        emotion = Emotion.sad;
+                        break;
+                    case "Angry":
+                        emotion = Emotion.angry;
+                        break;
+                    case "Confused":
+                        emotion = Emotion.confused;
+                        break;
+                    case "Disgust":
+                        emotion = Emotion.disgust;
+                        break;
+                    case "Scared":
+                        emotion = Emotion.fear;
+                        break;
+                    case "Shame":
+                        emotion = Emotion.shame;
+                        break;
+                    case "Surprised":
+                        emotion = Emotion.surprise;
+                        break;
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-        int emotion_spinner_poition = emotionAdapter.getPosition(mood.getEmotion().getName());
-        emotion_spinner.setSelection(emotion_spinner_poition);
+        int emotion_spinner_position = emotionAdapter.getPosition(mood.getEmotion().getName());
+        emotion_spinner.setSelection(emotion_spinner_position);
 
         // Do something when user selects a situation
         situation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -135,9 +163,16 @@ public class EditMoodActivity extends AppCompatActivity {
             }
         });
 
+        int situation_spinner_position = situationAdapter.getPosition(mood.getSituation());
+        situation_spinner.setSelection(situation_spinner_position);
+
         // Need to set limit of text field to 20 characters or 3 words
 //        http://stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
         editTrigger = (EditText) findViewById(R.id.et_trigger);
+        String trig = mood.getTrigger();
+        if (trig != null){
+            editTrigger.setText(mood.getTrigger());
+        }
         editTrigger.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -156,8 +191,6 @@ public class EditMoodActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-        trigger = editTrigger.getText().toString();
-
 
         // Get image file on button click
         Button btn_choose_photo = (Button) findViewById(R.id.btn_picture);
@@ -269,28 +302,51 @@ public class EditMoodActivity extends AppCompatActivity {
         });
     }
 
+    // Creates the actionbar at the top
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Adds the icons to the action bar is it present
+        getMenuInflater().inflate(R.menu.menu_edit_mood, menu);
+        return true;
+    }
+
     // When one of the buttons are selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // X button
             case R.id.action_edit_cancel:
-                finish();
+                Intent intent_cancel = new Intent(EditMoodActivity.this, MyProfileActivity.class);
+                startActivity(intent_cancel);
                 return true;
 
             // Checkmark button
             case R.id.action_edit_complete:
                 // Edit mood and send it right to elasticSearch
-                ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
-                updateMoodTask.execute();
-                CurrentUserSingleton.getInstance().getMyMoodList().edit();
+                trigger = editTrigger.getText().toString();
+                editMood();
 
                 setResult(RESULT_OK);
 
-                finish();
+                Intent intent_complete = new Intent(EditMoodActivity.this, MyProfileActivity.class);
+                startActivity(intent_complete);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void editMood() {
+        // Edit the mood
+        mood.setEmotion(emotion);
+        location = locationText.getText().toString();
+        mood.setSituation(situation);
+        mood.setLocation(location);
+        mood.setTrigger(trigger);
+
+        ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
+        updateMoodTask.execute(mood);
+        CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
+
     }
 
 }

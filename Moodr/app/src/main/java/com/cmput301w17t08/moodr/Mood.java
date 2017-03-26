@@ -22,10 +22,10 @@ public class Mood implements Serializable{
     {
         this.date = new Date(System.currentTimeMillis());
         this.id = "";
-        setUsername(owner);
-        setEmotion(emotion);
+        this.emotion = emotion;
+        this.owner = owner;
         setImgUrl(imgUrl);
-        setTrigger(trigger);
+//        setTrigger(trigger);
         setSituation(situation);
         setLocation(location);
 

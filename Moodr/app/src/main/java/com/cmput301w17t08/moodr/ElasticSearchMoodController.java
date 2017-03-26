@@ -179,9 +179,9 @@ public class ElasticSearchMoodController {
             verifySettings();
 
             Mood mood = search_parameters[0];
-            String id = mood.getId();
+            String moodId = mood.getId();
 
-            Index index = new Index.Builder(mood).index("cmput301w17t8").type("mood").id(id).build();
+            Index index = new Index.Builder(mood).index("cmput301w17t8").type("mood").id(moodId).build();
 
             try {
                 DocumentResult result = client.execute(index);
@@ -196,7 +196,6 @@ public class ElasticSearchMoodController {
             return null;
         }
     }
-
 
 
     public static void verifySettings() {

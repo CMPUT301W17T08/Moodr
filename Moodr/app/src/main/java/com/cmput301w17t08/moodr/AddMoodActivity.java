@@ -193,9 +193,6 @@ public class AddMoodActivity extends AppCompatActivity {
             }
         });
 
-
-        trigger = editTrigger.getText().toString();
-
         // Open camera on button click and use for the picture
         btnOpenCamera = (ImageButton) findViewById(R.id.btn_camera);
         imageView = (ImageView) findViewById(R.id.iv_imageview);
@@ -317,6 +314,7 @@ public class AddMoodActivity extends AppCompatActivity {
         mood.setSituation(situation);
 
         mood.setLocation(location);
+        trigger = editTrigger.getText().toString();
         mood.setTrigger(trigger);
 
 //        mood.setImgUrl("PLACEHOLDER");
