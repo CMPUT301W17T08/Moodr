@@ -23,8 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,15 +45,13 @@ import java.util.List;
 public class AddMoodActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
     private static final String TAG = "MainActivity";
-    /* When button for image is pressed */
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+
+
     private ImageView imageView;
-    private Button locationButton;
+    private ImageButton locationButton;
+    private ImageButton btnChoosePhoto;
+    private ImageButton btnOpenCamera;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private TextView locationText;
@@ -94,6 +92,7 @@ public class AddMoodActivity extends AppCompatActivity {
         Spinner situation_spinner = (Spinner) findViewById(R.id.et_social_situation);
         List<String> situation_categories = new ArrayList<String>();
         // Strings for situations
+        situation_categories.add("");
         situation_categories.add("Alone");
         situation_categories.add("1 other person");
         situation_categories.add("2 to several people");
@@ -149,9 +148,6 @@ public class AddMoodActivity extends AppCompatActivity {
                 }
             }
 
-
-
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -172,17 +168,10 @@ public class AddMoodActivity extends AppCompatActivity {
 
 
         editTrigger = (EditText) findViewById(R.id.et_trigger);
-        // Need to set limit of text field to 20 characters or 3 words
-//        http:stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
 
         editTrigger.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int wordsLength = countWords(s.toString());// words.length;
                 // count == 0 means a new word is going to start
                 if (count == 0 && wordsLength >= 3) {
@@ -192,23 +181,32 @@ public class AddMoodActivity extends AppCompatActivity {
                 }
             }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                trigger = editTrigger.getText().toString();
             }
         });
 
-        trigger = editTrigger.getText().toString();
+        // Open camera on button click and use for the picture
+        btnOpenCamera = (ImageButton) findViewById(R.id.btn_camera);
+        imageView = (ImageView) findViewById(R.id.iv_imageview);
+        btnOpenCamera.setOnClickListener(btnOpenCameraPressed);
+
 
 
         // Get image file on button click
-        Button btn_choose_photo = (Button) findViewById(R.id.btn_picture);
+        btnChoosePhoto = (ImageButton) findViewById(R.id.btn_picture);
         imageView = (ImageView) findViewById(R.id.iv_imageview);
-        btn_choose_photo.setOnClickListener(btnChoosePhotoPressed);
+        btnChoosePhoto.setOnClickListener(btnChoosePhotoPressed);
 
         // Get user location on button click
-        locationButton = (Button) findViewById(R.id.btn_location);
+        locationButton = (ImageButton) findViewById(R.id.btn_location);
         locationText = (TextView) findViewById(R.id.tv_location);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -306,25 +304,32 @@ public class AddMoodActivity extends AppCompatActivity {
         // Create the mood
         Mood mood = new Mood(owner, emotion);
 
-        id = CurrentUserSingleton.getInstance().getUser().getPostID();
-        mood.setId(id);
+//        id = CurrentUserSingleton.getInstance().getUser().getPostID();
+//        mood.setId(id);
 
-        CurrentUserSingleton.getInstance().getUser().incrementPostID();
+//        CurrentUserSingleton.getInstance().getUser().incrementPostID();
 
         location = locationText.getText().toString();
 
         mood.setSituation(situation);
 
         mood.setLocation(location);
-
+        trigger = editTrigger.getText().toString();
         mood.setTrigger(trigger);
 
 //        mood.setImgUrl("PLACEHOLDER");
 
-        ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
-        CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-        addMoodTask.execute(mood);
 
+        ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
+        addMoodTask.execute(mood);
+        try{
+            String moodId = addMoodTask.get();
+            mood.setId(moodId);
+            CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+        }
+        catch(Exception e){
+            Log.i("Error", "Error getting moods out of async object");
+        }
     }
 
     @Override
@@ -358,8 +363,24 @@ public class AddMoodActivity extends AppCompatActivity {
         });
     }
 
+/*
+    public String getAddress (double latitude, double longitude){
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder
+    }
+
+*/
+
     /* Choose an image from Gallery */
-    void chooseImage() {
+    /* When button for image is pressed */
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
+
+    public void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -399,6 +420,22 @@ public class AddMoodActivity extends AppCompatActivity {
     }
 
 
+    /* When button for camera is pressed */
+    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            openCamera();
+        }
+    };
+
+    public void openCamera(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+
     /* Functions for character limit on trigger, 20 characters or 3 words */
     private int countWords(String s) {
         String trim = s.trim();
@@ -418,6 +455,4 @@ public class AddMoodActivity extends AppCompatActivity {
             filter = null;
         }
     }
-
-
 }

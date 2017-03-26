@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -66,6 +67,7 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
 
 
         String trig = mood.getTrigger();
+        Log.d("Trigger", "Trigger is: " + mood.getTrigger());
         if (trig != null){
             trigger.setText(trig);
         }

@@ -8,10 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * This activity displays the user's moods. The user has the option to add a mood from this activity.
@@ -31,11 +32,8 @@ public class MyProfileActivity extends Profile {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        user = CurrentUserSingleton.getInstance().getUser();
         moods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
-
-        moodsListview = (ListView) findViewById(R.id.profile_moodlist);
-
+        user = CurrentUserSingleton.getInstance().getUser();
         setTitle(user.getName());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -45,15 +43,23 @@ public class MyProfileActivity extends Profile {
                 addMood();
             }
         });
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        moodsListview = (ListView) findViewById(R.id.profile_moodlist);
+        adapter = new ProfileMoodAdapter(this, moods);
+        moodsListview.setAdapter(adapter);
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 goToMood(i);
             }
         });
-
     }
+
 
     /**
      * goes to add mood activity to add a mood
@@ -80,7 +86,6 @@ public class MyProfileActivity extends Profile {
                 for (Mood mood : moods){
                     Log.d("Mood", mood.getEmotion().getName());
                 }
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -90,18 +95,4 @@ public class MyProfileActivity extends Profile {
             }
         }
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        moods.clear();
-        moods.addAll(loadPosts(user.getName()));
-
-        adapter = new ProfileMoodAdapter(this, moods);
-
-        moodsListview.setAdapter(adapter);
-    }
-
-
 }

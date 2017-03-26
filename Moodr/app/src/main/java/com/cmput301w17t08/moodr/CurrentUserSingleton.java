@@ -45,6 +45,7 @@ public enum CurrentUserSingleton {
      *
      * @return the my mood list
      */
+
     public MoodList getMyMoodList() {
         return myMoodList;
     }

@@ -24,7 +24,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:text="User name" />
+            android:text="User Name" />
 
         <EditText
             android:id="@+id/username"
@@ -32,7 +32,8 @@
             android:layout_height="wrap_content"
             android:scrollbars="horizontal"
             android:hint="Enter your user name here"
-            android:inputType="text" />
+            android:inputType="text"
+            android:digits="abcdefghijklmnopqrstuvwxyz" />
 
         <Button
             android:id="@+id/login_button"

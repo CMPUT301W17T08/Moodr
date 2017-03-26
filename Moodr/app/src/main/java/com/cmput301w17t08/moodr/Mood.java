@@ -1,10 +1,7 @@
 package com.cmput301w17t08.moodr;
 
-import android.location.Location;
-
 import java.io.Serializable;
 import java.util.Date;
-import java.util.StringTokenizer;
 
 /**
  *
@@ -14,7 +11,7 @@ import java.util.StringTokenizer;
 public class Mood implements Serializable{
     private Date date;
     private String owner;
-    private int id;
+    private String id;
     private Emotion emotion;
     private String imgUrl;
     private String trigger;
@@ -24,10 +21,11 @@ public class Mood implements Serializable{
     public Mood(String owner, Emotion emotion)
     {
         this.date = new Date(System.currentTimeMillis());
-        setUsername(owner);
-        setEmotion(emotion);
+        this.id = "";
+        this.emotion = emotion;
+        this.owner = owner;
         setImgUrl(imgUrl);
-        setTrigger(trigger);
+//        setTrigger(trigger);
         setSituation(situation);
         setLocation(location);
 
@@ -55,11 +53,11 @@ public class Mood implements Serializable{
         this.emotion=emotion;
     }
 
-    public int getId(){
+    public String getId(){
         return id;
     }
-    public void setId(int lastid){
-        this.id=lastid+1;
+    public void setId(String id){
+        this.id = id;
     }
 
     public String getImgUrl(){

@@ -8,9 +8,11 @@ import com.searchly.jestdroid.JestClientFactory;
 import com.searchly.jestdroid.JestDroidClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import io.searchbox.core.DeleteByQuery;
+import io.searchbox.core.Delete;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
@@ -26,26 +28,41 @@ public class ElasticSearchMoodController {
     private  static JestDroidClient client;
 
     // adds mood to elasticsearch
-    public static class AddMoodTask extends AsyncTask<Mood, Void, Void> {
+    public static class AddMoodTask extends AsyncTask<Mood, Void, String> {
 
         @Override
-        protected Void doInBackground(Mood... moods) {
+        protected String doInBackground(Mood... moods) {
             verifySettings();
 
+            String moodId = null;
+
             for (Mood mood:moods) {
-                Index index = new Index.Builder(mood).index("cmput301w17t8").type("mood").build();
+                Index index1 = new Index.Builder(mood).index("cmput301w17t8").type("mood").build();
 
                 try {
-                    DocumentResult result = client.execute(index);
-                    if (!result.isSucceeded()) {
+                    DocumentResult result1 = client.execute(index1);
+                    if (!result1.isSucceeded()) {
                         Log.i("Error", "Elasticsearch was not able to add mood.");
+                    }
+                    else {
+                        moodId = result1.getId();
+                        mood.setId(moodId);
+                        Index index2 = new Index.Builder(mood).index("cmput301w17t8").type("mood").id(moodId).build();
+                        try {
+                            DocumentResult result2 = client.execute(index2);
+                            if (!result1.isSucceeded()) {
+                                Log.i("Error", "Elasticsearch was not able to add mood.");
+                            }
+                        } catch (Exception e) {
+                            Log.i("Error", "The application failed to build and send mood.");
+                        }
                     }
                 }
                 catch (Exception e) {
                     Log.i("Error", "The application failed to build and send mood.");
                 }
             }
-            return null;
+            return moodId;
         }
     }
 
@@ -59,11 +76,13 @@ public class ElasticSearchMoodController {
             String query;
             ArrayList<Mood> moods = new ArrayList<Mood>();
 
-            if (search_parameters.length == 2) {
-                query = "{\"query\": {\"bool\": {\"must\": [{\"term\": {\"owner\": \""+ search_parameters[0] +"\"}}, {\"term\": {\"id\": \""+ search_parameters[1] +"\"}}]}}}";
-            } else {
-                query =  "{\"query\" : {\"term\" : { \"owner\" : \"" + search_parameters[0] + "\" }}}";
-            }
+//            if (search_parameters.length == 2) {
+//                query = "{\"query\": {\"bool\": {\"must\": [{\"term\": {\"owner\": \""+ search_parameters[0] +"\"}}, {\"term\": {\"id\": \""+ search_parameters[1] +"\"}}]}}}";
+//            } else {
+//                query =  "{\"query\" : {\"term\" : { \"owner\" : \"" + search_parameters[0] + "\" }}}";
+//            }
+
+            query =  "{\"query\" : {\"term\" : { \"owner\" : \"" + search_parameters[0] + "\" }}}";
 
             // Build the query
             Search search = new Search.Builder(query)
@@ -119,6 +138,12 @@ public class ElasticSearchMoodController {
                     Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
                 }
             }
+            Collections.sort(moods, new Comparator<Mood>() {
+                @Override
+                public int compare(Mood mood, Mood t1) {
+                    return t1.getDate().compareTo(mood.getDate());
+                }
+            });
             return moods;
         }
     }
@@ -130,12 +155,10 @@ public class ElasticSearchMoodController {
         protected Void doInBackground(String... search_parameters) {
             verifySettings();
 
-            String query = "{\"query\": {\"bool\": {\"must\": [{\"term\": {\"owner\": \""+ search_parameters[0] +"\"}}, {\"term\": {\"id\": \""+ search_parameters[1] +"\"}}]}}}";
-
             // Build the query
-            DeleteByQuery delete = new DeleteByQuery.Builder(query)
-                    .addIndex("cmput301w17t8")
-                    .addType("mood")
+            Delete delete = new Delete.Builder(search_parameters[0])
+                    .index("cmput301w17t8")
+                    .type("mood")
                     .build();
 
             try {
@@ -148,6 +171,31 @@ public class ElasticSearchMoodController {
         }
     }
 
+    // update a mood
+    public static class UpdateMoodTask extends AsyncTask<Mood, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Mood ... search_parameters) {
+            verifySettings();
+
+            Mood mood = search_parameters[0];
+            String moodId = mood.getId();
+
+            Index index = new Index.Builder(mood).index("cmput301w17t8").type("mood").id(moodId).build();
+
+            try {
+                DocumentResult result = client.execute(index);
+                if (!result.isSucceeded()) {
+                    Log.i("Error", "Elasticsearch was not able to update mood.");
+                }
+            }
+            catch (Exception e) {
+                Log.i("Error", "The application failed to build and send mood.");
+            }
+
+            return null;
+        }
+    }
 
 
     public static void verifySettings() {
