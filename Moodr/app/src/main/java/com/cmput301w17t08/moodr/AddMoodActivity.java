@@ -92,6 +92,7 @@ public class AddMoodActivity extends AppCompatActivity {
         Spinner situation_spinner = (Spinner) findViewById(R.id.et_social_situation);
         List<String> situation_categories = new ArrayList<String>();
         // Strings for situations
+        situation_categories.add("");
         situation_categories.add("Alone");
         situation_categories.add("1 other person");
         situation_categories.add("2 to several people");
