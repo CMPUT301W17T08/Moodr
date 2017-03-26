@@ -61,5 +61,7 @@
     <string name="surprise">Surprised</string>
     <string name="sad">Sad</string>
     <string name="Moodr">Moodr</string>
+    <string name="Filter_mood">Filter by Mood</string>
+    <string name="surprised">Surprised</string>
 
 </resources>
