@@ -92,6 +92,7 @@ public class AddMoodActivity extends AppCompatActivity {
         Spinner situation_spinner = (Spinner) findViewById(R.id.et_social_situation);
         List<String> situation_categories = new ArrayList<String>();
         // Strings for situations
+        situation_categories.add("");
         situation_categories.add("Alone");
         situation_categories.add("1 other person");
         situation_categories.add("2 to several people");
@@ -191,9 +192,6 @@ public class AddMoodActivity extends AppCompatActivity {
                 trigger = editTrigger.getText().toString();
             }
         });
-
-
-        trigger = editTrigger.getText().toString();
 
         // Open camera on button click and use for the picture
         btnOpenCamera = (ImageButton) findViewById(R.id.btn_camera);
@@ -317,12 +315,8 @@ public class AddMoodActivity extends AppCompatActivity {
 
         mood.setLocation(location);
 
-        try {
-            mood.setTrigger(trigger);
-        }
-        catch(InvalidEntryException e){
-            throw new RuntimeException(); // Error checking should detect this before adding.
-        }
+        trigger = editTrigger.getText().toString();
+        mood.setTrigger(trigger);
 
 //        mood.setImgUrl("PLACEHOLDER");
 

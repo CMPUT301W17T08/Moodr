@@ -5,14 +5,14 @@
     <item
         android:title="Edit Mood"
         android:id="@+id/edit_mood"
-        android:icon="@drawable/ic_mode_edit_black_24dp"
+        android:icon="@drawable/ic_edit"
         app:showAsAction="always"
         />
 
     <item
         android:title="Delete"
         android:id="@+id/delete_mood"
-        android:icon="@drawable/ic_delete_black_24dp"
+        android:icon="@drawable/ic_delete"
         app:showAsAction="always"
         />
 
