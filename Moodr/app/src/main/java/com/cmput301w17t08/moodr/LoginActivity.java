@@ -94,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean createUser(String Username){
         try {
+            CurrentUserSingleton.getInstance().reset();
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
@@ -133,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         catch(Exception e){
             Log.d("ERROR", "Error getting user from elastic search");
         }
+        CurrentUserSingleton.getInstance().reset();
         User currentUser = CurrentUserSingleton.getInstance().getUser();
         currentUser.setName(user.getName());
         currentUser.setUser_Id(user.getUser_Id());
