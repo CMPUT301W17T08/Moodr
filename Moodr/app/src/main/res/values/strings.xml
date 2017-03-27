@@ -63,5 +63,6 @@
     <string name="Moodr">Moodr</string>
     <string name="Filter_mood">Filter by Mood</string>
     <string name="surprised">Surprised</string>
+    <string name="view_all">View All</string>
 
 </resources>

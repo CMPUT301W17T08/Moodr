@@ -2,14 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/filter_all"
+        android:title="@string/view_all"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/filter_recent"
         android:orderInCategory="101"
         android:title="@string/Recent"
         app:showAsAction="never" />
 
     <item
+        app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="@string/filter_keyword"
-        android:id="@+id/filter_keyword"/>
+        android:id="@+id/filter_keyword"
+        app:showAsAction="always|collapseActionView"
+        android:icon="@drawable/ic_search"/>
 
     <item
         android:id="@+id/filter_moods"
@@ -43,9 +51,5 @@
                 android:title="@string/surprised"/>
         </menu>
     </item>
-
-
-
-
 
 </menu>

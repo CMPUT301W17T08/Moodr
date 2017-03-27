@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Filter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class MyProfileActivity extends Profile {
     private ArrayList<Mood> moods;
     private ProfileMoodAdapter adapter;
     private ListView moodsListview;
+    private Filter filter;
 
 
     @Override
@@ -51,6 +53,10 @@ public class MyProfileActivity extends Profile {
 
         moodsListview = (ListView) findViewById(R.id.profile_moodlist);
         adapter = new ProfileMoodAdapter(this, moods);
+
+        filter = adapter.getFilter();
+        setFilter(filter);
+
         moodsListview.setAdapter(adapter);
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -60,72 +66,11 @@ public class MyProfileActivity extends Profile {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.filter_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        String name = CurrentUserSingleton.getInstance().getUser().getName();
-        switch(item.getItemId()){
-            case R.id.filter_recent:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterMostRecent(name));
-                break;
-            case R.id.filter_angry:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.angry.getName().toLowerCase()));
-                break;
-
-            case R.id.filter_confused:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.confused.getName().toLowerCase()));
-                break;
-
-            case R.id.filter_disgusted:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.disgust.getName().toLowerCase()));
-                break;
-
-            case R.id.filter_happy:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.happy.getName().toLowerCase()));
-                break;
-
-            case R.id.filter_sad:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.sad.getName().toLowerCase()));
-                break;
-
-            case R.id.filter_scared:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.fear.getName().toLowerCase()));
-                break;
-
-            case R.id.filter_shame:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.shame.getName().toLowerCase()));
-                break;
-
-            case R.id.filter_surprise:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.surprise.getName().toLowerCase()));
-                break;
-        }
-
-        adapter.notifyDataSetChanged();
-
-        return true;
-    }
-
-
     /**
      * goes to add mood activity to add a mood
      */
     private void addMood(){
+        filter.filter(""); // before adding, restore moods list.
         Intent intent  = new Intent(this, AddMoodActivity.class);
         startActivityForResult(intent,1);
     }
@@ -147,12 +92,14 @@ public class MyProfileActivity extends Profile {
                 for (Mood mood : moods){
                     Log.d("Mood", mood.getEmotion().getName());
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+
+                adapter.updateData(moods);
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                });
             }
         }
     }

@@ -2,7 +2,9 @@ package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class Profile extends AppCompatActivity {
     private ArrayList<Mood> moods;
     private ProfileMoodAdapter adapter;
     private ListView moodsListview;
+    private Filter filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,63 +62,82 @@ public class Profile extends AppCompatActivity {
 
     }
 
+    protected void setFilter(Filter filter){
+        this.filter = filter;
+    }
+
+
+    // for the search:
+    // http://www.viralandroid.com/2016/03/implementing-searchview-in-android-actionbar.html
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.filter_menu, menu);
+
+        MenuItem searchViewItem = menu.findItem(R.id.filter_keyword);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filter.filter("K:" + searchView.getQuery());
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
-            case R.id.filter_recent:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterMostRecent(name));
+            case R.id.filter_all:
+                filter.filter("");
                 break;
+
+            case R.id.filter_recent:
+                filter.filter("LATEST");
+                break;
+
             case R.id.filter_angry:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.angry.getName()));
+                filter.filter("E:" + Emotion.angry.getName());
                 break;
 
             case R.id.filter_confused:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.confused.getName()));
+                filter.filter("E:" + Emotion.confused.getName());
                 break;
 
             case R.id.filter_disgusted:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.disgust.getName()));
+                filter.filter("E:" + Emotion.disgust.getName());
                 break;
 
             case R.id.filter_happy:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.happy.getName()));
+                filter.filter("E:" + Emotion.happy.getName());
                 break;
 
             case R.id.filter_sad:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.sad.getName()));
+                filter.filter("E:" + Emotion.sad.getName());
                 break;
 
             case R.id.filter_scared:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.fear.getName()));
+                filter.filter("E:" + Emotion.fear.getName());
                 break;
 
             case R.id.filter_shame:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.shame.getName()));
+                filter.filter("E:" + Emotion.shame.getName());
                 break;
 
             case R.id.filter_surprise:
-                moods.clear();
-                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.surprise.getName()));
+                filter.filter("E:" + Emotion.surprise.getName());
                 break;
-
         }
 
-        adapter.notifyDataSetChanged();
         return true;
     }
     /*
@@ -245,6 +268,7 @@ public class Profile extends AppCompatActivity {
         adapter = new ProfileMoodAdapter(this, moods);
 
         moodsListview.setAdapter(adapter);
+        filter = adapter.getFilter();
     }
 
     @Override
