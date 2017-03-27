@@ -314,7 +314,6 @@ public class AddMoodActivity extends AppCompatActivity {
         mood.setSituation(situation);
 
         mood.setLocation(location);
-
         trigger = editTrigger.getText().toString();
         mood.setTrigger(trigger);
 
