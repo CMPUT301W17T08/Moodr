@@ -46,7 +46,7 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
 
         //update on server
         ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
-        deleteMoodTask.execute(mood.getId());
+        deleteMoodTask.execute(mood);
         finish();
     }
 

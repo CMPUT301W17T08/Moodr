@@ -91,12 +91,6 @@ public class Profile extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.action_offline) {
-            Intent intent = new Intent(Profile.this, OfflineMode.class);
-            startActivity(intent);
-            return true;
-        }
-
         if (id == R.id.action_logout) {
             CurrentUserSingleton.getInstance().reset();
             Intent intent = new Intent(Profile.this, LoginActivity.class);

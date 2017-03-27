@@ -16,10 +16,12 @@ public enum CurrentUserSingleton {
     INSTANCE;
     private final User user;
     private final MoodList myMoodList;
+    private final OfflineMode myOfflineActions;
 
     CurrentUserSingleton() {
         user = new User("placeholder");
         myMoodList = new MoodList();
+        myOfflineActions = new OfflineMode();
     }
 
     /**
@@ -45,16 +47,25 @@ public enum CurrentUserSingleton {
      *
      * @return the my mood list
      */
-
     public MoodList getMyMoodList() {
         return myMoodList;
     }
 
+    /**
+     * Gets my offline actions.
+     *
+     * @return OfflineMode object
+     */
+    public OfflineMode getMyOfflineActions() {
+        return myOfflineActions;
+    }
+    
     /**
      * Reset singleton.
      */
     public void reset () {
         user.reset();
         myMoodList.reset();
+        myOfflineActions.reset();
     }
 }

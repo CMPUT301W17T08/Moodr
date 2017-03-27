@@ -1,8 +1,5 @@
 package com.cmput301w17t08.moodr;
 
-import android.os.Bundle;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -14,34 +11,49 @@ import java.util.ArrayList;
  */
 
 public class OfflineMode {
-    private ArrayList<Mood> addedMoodList;
-    private ArrayList<Mood> editedMoodList;
-    private ArrayList<Mood> deletedMoodList;
+
+    /**
+     * 1 is Add
+     * 2 is Edit
+     * 3 is Delete
+     */
+    private ArrayList<Integer> allActions;
+    private ArrayList<Mood> correspondingMood;
 
 
-    public ArrayList getAddedMoodList(){
-        return this.addedMoodList;
+    public OfflineMode() {
+        allActions = new ArrayList<Integer>();
+        correspondingMood = new ArrayList<Mood>();
     }
 
-    public ArrayList getEditMoodList(){
-        return this.editedMoodList;
+    public ArrayList<Integer> getAllActions() {
+        return allActions;
     }
 
-    public ArrayList getDeleteMoodList(){
-        return this.deletedMoodList;
+    public void setAllActions(ArrayList<Integer> allActions) {
+        this.allActions = allActions;
     }
 
-    public void addMoodWhileOffline(Mood m){
-        addedMoodList.add(m);
+    public ArrayList<Mood> getCorrespondingMood() {
+        return correspondingMood;
     }
 
-    public void editMoodWhileOffline(Mood m){
-        editedMoodList.add(m);
-
+    public void setCorrespondingMood(ArrayList<Mood> correspondingMood) {
+        this.correspondingMood = correspondingMood;
     }
 
-    public void deleteMoodWhileOffline(Mood m){
-        deletedMoodList.add(m);
+    public void addAction(Integer i, Mood mood) {
+        allActions.add(i);
+        correspondingMood.add(mood);
+    }
 
+    public void popFirstAction() {
+        allActions.remove(0);
+        correspondingMood.remove(0);
+    }
+
+    public void reset() {
+        allActions.clear();
+        correspondingMood.clear();
     }
 }
