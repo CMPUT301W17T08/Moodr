@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class MyProfileActivity extends Profile {
     private User user;
-    private ArrayList<Mood> moods;
+    private ArrayList<Mood> moods = new ArrayList<>();
     private ProfileMoodAdapter adapter;
     private ListView moodsListview;
     private Filter filter;
@@ -34,7 +34,7 @@ public class MyProfileActivity extends Profile {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        moods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
+        moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
         user = CurrentUserSingleton.getInstance().getUser();
         setTitle(user.getName());
 
@@ -70,7 +70,6 @@ public class MyProfileActivity extends Profile {
      * goes to add mood activity to add a mood
      */
     private void addMood(){
-        filter.filter(""); // before adding, restore moods list.
         Intent intent  = new Intent(this, AddMoodActivity.class);
         startActivityForResult(intent,1);
     }
@@ -80,6 +79,7 @@ public class MyProfileActivity extends Profile {
      * @param i index of the mood in moodList
      */
     private void goToMood(int i){
+        i = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods().indexOf(moods.get(i));
         Intent intent = new Intent(this, ViewMyMoodActivity.class);
         intent.putExtra("index", i);
         startActivityForResult(intent, 1);
@@ -89,11 +89,15 @@ public class MyProfileActivity extends Profile {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
+                moods.clear();
+                moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
+                adapter.notifyDataSetChanged();
+
                 for (Mood mood : moods){
                     Log.d("Mood", mood.getEmotion().getName());
                 }
 
-                adapter.updateData(moods);
+
 //                runOnUiThread(new Runnable() {
 //                    @Override
 //                    public void run() {

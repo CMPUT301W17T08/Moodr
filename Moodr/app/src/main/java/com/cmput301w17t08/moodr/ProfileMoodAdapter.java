@@ -17,7 +17,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * This class is a custom adapter for the profile pages.
+ * This class is a custom adapter for the profile pages. Includes filter to filter results. Filter
+ * uses the results stored in the array, so filters can be applied both online and offline.
  *
  * @see Profile
  * @see MyProfileActivity
@@ -29,12 +30,11 @@ import java.util.Locale;
 public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable {
     private MoodFilter moodFilter;
     private ArrayList<Mood> moods;
-    private ArrayList<Mood> origMoods = new ArrayList<>(); // keep a copy of the original moods.
+    private ArrayList<Mood> allMoods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
 
     public ProfileMoodAdapter(Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
         this.moods = moods;
-        origMoods.addAll(moods);
     }
 
     @Override
@@ -63,11 +63,6 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
         return convertView;
     }
 
-    public void updateData(ArrayList moods){
-        origMoods.clear();
-        origMoods.addAll(moods);
-        notifyDataSetChanged();
-    }
 
     @Override
     public Filter getFilter() {
@@ -85,14 +80,14 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
             FilterResults results = new FilterResults();
 
             if (constraint == null | constraint.length() == 0) {
-                results.values = origMoods;
-                results.count = origMoods.size();
+                results.values = allMoods;
+                results.count = allMoods.size();
             } else {
                 ArrayList<Mood> resultsList = new ArrayList<Mood>();
                 String filterBy = constraint.toString();
 
                 if (filterBy.startsWith("E:")) { // filter by emotion
-                    for (Mood mood : origMoods) {
+                    for (Mood mood : allMoods) {
                         if (mood.getEmotion().getName().equals(filterBy.substring(2))) {
                             resultsList.add(mood);
                         }
@@ -101,13 +96,13 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
                     Calendar now = Calendar.getInstance();
                     now.add(Calendar.WEEK_OF_MONTH, -1);
 
-                    for (Mood mood : origMoods) {
+                    for (Mood mood : allMoods) {
                         if (mood.getDate().after(now.getTime())) {
                             resultsList.add(mood);
                         }
                     }
                 } else if (filterBy.startsWith("K:")) { // filter by keyword
-                    for (Mood mood : origMoods) {
+                    for (Mood mood : allMoods) {
                         if (mood.getTrigger().contains(filterBy.substring(2))) {
                             resultsList.add(mood);
                         }
