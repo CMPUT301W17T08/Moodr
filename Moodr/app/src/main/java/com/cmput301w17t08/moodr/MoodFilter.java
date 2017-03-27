@@ -1,6 +1,7 @@
 package com.cmput301w17t08.moodr;
 
 import android.util.Log;
+import android.widget.Filter;
 
 import java.util.ArrayList;
 
@@ -8,7 +9,10 @@ import java.util.ArrayList;
  * Created by kirsten on 23/03/17.
  */
 
-public class Filter {
+public class MoodFilter{
+
+
+    // Filter by elastic search. Only works if online.
 
     ArrayList<Mood> filterByEmotion(String name, String emotion){
         ArrayList<Mood> results = new ArrayList<Mood>();

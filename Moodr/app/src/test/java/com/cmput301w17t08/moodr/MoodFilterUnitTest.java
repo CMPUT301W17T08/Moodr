@@ -1,10 +1,7 @@
 package com.cmput301w17t08.moodr;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -14,7 +11,7 @@ import static junit.framework.Assert.assertTrue;
  * Created by kirsten on 23/03/17.
  */
 
-public class FilterUnitTest {
+public class MoodFilterUnitTest {
     //    ArrayList<Mood> filterByEmotion(String name, String emotion){
 //        return null;
 //    }
@@ -42,9 +39,9 @@ public class FilterUnitTest {
         new ElasticSearchMoodController.AddMoodTask().execute(mood3);
         new ElasticSearchMoodController.AddMoodTask().execute(mood4);
 
-        // filter the surprise mood from filterEmotionTest
-        Filter filter = new Filter();
-        ArrayList retrieved = filter.filterByEmotion("filterEmotionTest", "surprise");
+        // moodFilter the surprise mood from filterEmotionTest
+        MoodFilter moodFilter = new MoodFilter();
+        ArrayList retrieved = moodFilter.filterByEmotion("filterEmotionTest", "surprise");
         assertTrue(retrieved.contains(mood1));
         assertTrue(retrieved.contains(mood4));
 
@@ -78,9 +75,9 @@ public class FilterUnitTest {
 
 
         // get the latest moods
-        Filter filter = new Filter();
+        MoodFilter moodFilter = new MoodFilter();
 
-        ArrayList<Mood> retrieved = filter.filterMostRecent("filterEmotionTest");
+        ArrayList<Mood> retrieved = moodFilter.filterMostRecent("filterEmotionTest");
         assertTrue(retrieved.contains(mood2));
 
         // delete added moods.
@@ -113,8 +110,8 @@ public class FilterUnitTest {
         new ElasticSearchMoodController.AddMoodTask().execute(mood3);
         new ElasticSearchMoodController.AddMoodTask().execute(mood4);
 
-        Filter filter = new Filter();
-        ArrayList<Mood> retrieved =  filter.filterKeyword("filterEmotionTest","text");
+        MoodFilter moodFilter = new MoodFilter();
+        ArrayList<Mood> retrieved =  moodFilter.filterKeyword("filterEmotionTest","text");
         assertTrue(retrieved.contains(mood1));
         assertTrue(retrieved.contains(mood2));
         assertTrue(retrieved.contains(mood3));

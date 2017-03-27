@@ -6,6 +6,11 @@
         android:orderInCategory="101"
         android:title="@string/Recent"
         app:showAsAction="never" />
+
+    <item
+        android:title="@string/filter_keyword"
+        android:id="@+id/filter_keyword"/>
+
     <item
         android:id="@+id/filter_moods"
         android:orderInCategory="101"
@@ -38,12 +43,9 @@
                 android:title="@string/surprised"/>
         </menu>
     </item>
-    <item
-        android:id="@+id/app_bar_search"
-        android:actionViewClass="android.widget.SearchView"
-        android:icon="@drawable/ic_search"
-        android:orderInCategory="100"
-        android:title="Search" />
+
+
+
 
 
 </menu>

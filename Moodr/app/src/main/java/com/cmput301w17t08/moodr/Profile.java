@@ -2,8 +2,6 @@ package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -63,10 +61,63 @@ public class Profile extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_my_profile, menu);
+        getMenuInflater().inflate(R.menu.filter_menu, menu);
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.filter_recent:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterMostRecent(name));
+                break;
+            case R.id.filter_angry:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.angry.getName()));
+                break;
+
+            case R.id.filter_confused:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.confused.getName()));
+                break;
+
+            case R.id.filter_disgusted:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.disgust.getName()));
+                break;
+
+            case R.id.filter_happy:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.happy.getName()));
+                break;
+
+            case R.id.filter_sad:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.sad.getName()));
+                break;
+
+            case R.id.filter_scared:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.fear.getName()));
+                break;
+
+            case R.id.filter_shame:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.shame.getName()));
+                break;
+
+            case R.id.filter_surprise:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.surprise.getName()));
+                break;
+
+        }
+
+        adapter.notifyDataSetChanged();
+        return true;
+    }
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -112,7 +163,9 @@ public class Profile extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
+
+
 
     /**
      * view details of mood.

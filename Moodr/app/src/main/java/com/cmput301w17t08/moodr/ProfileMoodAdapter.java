@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ import java.util.Locale;
  */
 
 
-public class ProfileMoodAdapter extends ArrayAdapter<Mood> {
+public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable {
     private ArrayList<Mood> moods;
 
     public ProfileMoodAdapter(Context context, ArrayList<Mood> moods) {

@@ -31,13 +31,10 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/Moodr" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             </activity>
 
         <!--
@@ -59,11 +56,7 @@
             android:name=".Profile"
 
             android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-Filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-Filter>-->
         </activity>
         <activity android:name=".ViewMyMoodActivity"/>
         <activity android:name=".AddMoodActivity" />

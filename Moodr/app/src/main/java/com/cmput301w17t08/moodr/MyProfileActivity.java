@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * This activity displays the user's moods. The user has the option to add a mood from this activity.
@@ -24,6 +23,7 @@ public class MyProfileActivity extends Profile {
     private ArrayList<Mood> moods;
     private ProfileMoodAdapter adapter;
     private ListView moodsListview;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,67 @@ public class MyProfileActivity extends Profile {
                 goToMood(i);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.filter_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        String name = CurrentUserSingleton.getInstance().getUser().getName();
+        switch(item.getItemId()){
+            case R.id.filter_recent:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterMostRecent(name));
+                break;
+            case R.id.filter_angry:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.angry.getName().toLowerCase()));
+                break;
+
+            case R.id.filter_confused:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.confused.getName().toLowerCase()));
+                break;
+
+            case R.id.filter_disgusted:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.disgust.getName().toLowerCase()));
+                break;
+
+            case R.id.filter_happy:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.happy.getName().toLowerCase()));
+                break;
+
+            case R.id.filter_sad:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.sad.getName().toLowerCase()));
+                break;
+
+            case R.id.filter_scared:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.fear.getName().toLowerCase()));
+                break;
+
+            case R.id.filter_shame:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.shame.getName().toLowerCase()));
+                break;
+
+            case R.id.filter_surprise:
+                moods.clear();
+                moods.addAll(new MoodFilter().filterByEmotion(name, Emotion.surprise.getName().toLowerCase()));
+                break;
+        }
+
+        adapter.notifyDataSetChanged();
+
+        return true;
     }
 
 
