@@ -174,6 +174,7 @@ public class Profile extends AppCompatActivity {
         }
 
         if (id == R.id.action_logout) {
+            CurrentUserSingleton.getInstance().reset();
             Intent intent = new Intent(Profile.this, LoginActivity.class);
             startActivity(intent);
             return true;

@@ -62,9 +62,16 @@ public class User {
         this.pending = pending;
     }
 
-    public void addFriend(String name){
-        if (!this.friends.contains(name)){
+    public void addFriend(String name) {
+        if (!this.friends.contains(name)) {
             this.friends.add(name);
         }
+    }
+
+    public void reset(){
+        this.name = "placeholder";
+        friends.clear();
+        pending.clear();
+        user_ID = "";
     }
 }

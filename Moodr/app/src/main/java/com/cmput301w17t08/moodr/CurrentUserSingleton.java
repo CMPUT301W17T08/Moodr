@@ -49,4 +49,12 @@ public enum CurrentUserSingleton {
     public MoodList getMyMoodList() {
         return myMoodList;
     }
+
+    /**
+     * Reset singleton.
+     */
+    public void reset () {
+        user.reset();
+        myMoodList.reset();
+    }
 }
