@@ -72,7 +72,8 @@ public class Profile extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.filter_menu, menu);
+        getMenuInflater().inflate(R.menu.filter_menu, menu); // inflate the filter
+        getMenuInflater().inflate(R.menu.menu_my_profile, menu); // inflate navigation
 
         MenuItem searchViewItem = menu.findItem(R.id.filter_keyword);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
@@ -96,7 +97,9 @@ public class Profile extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
+        Intent intent;
+
+        switch(item.getItemId()) {
             case R.id.filter_all:
                 filter.filter("");
                 break;
@@ -136,6 +139,36 @@ public class Profile extends AppCompatActivity {
             case R.id.filter_surprise:
                 filter.filter("E:" + Emotion.surprise.getName());
                 break;
+
+
+            // navigation cases
+            case R.id.action_home:
+                intent = new Intent(Profile.this, MyProfileActivity.class);
+                startActivity(intent);
+                return true;
+
+
+            case R.id.action_friends:
+                intent = new Intent(Profile.this, FriendsActivity.class);
+                startActivity(intent);
+                return true;
+
+
+            case R.id.action_nearme:
+                intent = new Intent(Profile.this, MapsActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_logout:
+                CurrentUserSingleton.getInstance().reset();
+                intent = new Intent(Profile.this, LoginActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_latest:
+                intent = new Intent(this, LatestActivity.class);
+                startActivity(intent);
+                return true;
         }
 
         return true;

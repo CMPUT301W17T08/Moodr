@@ -89,6 +89,7 @@ public class MyProfileActivity extends Profile {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
+                // on any change to moods, the filter will reset.
                 moods.clear();
                 moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
                 adapter.notifyDataSetChanged();
@@ -96,14 +97,6 @@ public class MyProfileActivity extends Profile {
                 for (Mood mood : moods){
                     Log.d("Mood", mood.getEmotion().getName());
                 }
-
-
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                });
             }
         }
     }

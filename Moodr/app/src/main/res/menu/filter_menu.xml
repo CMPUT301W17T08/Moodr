@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/filter_all"
-        android:title="@string/view_all"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/filter_recent"
-        android:orderInCategory="101"
-        android:title="@string/Recent"
-        app:showAsAction="never" />
 
     <item
         app:actionViewClass="android.support.v7.widget.SearchView"
@@ -20,36 +10,59 @@
         android:icon="@drawable/ic_search"/>
 
     <item
-        android:id="@+id/filter_moods"
-        android:orderInCategory="101"
-        android:title="@string/Filter_mood"
-        app:showAsAction="never">
+        android:id="@+id/option_group"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="ifRoom"
+        android:title="Filter">
+
+
         <menu>
             <item
-                android:id="@+id/filter_angry"
-                android:title="@string/angry"/>
+                android:id="@+id/filter_all"
+                android:title="@string/view_all"
+                app:showAsAction="never"/>
+
             <item
-                android:id="@+id/filter_confused"
-                android:title="@string/confused"/>
+                android:id="@+id/filter_recent"
+                android:orderInCategory="101"
+                android:title="@string/Recent"
+                app:showAsAction="never" />
+
+
             <item
-                android:id="@+id/filter_disgusted"
-                android:title="@string/disgusted"/>
-            <item
-                android:id="@+id/filter_happy"
-                android:title="@string/happy"/>
-            <item
-                android:id="@+id/filter_scared"
-                android:title="@string/scared"/>
-            <item
-                android:id="@+id/filter_sad"
-                android:title="@string/sad"/>
-            <item
-                android:id="@+id/filter_shame"
-                android:title="@string/shame"/>
-            <item
-                android:id="@+id/filter_surprise"
-                android:title="@string/surprised"/>
+                android:id="@+id/filter_moods"
+                android:orderInCategory="101"
+                android:title="@string/Filter_mood"
+                app:showAsAction="never">
+                <menu>
+                    <item
+                        android:id="@+id/filter_angry"
+                        android:title="@string/angry"/>
+                    <item
+                        android:id="@+id/filter_confused"
+                        android:title="@string/confused"/>
+                    <item
+                        android:id="@+id/filter_disgusted"
+                        android:title="@string/disgusted"/>
+                    <item
+                        android:id="@+id/filter_happy"
+                        android:title="@string/happy"/>
+                    <item
+                        android:id="@+id/filter_scared"
+                        android:title="@string/scared"/>
+                    <item
+                        android:id="@+id/filter_sad"
+                        android:title="@string/sad"/>
+                    <item
+                        android:id="@+id/filter_shame"
+                        android:title="@string/shame"/>
+                    <item
+                        android:id="@+id/filter_surprise"
+                        android:title="@string/surprised"/>
+                </menu>
+            </item>
         </menu>
     </item>
+
 
 </menu>

@@ -18,7 +18,7 @@ import java.util.Locale;
 
 /**
  * This class is a custom adapter for the profile pages. Includes filter to filter results. Filter
- * uses the results stored in the array, so filters can be applied both online and offline.
+ * uses the posts stored in CurrentUserSingleton, so filters can be applied both online and offline.
  *
  * @see Profile
  * @see MyProfileActivity
