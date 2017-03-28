@@ -118,7 +118,7 @@ public class ElasticSearchMoodController {
             ArrayList<Mood> moods = new ArrayList<Mood>();
 
             for (String sp : search_parameters[0]) {
-                String query = "{ \"query\" : { \"filtered\" : { \"Filter\" : { \"term\" : { \"owner\" : \"" + sp + "\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"size\" : 1}";
+                String query = "{ \"query\" : { \"filtered\" : { \"filter\" : { \"term\" : { \"owner\" : \"" + sp + "\"}}}}, \"sort\" : { \"date\" : { \"order\" : \"desc\"}}, \"size\" : 1}";
 
                 Search search = new Search.Builder(query)
                         .addIndex("cmput301w17t8")
