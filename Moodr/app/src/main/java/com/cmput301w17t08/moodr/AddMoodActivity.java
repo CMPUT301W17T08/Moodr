@@ -1,6 +1,8 @@
 package com.cmput301w17t08.moodr;
 
+
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -16,6 +18,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -26,8 +29,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -54,9 +57,9 @@ public class AddMoodActivity extends AppCompatActivity {
 
 
     private ImageView imageView;
-    private ImageButton locationButton;
-    private ImageButton btnChoosePhoto;
-    private ImageButton btnOpenCamera;
+    private Button locationButton;
+    private Button btnChoosePhoto;
+    private Button btnOpenCamera;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private TextView locationText;
@@ -72,7 +75,6 @@ public class AddMoodActivity extends AppCompatActivity {
     private String imgUrl;
     private String trigger;
     private String situation;
-    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,44 +176,20 @@ public class AddMoodActivity extends AppCompatActivity {
 
         editTrigger = (EditText) findViewById(R.id.et_trigger);
 
-        editTrigger.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                int wordsLength = countWords(s.toString());// words.length;
-                // count == 0 means a new word is going to start
-                if (count == 0 && wordsLength >= 3) {
-                    setCharLimit(editTrigger, editTrigger.getText().length());
-                } else {
-                    removeFilter(editTrigger);
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                trigger = editTrigger.getText().toString();
-            }
-        });
-
         // Open camera on button click and use for the picture
-        btnOpenCamera = (ImageButton) findViewById(R.id.btn_camera);
+        btnOpenCamera = (Button) findViewById(R.id.btn_camera);
         imageView = (ImageView) findViewById(R.id.iv_imageview);
         btnOpenCamera.setOnClickListener(btnOpenCameraPressed);
 
 
 
         // Get image file on button click
-        btnChoosePhoto = (ImageButton) findViewById(R.id.btn_picture);
+        btnChoosePhoto = (Button) findViewById(R.id.btn_picture);
         imageView = (ImageView) findViewById(R.id.iv_imageview);
         btnChoosePhoto.setOnClickListener(btnChoosePhotoPressed);
 
         // Get user location on button click
-        locationButton = (ImageButton) findViewById(R.id.btn_location);
+        locationButton = (Button) findViewById(R.id.btn_location);
         locationText = (TextView) findViewById(R.id.tv_location);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -219,6 +197,8 @@ public class AddMoodActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 locationText.setText(location.getLongitude() + " " + location.getLatitude());
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
             }
 
             @Override
@@ -314,39 +294,42 @@ public class AddMoodActivity extends AppCompatActivity {
 
 //        CurrentUserSingleton.getInstance().getUser().incrementPostID();
 
-        location = locationText.getText().toString();
 
         mood.setSituation(situation);
 
-        mood.setLocation(location);
+        // mood.setLocation(location);
+        // set Longitude and Latitude onto elasticSearch
+
         trigger = editTrigger.getText().toString();
+        boolean checkLimit = countLimit();
         mood.setTrigger(trigger);
 
-//        mood.setImgUrl("PLACEHOLDER");
-
-        // Check if app is connected to a network.
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (null == activeNetwork) {
-            // Generate a unique UUID ID for offline mode.
-            mood.setId(UUID.randomUUID().toString());
-            CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-            Toast.makeText(AddMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
-            CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
+        // Check if limit is reached
+        if (checkLimit) {
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (null == activeNetwork) {
+                // Generate a unique UUID ID for offline mode.
+                mood.setId(UUID.randomUUID().toString());
+                CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+                Toast.makeText(AddMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+                CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
+            } else {
+                ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
+                addMoodTask.execute(mood);
+                try {
+                    String moodId = addMoodTask.get();
+                    mood.setId(moodId);
+                    CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+                } catch (Exception e) {
+                    Log.i("Error", "Error getting moods out of async object");
+                }
+            }
         }
         else {
-            ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
-            addMoodTask.execute(mood);
-            try{
-                String moodId = addMoodTask.get();
-                mood.setId(moodId);
-                CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-            }
-            catch(Exception e){
-                Log.i("Error", "Error getting moods out of async object");
-            }
+            triggerError();
         }
-
 
     }
 
@@ -455,22 +438,39 @@ public class AddMoodActivity extends AppCompatActivity {
 
 
     /* Functions for character limit on trigger, 20 characters or 3 words */
-    private int countWords(String s) {
-        String trim = s.trim();
-        if (trim.isEmpty())
-            return 0;
-        return trim.split("\\s+").length; // separate string around spaces
-    }
-
-    private void setCharLimit(EditText et, int max) {
-        filter = new InputFilter.LengthFilter(max);
-        et.setFilters(new InputFilter[]{filter});
-    }
-
-    private void removeFilter(EditText et) {
-        if (filter != null) {
-            et.setFilters(new InputFilter[0]);
-            filter = null;
+    public boolean countLimit(){
+        trigger = editTrigger.getText().toString();
+        int triggerLength= trigger.length();
+        int triggerWords = wordCount(trigger);
+        boolean flag = true;
+        if (triggerLength > 20 || triggerWords > 3){
+            flag = false;
         }
+        return flag;
+
+    }
+
+    public int wordCount (String s){
+        String input = s.trim();
+        int words = input.isEmpty() ? 0 : input.split("\\s+").length;
+        return words;
+    }
+
+    public void triggerError (){
+        new AlertDialog.Builder(AddMoodActivity.this)
+                .setTitle("Limit Reached")
+                .setMessage("Please use only 3 words or 20 characters")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }

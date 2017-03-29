@@ -11,6 +11,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -19,11 +20,20 @@
         <!--android:paddingLeLft="24dp"-->
         <!--android:paddingRight="24dp">-->
 
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="275dp"
+            android:layout_height="194dp"
+            android:src="@drawable/heart"
+            android:layout_gravity="center"
+            />
+
         <TextView
             android:id="@+id/login_hint"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
+            android:textSize="20dp"
             android:text="User Name" />
 
         <EditText

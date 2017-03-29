@@ -6,10 +6,12 @@
     android:weightSum="1">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_emotion"
         android:text="Mood"
+        android:textSize="25dp"
+        android:gravity="center"
 
         />
 
@@ -18,14 +20,17 @@
         android:layout_height="wrap_content"
         android:id="@+id/sp_emotion"
         android:spinnerMode="dropdown"
+        android:minHeight="48dp"
 
         />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_social_situation"
         android:text="Social Situation"
+        android:textSize="25dp"
+        android:gravity="center"
 
         />
 
@@ -34,6 +39,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_social_situation"
         android:spinnerMode="dropdown"
+        android:minHeight="48dp"
 
         />
 
@@ -42,6 +48,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/tv_trigger"
         android:text="Trigger (3 words or 20 characters)"
+        android:textSize="20dp"
+        android:gravity="center"
 
         />
 
@@ -50,7 +58,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_trigger"
         android:inputType="text"
-        android:maxLength="20"
+        android:minHeight="50dp"
 
         />
 
@@ -62,34 +70,31 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="                                  "
+            android:text="               "
             />
 
-        <ImageButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_camera"
-            android:src="@mipmap/ic_camera"
-            android:background="#80FFFFFF"
+            android:text="Camera"
             />
 
 
-        <ImageButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_picture"
-            android:src="@mipmap/ic_gallery"
-            android:background="#80FFFFFF"
+            android:text="Gallery"
 
 
             />
 
-        <ImageButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_location"
-            android:src="@mipmap/ic_map"
-            android:background="#80FFFFFF"
+            android:text="Location"
 
             />
 

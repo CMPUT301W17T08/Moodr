@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by salvindr on 2/27/17.
+ * Created by sal on 2/27/17.
  */
 
 public class OfflineModeUnitTest {
-
+/*
     @Test
     public void testGetAddedMoodList(){
         //Mood(owner,emotion)
@@ -34,6 +34,7 @@ public class OfflineModeUnitTest {
 
     }
 
+
     public void testGetDeletedMoodList(){
         Mood m = new Mood("newowner", Emotion.sad);
         OfflineMode offlineMode = new OfflineMode();
@@ -42,7 +43,7 @@ public class OfflineModeUnitTest {
 
         Assert.assertEquals(retrievedList.get(0), m);
     }
-
+*/
     public void testaddwhileOffline(){
 
     }
