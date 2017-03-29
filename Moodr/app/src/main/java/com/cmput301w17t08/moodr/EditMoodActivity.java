@@ -1,11 +1,14 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -343,10 +347,19 @@ public class EditMoodActivity extends AppCompatActivity {
         mood.setLocation(location);
         mood.setTrigger(trigger);
 
-        ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
-        updateMoodTask.execute(mood);
-        CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
 
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
+        if (null == activeNetwork) {
+            Toast.makeText(EditMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+            CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
+        }
+        else {
+            ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
+            updateMoodTask.execute(mood);
+        }
     }
 
 }

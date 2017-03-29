@@ -99,8 +99,8 @@ public class LoginActivity extends AppCompatActivity {
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
             try{
-                String moodId = addUserTask.get();
-                CurrentUserSingleton.getInstance().getUser().setUser_Id(moodId);
+                String userId = addUserTask.get();
+                CurrentUserSingleton.getInstance().getUser().setUser_Id(userId);
             }
             catch(Exception e){
                 Log.i("Error", "Error getting user out of async object");
@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         catch (Exception e){
             Log.i("Error", "Failed to create the User");
-            Toast.makeText(getApplicationContext(),
+            Toast.makeText(LoginActivity.this,
                     "Can not create user. Internet connection Error",
                     Toast.LENGTH_SHORT).show();
             return false;

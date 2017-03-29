@@ -1,11 +1,14 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,10 +31,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * AddMoodActivity Class creates a new mood which the user can set the inputs to what they desire
@@ -319,17 +324,30 @@ public class AddMoodActivity extends AppCompatActivity {
 
 //        mood.setImgUrl("PLACEHOLDER");
 
-
-        ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
-        addMoodTask.execute(mood);
-        try{
-            String moodId = addMoodTask.get();
-            mood.setId(moodId);
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null == activeNetwork) {
+            // Generate a unique UUID ID for offline mode.
+            mood.setId(UUID.randomUUID().toString());
             CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+            Toast.makeText(AddMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+            CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
         }
-        catch(Exception e){
-            Log.i("Error", "Error getting moods out of async object");
+        else {
+            ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
+            addMoodTask.execute(mood);
+            try{
+                String moodId = addMoodTask.get();
+                mood.setId(moodId);
+                CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+            }
+            catch(Exception e){
+                Log.i("Error", "Error getting moods out of async object");
+            }
         }
+
+
     }
 
     @Override
