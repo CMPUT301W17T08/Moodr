@@ -61,4 +61,11 @@ public class User {
     public void setPending(ArrayList<String> pending) {
         this.pending = pending;
     }
+
+    public void reset() {
+        this.name = "placeholder";
+        friends.clear();
+        pending.clear();
+        user_ID = "";
+    }
 }

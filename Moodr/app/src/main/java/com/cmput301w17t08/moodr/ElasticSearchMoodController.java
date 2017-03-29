@@ -149,14 +149,17 @@ public class ElasticSearchMoodController {
     }
 
     // delete moods from elasticsearch
-    public static class DeleteMoodTask extends AsyncTask<String, Void, Void> {
+    public static class DeleteMoodTask extends AsyncTask<Mood, Void, Void> {
 
         @Override
-        protected Void doInBackground(String... search_parameters) {
+        protected Void doInBackground(Mood... search_parameters) {
             verifySettings();
 
+            Mood mood = search_parameters[0];
+            String moodId = mood.getId();
+
             // Build the query
-            Delete delete = new Delete.Builder(search_parameters[0])
+            Delete delete = new Delete.Builder(moodId)
                     .index("cmput301w17t8")
                     .type("mood")
                     .build();

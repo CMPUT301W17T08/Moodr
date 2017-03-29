@@ -52,4 +52,8 @@ public class MoodList {
     public int getSize(){
         return listOfMoods.size();
     }
+
+    public void reset() {
+        listOfMoods.clear();
+    }
 }

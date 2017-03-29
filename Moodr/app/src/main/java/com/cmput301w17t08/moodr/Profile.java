@@ -2,8 +2,6 @@ package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -93,13 +91,8 @@ public class Profile extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.action_offline) {
-            Intent intent = new Intent(Profile.this, OfflineMode.class);
-            startActivity(intent);
-            return true;
-        }
-
         if (id == R.id.action_logout) {
+            CurrentUserSingleton.getInstance().reset();
             Intent intent = new Intent(Profile.this, LoginActivity.class);
             startActivity(intent);
             return true;
