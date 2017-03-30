@@ -17,7 +17,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 /**
- * Created by kirsten on 29/03/17.
+ * A class to set up the navigation drawer for any activities that require it.
  */
 
 public class NavDrawerSetup {

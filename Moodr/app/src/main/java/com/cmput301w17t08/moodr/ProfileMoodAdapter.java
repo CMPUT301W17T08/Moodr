@@ -118,7 +118,7 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (results != null && results.count > 0){
+            if (results != null){
                 clear();
                 moods.addAll((ArrayList<Mood>) results.values);
                 notifyDataSetChanged();

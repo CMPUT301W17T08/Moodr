@@ -73,13 +73,14 @@ public class Profile extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.filter_menu, menu); // inflate the filter
-        getMenuInflater().inflate(R.menu.menu_my_profile, menu); // inflate navigation
+
 
         MenuItem searchViewItem = menu.findItem(R.id.filter_keyword);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                filter.filter("K:" + searchView.getQuery());
                 searchView.clearFocus();
                 return true;
             }
@@ -139,83 +140,10 @@ public class Profile extends AppCompatActivity {
             case R.id.filter_surprise:
                 filter.filter("E:" + Emotion.surprise.getName());
                 break;
-
-
-            // navigation cases
-            case R.id.action_home:
-                intent = new Intent(Profile.this, MyProfileActivity.class);
-                startActivity(intent);
-                return true;
-
-
-            case R.id.action_friends:
-                intent = new Intent(Profile.this, FriendsActivity.class);
-                startActivity(intent);
-                return true;
-
-
-            case R.id.action_nearme:
-                intent = new Intent(Profile.this, MapsActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.action_logout:
-                CurrentUserSingleton.getInstance().reset();
-                intent = new Intent(Profile.this, LoginActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.action_latest:
-                intent = new Intent(this, LatestActivity.class);
-                startActivity(intent);
-                return true;
         }
 
         return true;
     }
-    /*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_home) {
-            Intent intent = new Intent(Profile.this, MyProfileActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_friends) {
-            Intent intent = new Intent(Profile.this, FriendsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_nearme) {
-            Intent intent = new Intent(Profile.this, MapsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_logout) {
-            CurrentUserSingleton.getInstance().reset();
-            Intent intent = new Intent(Profile.this, LoginActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_latest) {
-            Intent intent = new Intent(this, LatestActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
 
 
     /**
