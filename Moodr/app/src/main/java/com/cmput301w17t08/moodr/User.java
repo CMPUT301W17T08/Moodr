@@ -35,15 +35,15 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public ArrayList<String> getFriends() {
-        return friends;
+        return this.friends;
     }
 
     public ArrayList<String> getPending() {
-        return pending;
+        return this.pending;
     }
 
     public void setName(String name) {
@@ -51,7 +51,11 @@ public class User {
     }
 
     public void removeFriend(String name){
-        friends.remove(name);
+        this.friends.remove(name);
+    }
+
+    public void removePending(String name){
+        this.pending.remove(name);
     }
 
     public void setFriends(ArrayList<String> friends) {
