@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -16,17 +17,19 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="56dp">
+        android:paddingTop="56dp"
+        android:weightSum="1"
+        android:layout_weight="0.50">
         <!--android:paddingLeLft="24dp"-->
         <!--android:paddingRight="24dp">-->
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="275dp"
-            android:layout_height="194dp"
-            android:src="@drawable/heart"
+            android:layout_width="243dp"
+            android:layout_height="195dp"
             android:layout_gravity="center"
-            />
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:src="@drawable/heart" />
 
         <TextView
             android:id="@+id/login_hint"
@@ -34,7 +37,8 @@
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
             android:textSize="20dp"
-            android:text="User Name" />
+            android:text="User Name"
+            android:gravity="center"/>
 
         <EditText
             android:id="@+id/username"
@@ -43,18 +47,25 @@
             android:scrollbars="horizontal"
             android:hint="Enter your user name here"
             android:inputType="text"
+            android:gravity="center"
             android:digits="abcdefghijklmnopqrstuvwxyz" />
 
         <Button
             android:id="@+id/login_button"
-            android:layout_width="match_parent"
+            android:layout_width="113dp"
             android:layout_height="wrap_content"
-            android:text="LOGIN"/>
+            android:layout_gravity="center"
+            android:background="@color/color_login"
+            android:text="LOGIN" />
+
         <Button
             android:id="@+id/signup_button"
-            android:layout_width="match_parent"
+            android:layout_width="113dp"
             android:layout_height="wrap_content"
-            android:text="SIGN UP"/>
+            android:layout_gravity="center"
+            android:background="@color/color_signup"
+            android:layout_marginTop="10dp"
+            android:text="SIGN UP" />
 
 
     </LinearLayout>
