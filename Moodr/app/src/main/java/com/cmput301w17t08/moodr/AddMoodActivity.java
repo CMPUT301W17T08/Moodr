@@ -1,11 +1,13 @@
 package com.cmput301w17t08.moodr;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +39,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,6 +80,7 @@ public class AddMoodActivity extends AppCompatActivity {
     private String imgUrl;
     private String trigger;
     private String situation;
+    private String encodedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +133,7 @@ public class AddMoodActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected_emotion = parent.getItemAtPosition(position).toString();
 
-                switch(selected_emotion){
+                switch (selected_emotion) {
                     case "Happy":
                         emotion = Emotion.happy;
                         break;
@@ -180,7 +186,6 @@ public class AddMoodActivity extends AppCompatActivity {
         btnOpenCamera = (Button) findViewById(R.id.btn_camera);
         imageView = (ImageView) findViewById(R.id.iv_imageview);
         btnOpenCamera.setOnClickListener(btnOpenCameraPressed);
-
 
 
         // Get image file on button click
@@ -253,7 +258,7 @@ public class AddMoodActivity extends AppCompatActivity {
             // Checkmark button
             case R.id.action_add_complete:
                 // Create mood and send it right to elasticSearch
-                createMood(emotion, situation, trigger);
+                createMood(emotion, situation, trigger, encodedImage);
                 // Add the mood to MoodList
                 //finish();
                 return true;
@@ -280,7 +285,7 @@ public class AddMoodActivity extends AppCompatActivity {
     }
     */
 
-    public void createMood(Emotion emotion, String situation, String trigger) {
+    public void createMood(Emotion emotion, String situation, String trigger, String encodedImage) {
         // Grab owner
         owner = CurrentUserSingleton.getInstance().getUser().getName();
         // Create the mood
@@ -300,6 +305,11 @@ public class AddMoodActivity extends AppCompatActivity {
         trigger = editTrigger.getText().toString();
         boolean checkLimit = countLimit();
         mood.setTrigger(trigger);
+
+        // Set image encoded string
+        encodedImage = "SDFKDMKDM";
+        Log.d("ImageURL", encodedImage);
+        mood.setImgUrl(encodedImage);
 
         // Check if limit is reached
         if (checkLimit) {
@@ -325,8 +335,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 }
                 finish();
             }
-        }
-        else {
+        } else {
             triggerError();
         }
 
@@ -363,15 +372,14 @@ public class AddMoodActivity extends AppCompatActivity {
         });
     }
 
-/*
-    public String getAddress (double latitude, double longitude){
-        String strAdd = "";
-        Geocoder geocoder = new Geocoder
-    }
 
-*/
+    /* ------------------- Functions for image addition ------------------ */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
 
-    /* Choose an image from Gallery */
+
     /* When button for image is pressed */
     public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
         @Override
@@ -384,7 +392,7 @@ public class AddMoodActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        startActivityForResult(intent, 1);
     }
 
     /* Get the real path from the URI */
@@ -404,20 +412,58 @@ public class AddMoodActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // Get the path from the Uri
-                    String path = getPathFromURI(selectedImageUri);
-                    Log.i(TAG, "Image Path : " + path);
-                    // Set the image in ImageView
-                    imageView.setImageURI(selectedImageUri);
+        if (resultCode == 1) {
+            if (resultCode == RESULT_OK) {
+                if (requestCode == SELECT_PICTURE) {
+                    // Get the url from data
+                    Uri selectedImageUri = data.getData();
+                    if (null != selectedImageUri) {
+                        // Get the path from the Uri
+                        String path = getPathFromURI(selectedImageUri);
+                        Log.i(TAG, "Image Path : " + path);
+                        // Set the image in ImageView
+                        imageView.setImageURI(selectedImageUri);
+                    }
                 }
+            }
+        } else if (resultCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
+                Bundle extras = data.getExtras();
+                Bitmap bitmapImage = (Bitmap) extras.get("data");
+                imageView.setImageBitmap(bitmapImage);
+                saveToInternalStorage(bitmapImage);
+                encodedImage = encodeImage(bitmapImage);
+                Toast.makeText(AddMoodActivity.this, "Image Added", Toast.LENGTH_SHORT).show();
+
             }
         }
     }
+
+
+    public static String encodeImage(Bitmap bitmap){
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+   // http://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
+    public boolean saveToInternalStorage(Bitmap bitmapImage){
+        try {
+            FileOutputStream fos = AddMoodActivity.this.openFileOutput("desiredFilename.png", Context.MODE_PRIVATE);
+
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+
+            return true;
+        } catch (Exception e) {
+            Log.e("saveToInternalStorage()", e.getMessage());
+            return false;
+        }
+    }
+
 
 
     /* When button for camera is pressed */
@@ -431,12 +477,17 @@ public class AddMoodActivity extends AppCompatActivity {
     public void openCamera(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, 2);
         }
     }
 
 
+
     /* Functions for character limit on trigger, 20 characters or 3 words */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
     public boolean countLimit(){
         trigger = editTrigger.getText().toString();
         int triggerLength= trigger.length();
