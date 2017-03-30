@@ -30,7 +30,8 @@
         <activity android:name=".LatestActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/Moodr" >
+            android:label="@string/Moodr"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

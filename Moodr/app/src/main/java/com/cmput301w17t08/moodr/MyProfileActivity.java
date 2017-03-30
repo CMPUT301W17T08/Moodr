@@ -5,13 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 
 /**
@@ -33,6 +30,8 @@ public class MyProfileActivity extends Profile {
         setContentView(R.layout.activity_my_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        new NavDrawerSetup(this, toolbar).setupNav();
 
         moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
         user = CurrentUserSingleton.getInstance().getUser();
