@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,9 +22,22 @@ import java.util.Locale;
  *
  */
 
-public class LatestMoodListAdapter extends ArrayAdapter<Mood> {
+public class LatestMoodListAdapter extends ArrayAdapter<Mood> implements Filterable{
+    MoodFilterHolder moodFilter;
+    private ArrayList<Mood> origMoods;
+
     public LatestMoodListAdapter(Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
+        origMoods = new ArrayList<Mood>();
+        origMoods.addAll(moods);
+    }
+
+    public void setOrigMoods(ArrayList<Mood> mood){
+        moodFilter.setMoods(mood);
+
+        clear();
+        addAll(mood);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -50,6 +65,15 @@ public class LatestMoodListAdapter extends ArrayAdapter<Mood> {
 
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (moodFilter == null) {
+            moodFilter = new MoodFilterHolder(this, origMoods);
+        }
+
+        return moodFilter.getFilter();
     }
 
 }

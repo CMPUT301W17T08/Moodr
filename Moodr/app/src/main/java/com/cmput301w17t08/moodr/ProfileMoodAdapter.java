@@ -33,7 +33,8 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
 
     public ProfileMoodAdapter(Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
-        this.moods = moods;
+        this.moods = new ArrayList<Mood>();
+        this.moods.addAll(moods);
     }
 
     @Override
@@ -62,11 +63,17 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
         return convertView;
     }
 
+    public void setMoods(ArrayList<Mood> moods){
+        clear();
+        addAll(moods);
+        moodFilter.setMoods(moods);
+        notifyDataSetChanged();
+    }
 
     @Override
     public Filter getFilter() {
         if (moodFilter == null) {
-            moodFilter = new MoodFilterHolder(this);
+            moodFilter = new MoodFilterHolder(this, moods);
         }
 
         return moodFilter.getFilter();

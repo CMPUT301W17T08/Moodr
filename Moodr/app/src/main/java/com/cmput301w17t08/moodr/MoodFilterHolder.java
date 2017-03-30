@@ -11,12 +11,19 @@ import java.util.Calendar;
  */
 
 public class MoodFilterHolder {
-    ArrayAdapter<Mood> adapter;
-    MoodFilter filter;
-    ArrayList<Mood> allMoods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
+    private ArrayAdapter<Mood> adapter;
+    private MoodFilter filter;
+    private ArrayList<Mood> moods;
 
-    public MoodFilterHolder(ArrayAdapter adapter){
+    public MoodFilterHolder(ArrayAdapter<Mood> adapter, ArrayList<Mood> moods){
         this.adapter = adapter;
+        this.moods = new ArrayList<Mood>();
+        this.moods.addAll(moods);
+    }
+
+    public void setMoods(ArrayList<Mood> moods){
+        this.moods.clear();
+        this.moods.addAll(moods);
     }
 
     public MoodFilter getFilter(){
@@ -32,14 +39,14 @@ public class MoodFilterHolder {
             FilterResults results = new FilterResults();
 
             if (constraint == null | constraint.length() == 0) {
-                results.values = allMoods;
-                results.count = allMoods.size();
+                results.values = moods;
+                results.count = moods.size();
             } else {
                 ArrayList<Mood> resultsList = new ArrayList<Mood>();
                 String filterBy = constraint.toString();
 
                 if (filterBy.startsWith("E:")) { // filter by emotion
-                    for (Mood mood : allMoods) {
+                    for (Mood mood : moods) {
                         if (mood.getEmotion().getName().equals(filterBy.substring(2))) {
                             resultsList.add(mood);
                         }
@@ -48,13 +55,13 @@ public class MoodFilterHolder {
                     Calendar now = Calendar.getInstance();
                     now.add(Calendar.WEEK_OF_MONTH, -1);
 
-                    for (Mood mood : allMoods) {
+                    for (Mood mood : moods) {
                         if (mood.getDate().after(now.getTime())) {
                             resultsList.add(mood);
                         }
                     }
                 } else if (filterBy.startsWith("K:")) { // filter by keyword
-                    for (Mood mood : allMoods) {
+                    for (Mood mood : moods) {
                         if (mood.getTrigger().contains(filterBy.substring(2))) {
                             resultsList.add(mood);
                         }
