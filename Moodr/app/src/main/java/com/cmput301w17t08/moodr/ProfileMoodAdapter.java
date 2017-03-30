@@ -4,28 +4,33 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * This class is a custom adapter for the profile pages.
+ * This class is a custom adapter for the profile pages. Includes filter to filter results. Filter
+ * uses the posts stored in CurrentUserSingleton, so filters can be applied both online and offline.
+ *
  * @see Profile
  * @see MyProfileActivity
- *
+ * <p>
  * Created by kirsten on 13/03/17.
  */
 
 
-public class ProfileMoodAdapter extends ArrayAdapter<Mood> {
+public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable {
+    private MoodFilter moodFilter;
     private ArrayList<Mood> moods;
+    private ArrayList<Mood> allMoods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
 
     public ProfileMoodAdapter(Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
@@ -58,4 +63,69 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> {
         return convertView;
     }
 
+
+    @Override
+    public Filter getFilter() {
+        if (moodFilter == null) {
+            moodFilter = new MoodFilter();
+        }
+
+        return moodFilter;
+    }
+
+
+    private class MoodFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+
+            if (constraint == null | constraint.length() == 0) {
+                results.values = allMoods;
+                results.count = allMoods.size();
+            } else {
+                ArrayList<Mood> resultsList = new ArrayList<Mood>();
+                String filterBy = constraint.toString();
+
+                if (filterBy.startsWith("E:")) { // filter by emotion
+                    for (Mood mood : allMoods) {
+                        if (mood.getEmotion().getName().equals(filterBy.substring(2))) {
+                            resultsList.add(mood);
+                        }
+                    }
+                } else if (filterBy.equals("LATEST")) { // filter latest
+                    Calendar now = Calendar.getInstance();
+                    now.add(Calendar.WEEK_OF_MONTH, -1);
+
+                    for (Mood mood : allMoods) {
+                        if (mood.getDate().after(now.getTime())) {
+                            resultsList.add(mood);
+                        }
+                    }
+                } else if (filterBy.startsWith("K:")) { // filter by keyword
+                    for (Mood mood : allMoods) {
+                        if (mood.getTrigger().contains(filterBy.substring(2))) {
+                            resultsList.add(mood);
+                        }
+                    }
+                }
+
+                results.values = resultsList;
+                results.count = resultsList.size();
+            }
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (results != null){
+                clear();
+                moods.addAll((ArrayList<Mood>) results.values);
+                notifyDataSetChanged();
+            }
+        }
+
+    }
+
 }
+

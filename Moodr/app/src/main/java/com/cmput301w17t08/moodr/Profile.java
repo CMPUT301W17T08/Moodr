@@ -2,9 +2,9 @@ package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class Profile extends AppCompatActivity {
     private ArrayList<Mood> moods;
     private ProfileMoodAdapter adapter;
     private ListView moodsListview;
+    private Filter filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,59 +62,89 @@ public class Profile extends AppCompatActivity {
 
     }
 
+    protected void setFilter(Filter filter){
+        this.filter = filter;
+    }
+
+
+    // for the search:
+    // http://www.viralandroid.com/2016/03/implementing-searchview-in-android-actionbar.html
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_my_profile, menu);
+        getMenuInflater().inflate(R.menu.filter_menu, menu); // inflate the filter
+
+
+        MenuItem searchViewItem = menu.findItem(R.id.filter_keyword);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filter.filter("K:" + searchView.getQuery());
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter.filter("K:" + searchView.getQuery());
+                return false;
+            }
+        });
+
+
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_home) {
-            Intent intent = new Intent(Profile.this, MyProfileActivity.class);
-            startActivity(intent);
-            return true;
+        switch(item.getItemId()) {
+            case R.id.filter_all:
+                filter.filter("");
+                break;
+
+            case R.id.filter_recent:
+                filter.filter("LATEST");
+                break;
+
+            case R.id.filter_angry:
+                filter.filter("E:" + Emotion.angry.getName());
+                break;
+
+            case R.id.filter_confused:
+                filter.filter("E:" + Emotion.confused.getName());
+                break;
+
+            case R.id.filter_disgusted:
+                filter.filter("E:" + Emotion.disgust.getName());
+                break;
+
+            case R.id.filter_happy:
+                filter.filter("E:" + Emotion.happy.getName());
+                break;
+
+            case R.id.filter_sad:
+                filter.filter("E:" + Emotion.sad.getName());
+                break;
+
+            case R.id.filter_scared:
+                filter.filter("E:" + Emotion.fear.getName());
+                break;
+
+            case R.id.filter_shame:
+                filter.filter("E:" + Emotion.shame.getName());
+                break;
+
+            case R.id.filter_surprise:
+                filter.filter("E:" + Emotion.surprise.getName());
+                break;
         }
 
-        if (id == R.id.action_friends) {
-            Intent intent = new Intent(Profile.this, FriendsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_nearme) {
-            Intent intent = new Intent(Profile.this, MapsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_offline) {
-            Intent intent = new Intent(Profile.this, OfflineMode.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_logout) {
-            Intent intent = new Intent(Profile.this, LoginActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        if (id == R.id.action_latest) {
-            Intent intent = new Intent(this, LatestActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
+
 
     /**
      * view details of mood.
@@ -192,6 +224,7 @@ public class Profile extends AppCompatActivity {
         adapter = new ProfileMoodAdapter(this, moods);
 
         moodsListview.setAdapter(adapter);
+        filter = adapter.getFilter();
     }
 
     @Override

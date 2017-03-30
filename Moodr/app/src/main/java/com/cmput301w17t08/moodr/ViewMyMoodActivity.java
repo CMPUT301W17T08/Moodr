@@ -1,8 +1,11 @@
 package com.cmput301w17t08.moodr;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -42,11 +45,20 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
      * deletes the current mood the user is viewing.
      */
     private void deleteMood(){
-        CurrentUserSingleton.getInstance().getMyMoodList().delete(mood);
 
-        //update on server
-        ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
-        deleteMoodTask.execute(mood.getId());
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        CurrentUserSingleton.getInstance().getMyMoodList().delete(mood);
+        if (null == activeNetwork) {
+            Toast.makeText(ViewMyMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+            CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(3, mood);
+        }
+        else {
+            //update on server
+            ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
+            deleteMoodTask.execute(mood);
+        }
         finish();
     }
 

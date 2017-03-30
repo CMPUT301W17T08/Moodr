@@ -1,11 +1,18 @@
 package com.cmput301w17t08.moodr;
 
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,25 +20,31 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * AddMoodActivity Class creates a new mood which the user can set the inputs to what they desire
@@ -49,9 +62,9 @@ public class AddMoodActivity extends AppCompatActivity {
 
 
     private ImageView imageView;
-    private ImageButton locationButton;
-    private ImageButton btnChoosePhoto;
-    private ImageButton btnOpenCamera;
+    private Button locationButton;
+    private Button btnChoosePhoto;
+    private Button btnOpenCamera;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private TextView locationText;
@@ -67,7 +80,7 @@ public class AddMoodActivity extends AppCompatActivity {
     private String imgUrl;
     private String trigger;
     private String situation;
-    private String location;
+    private String encodedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +105,7 @@ public class AddMoodActivity extends AppCompatActivity {
         Spinner situation_spinner = (Spinner) findViewById(R.id.et_social_situation);
         List<String> situation_categories = new ArrayList<String>();
         // Strings for situations
+        situation_categories.add("");
         situation_categories.add("Alone");
         situation_categories.add("1 other person");
         situation_categories.add("2 to several people");
@@ -119,7 +133,7 @@ public class AddMoodActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected_emotion = parent.getItemAtPosition(position).toString();
 
-                switch(selected_emotion){
+                switch (selected_emotion) {
                     case "Happy":
                         emotion = Emotion.happy;
                         break;
@@ -168,47 +182,19 @@ public class AddMoodActivity extends AppCompatActivity {
 
         editTrigger = (EditText) findViewById(R.id.et_trigger);
 
-        editTrigger.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                int wordsLength = countWords(s.toString());// words.length;
-                // count == 0 means a new word is going to start
-                if (count == 0 && wordsLength >= 3) {
-                    setCharLimit(editTrigger, editTrigger.getText().length());
-                } else {
-                    removeFilter(editTrigger);
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                trigger = editTrigger.getText().toString();
-            }
-        });
-
-
-        trigger = editTrigger.getText().toString();
-
         // Open camera on button click and use for the picture
-        btnOpenCamera = (ImageButton) findViewById(R.id.btn_camera);
+        btnOpenCamera = (Button) findViewById(R.id.btn_camera);
         imageView = (ImageView) findViewById(R.id.iv_imageview);
         btnOpenCamera.setOnClickListener(btnOpenCameraPressed);
 
 
-
         // Get image file on button click
-        btnChoosePhoto = (ImageButton) findViewById(R.id.btn_picture);
+        btnChoosePhoto = (Button) findViewById(R.id.btn_picture);
         imageView = (ImageView) findViewById(R.id.iv_imageview);
         btnChoosePhoto.setOnClickListener(btnChoosePhotoPressed);
 
         // Get user location on button click
-        locationButton = (ImageButton) findViewById(R.id.btn_location);
+        locationButton = (Button) findViewById(R.id.btn_location);
         locationText = (TextView) findViewById(R.id.tv_location);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -216,6 +202,8 @@ public class AddMoodActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 locationText.setText(location.getLongitude() + " " + location.getLatitude());
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
             }
 
             @Override
@@ -270,12 +258,9 @@ public class AddMoodActivity extends AppCompatActivity {
             // Checkmark button
             case R.id.action_add_complete:
                 // Create mood and send it right to elasticSearch
-                createMood(emotion, situation, trigger);
-
-                setResult(RESULT_OK);
-
+                createMood(emotion, situation, trigger, encodedImage);
                 // Add the mood to MoodList
-                finish();
+                //finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -300,7 +285,7 @@ public class AddMoodActivity extends AppCompatActivity {
     }
     */
 
-    public void createMood(Emotion emotion, String situation, String trigger) {
+    public void createMood(Emotion emotion, String situation, String trigger, String encodedImage) {
         // Grab owner
         owner = CurrentUserSingleton.getInstance().getUser().getName();
         // Create the mood
@@ -311,32 +296,49 @@ public class AddMoodActivity extends AppCompatActivity {
 
 //        CurrentUserSingleton.getInstance().getUser().incrementPostID();
 
-        location = locationText.getText().toString();
 
         mood.setSituation(situation);
 
-        mood.setLocation(location);
+        // mood.setLocation(location);
+        // set Longitude and Latitude onto elasticSearch
 
-        try {
-            mood.setTrigger(trigger);
-        }
-        catch(InvalidEntryException e){
-            throw new RuntimeException(); // Error checking should detect this before adding.
+        trigger = editTrigger.getText().toString();
+        boolean checkLimit = countLimit();
+        mood.setTrigger(trigger);
+
+        // Set image encoded string
+        encodedImage = "SDFKDMKDM";
+        Log.d("ImageURL", encodedImage);
+        mood.setImgUrl(encodedImage);
+
+        // Check if limit is reached
+        if (checkLimit) {
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (null == activeNetwork) {
+                // Generate a unique UUID ID for offline mode.
+                mood.setId(UUID.randomUUID().toString());
+                CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+                Toast.makeText(AddMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+                CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
+                finish();
+            } else {
+                ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
+                addMoodTask.execute(mood);
+                try {
+                    String moodId = addMoodTask.get();
+                    mood.setId(moodId);
+                    CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+                } catch (Exception e) {
+                    Log.i("Error", "Error getting moods out of async object");
+                }
+                finish();
+            }
+        } else {
+            triggerError();
         }
 
-//        mood.setImgUrl("PLACEHOLDER");
-
-
-        ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
-        addMoodTask.execute(mood);
-        try{
-            String moodId = addMoodTask.get();
-            mood.setId(moodId);
-            CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-        }
-        catch(Exception e){
-            Log.i("Error", "Error getting moods out of async object");
-        }
     }
 
     @Override
@@ -370,15 +372,14 @@ public class AddMoodActivity extends AppCompatActivity {
         });
     }
 
-/*
-    public String getAddress (double latitude, double longitude){
-        String strAdd = "";
-        Geocoder geocoder = new Geocoder
-    }
 
-*/
+    /* ------------------- Functions for image addition ------------------ */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
 
-    /* Choose an image from Gallery */
+
     /* When button for image is pressed */
     public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
         @Override
@@ -391,7 +392,7 @@ public class AddMoodActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        startActivityForResult(intent, 1);
     }
 
     /* Get the real path from the URI */
@@ -411,20 +412,58 @@ public class AddMoodActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // Get the path from the Uri
-                    String path = getPathFromURI(selectedImageUri);
-                    Log.i(TAG, "Image Path : " + path);
-                    // Set the image in ImageView
-                    imageView.setImageURI(selectedImageUri);
+        if (resultCode == 1) {
+            if (resultCode == RESULT_OK) {
+                if (requestCode == SELECT_PICTURE) {
+                    // Get the url from data
+                    Uri selectedImageUri = data.getData();
+                    if (null != selectedImageUri) {
+                        // Get the path from the Uri
+                        String path = getPathFromURI(selectedImageUri);
+                        Log.i(TAG, "Image Path : " + path);
+                        // Set the image in ImageView
+                        imageView.setImageURI(selectedImageUri);
+                    }
                 }
+            }
+        } else if (resultCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
+                Bundle extras = data.getExtras();
+                Bitmap bitmapImage = (Bitmap) extras.get("data");
+                imageView.setImageBitmap(bitmapImage);
+                saveToInternalStorage(bitmapImage);
+                encodedImage = encodeImage(bitmapImage);
+                Toast.makeText(AddMoodActivity.this, "Image Added", Toast.LENGTH_SHORT).show();
+
             }
         }
     }
+
+
+    public static String encodeImage(Bitmap bitmap){
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+   // http://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
+    public boolean saveToInternalStorage(Bitmap bitmapImage){
+        try {
+            FileOutputStream fos = AddMoodActivity.this.openFileOutput("desiredFilename.png", Context.MODE_PRIVATE);
+
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+
+            return true;
+        } catch (Exception e) {
+            Log.e("saveToInternalStorage()", e.getMessage());
+            return false;
+        }
+    }
+
 
 
     /* When button for camera is pressed */
@@ -438,28 +477,50 @@ public class AddMoodActivity extends AppCompatActivity {
     public void openCamera(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, 2);
         }
     }
+
 
 
     /* Functions for character limit on trigger, 20 characters or 3 words */
-    private int countWords(String s) {
-        String trim = s.trim();
-        if (trim.isEmpty())
-            return 0;
-        return trim.split("\\s+").length; // separate string around spaces
-    }
-
-    private void setCharLimit(EditText et, int max) {
-        filter = new InputFilter.LengthFilter(max);
-        et.setFilters(new InputFilter[]{filter});
-    }
-
-    private void removeFilter(EditText et) {
-        if (filter != null) {
-            et.setFilters(new InputFilter[0]);
-            filter = null;
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    public boolean countLimit(){
+        trigger = editTrigger.getText().toString();
+        int triggerLength= trigger.length();
+        int triggerWords = wordCount(trigger);
+        boolean flag = true;
+        if (triggerLength > 20 || triggerWords > 3){
+            flag = false;
         }
+        return flag;
+
+    }
+
+    public int wordCount (String s){
+        String input = s.trim();
+        int words = input.isEmpty() ? 0 : input.split("\\s+").length;
+        return words;
+    }
+
+    public void triggerError (){
+        new AlertDialog.Builder(AddMoodActivity.this)
+                .setTitle("Limit Reached")
+                .setMessage("Please use only 3 words or 20 characters")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }

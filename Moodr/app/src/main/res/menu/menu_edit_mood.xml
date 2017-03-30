@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.cmput301w17t08.moodr.EditMoodActivity">
+
+    <item
+        android:id="@+id/action_edit_complete"
+        android:icon="@drawable/ic_done_black_24dp"
+        android:title="@string/action_add_complete"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_edit_cancel"
+        android:icon="@drawable/ic_clear_black_24dp"
+        android:title="@string/action_add_cancel"
+        app:showAsAction="always"
+        />
+
+</menu>

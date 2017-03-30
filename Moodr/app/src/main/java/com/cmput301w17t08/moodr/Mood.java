@@ -4,11 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
  * The mood class which holds all the relevant information for the mooditself
- *
  */
-public class Mood implements Serializable{
+public class Mood implements Serializable {
     private Date date;
     private String owner;
     private String id;
@@ -18,8 +16,7 @@ public class Mood implements Serializable{
     private String situation;
     private String location;
 
-    public Mood(String owner, Emotion emotion)
-    {
+    public Mood(String owner, Emotion emotion) {
         this.date = new Date(System.currentTimeMillis());
         this.id = "";
         this.emotion = emotion;
@@ -29,65 +26,73 @@ public class Mood implements Serializable{
         setSituation(situation);
         setLocation(location);
 
-   }
+    }
 
-    public String getUsername(){
+    public String getUsername() {
         return owner;
     }
-    public void setUsername(String Username){
-        this.owner=Username;
+
+    public void setUsername(String Username) {
+        this.owner = Username;
     }
 
 
-    public Date getDate(){
+    public Date getDate() {
         return date;
     }
-    public void setDate(Date date){
+
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public Emotion getEmotion(){
+    public Emotion getEmotion() {
         return emotion;
     }
-    public void setEmotion(Emotion emotion){
-        this.emotion=emotion;
+
+    public void setEmotion(Emotion emotion) {
+        this.emotion = emotion;
     }
 
-    public String getId(){
+    public String getId() {
         return id;
     }
-    public void setId(String id){
+
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getImgUrl(){
+    public String getImgUrl() {
         return imgUrl;
     }
+
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
 
-    public String getTrigger(){
+    public String getTrigger() {
         return trigger;
     }
-    public void setTrigger(String trigger) throws InvalidEntryException{
-        if (trigger.length() > 20){
-            throw new InvalidEntryException();
+
+    public void setTrigger(String trigger) {
+        if (trigger.length() > 20) {
+            ;
         }
-        this.trigger=trigger;
+        this.trigger = trigger;
     }
 
-    public String getSituation(){
+    public String getSituation() {
         return situation;
     }
-    public void setSituation(String situation){
-        this.situation=situation;
+
+    public void setSituation(String situation) {
+        this.situation = situation;
     }
 
-    public String getLocation(){
+    public String getLocation() {
         return location;
     }
-    public void setLocation(String location){
-        this.location=location;
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

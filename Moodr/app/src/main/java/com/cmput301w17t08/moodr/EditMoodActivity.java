@@ -1,22 +1,27 @@
 package com.cmput301w17t08.moodr;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,20 +55,32 @@ public class EditMoodActivity extends AppCompatActivity {
     private EditText editTrigger;
     private InputFilter filter;
 
-
     private Date date;
     private String owner;
     private int id;
-    private String emotion;
+    private String selected_emotion;
+    private Emotion emotion;
     private String imgUrl;
     private String trigger;
     private String situation;
     private String location;
 
+    Mood mood;
+    int index;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_mood);
+
+        Intent intent = getIntent();
+        index = intent.getIntExtra("index", -1);
+        try {
+            mood = CurrentUserSingleton.getInstance().getMyMoodList().getMood(index);
+        }
+        catch (Exception e){
+            Log.d("Error", "Invalid mood index");
+        }
 
         // Create the spinner drop-down
         Spinner emotion_spinner = (Spinner) findViewById(R.id.sp_emotion);
@@ -77,11 +95,11 @@ public class EditMoodActivity extends AppCompatActivity {
         emotion_categories.add("Shame");
         emotion_categories.add("Surprised");
 
-
         // Create the spinner drop-down
         Spinner situation_spinner = (Spinner) findViewById(R.id.et_social_situation);
         List<String> situation_categories = new ArrayList<String>();
         // Strings for situations
+        situation_categories.add("");
         situation_categories.add("Alone");
         situation_categories.add("1 other person");
         situation_categories.add("2 to several people");
@@ -89,17 +107,12 @@ public class EditMoodActivity extends AppCompatActivity {
 
         emotionAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, emotion_categories);
-
         situationAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, situation_categories);
-
-
         emotionAdapter.setDropDownViewResource(android.R.layout.
                 simple_spinner_dropdown_item);
-
         situationAdapter.setDropDownViewResource(android.R.layout.
                 simple_spinner_dropdown_item);
-
         emotion_spinner.setAdapter(emotionAdapter);
         situation_spinner.setAdapter(situationAdapter);
 
@@ -107,15 +120,41 @@ public class EditMoodActivity extends AppCompatActivity {
         emotion_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                emotion = parent.getItemAtPosition(position).toString();
+                selected_emotion = parent.getItemAtPosition(position).toString();
+                switch(selected_emotion){
+                    case "Happy":
+                        emotion = Emotion.happy;
+                        break;
+                    case "Sad":
+                        emotion = Emotion.sad;
+                        break;
+                    case "Angry":
+                        emotion = Emotion.angry;
+                        break;
+                    case "Confused":
+                        emotion = Emotion.confused;
+                        break;
+                    case "Disgust":
+                        emotion = Emotion.disgust;
+                        break;
+                    case "Scared":
+                        emotion = Emotion.fear;
+                        break;
+                    case "Shame":
+                        emotion = Emotion.shame;
+                        break;
+                    case "Surprised":
+                        emotion = Emotion.surprise;
+                        break;
+                }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
+        int emotion_spinner_position = emotionAdapter.getPosition(mood.getEmotion().getName());
+        emotion_spinner.setSelection(emotion_spinner_position);
 
         // Do something when user selects a situation
         situation_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -123,24 +162,25 @@ public class EditMoodActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 situation = parent.getItemAtPosition(position).toString();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
+        int situation_spinner_position = situationAdapter.getPosition(mood.getSituation());
+        situation_spinner.setSelection(situation_spinner_position);
 
-        editTrigger = (EditText) findViewById(R.id.et_trigger);
         // Need to set limit of text field to 20 characters or 3 words
-        http://stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
-
+//        http://stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
+        editTrigger = (EditText) findViewById(R.id.et_trigger);
+        String trig = mood.getTrigger();
+        if (trig != null){
+            editTrigger.setText(mood.getTrigger());
+        }
         editTrigger.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int wordsLength = countWords(s.toString());// words.length;
@@ -151,16 +191,10 @@ public class EditMoodActivity extends AppCompatActivity {
                     removeFilter(editTrigger);
                 }
             }
-
-
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
-
-        trigger = editTrigger.getText().toString();
-
 
         // Get image file on button click
         Button btn_choose_photo = (Button) findViewById(R.id.btn_picture);
@@ -177,20 +211,14 @@ public class EditMoodActivity extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 locationText.setText(location.getLongitude() + " " + location.getLatitude());
             }
-
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
-
             }
-
             @Override
             public void onProviderEnabled(String s) {
-
             }
-
             @Override
             public void onProviderDisabled(String s) {
-
                 Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(i);
             }
@@ -207,7 +235,6 @@ public class EditMoodActivity extends AppCompatActivity {
         } else {
             acquireLocation();
         }
-
     }
 
     // When button for image is pressed
@@ -279,5 +306,60 @@ public class EditMoodActivity extends AppCompatActivity {
         });
     }
 
+    // Creates the actionbar at the top
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Adds the icons to the action bar is it present
+        getMenuInflater().inflate(R.menu.menu_edit_mood, menu);
+        return true;
+    }
+
+    // When one of the buttons are selected
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // X button
+            case R.id.action_edit_cancel:
+                Intent intent_cancel = new Intent(EditMoodActivity.this, MyProfileActivity.class);
+                startActivity(intent_cancel);
+                return true;
+
+            // Checkmark button
+            case R.id.action_edit_complete:
+                // Edit mood and send it right to elasticSearch
+                trigger = editTrigger.getText().toString();
+                editMood();
+
+                setResult(RESULT_OK);
+
+                Intent intent_complete = new Intent(EditMoodActivity.this, MyProfileActivity.class);
+                startActivity(intent_complete);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void editMood() {
+        // Edit the mood
+        mood.setEmotion(emotion);
+        location = locationText.getText().toString();
+        mood.setSituation(situation);
+        mood.setLocation(location);
+        mood.setTrigger(trigger);
+
+
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
+        if (null == activeNetwork) {
+            Toast.makeText(EditMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+            CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
+        }
+        else {
+            ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
+            updateMoodTask.execute(mood);
+        }
+    }
 
 }

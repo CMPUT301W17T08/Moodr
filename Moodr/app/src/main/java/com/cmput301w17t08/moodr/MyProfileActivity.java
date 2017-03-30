@@ -7,12 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Filter;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * This activity displays the user's moods. The user has the option to add a mood from this activity.
@@ -21,9 +18,11 @@ import java.util.Comparator;
  */
 public class MyProfileActivity extends Profile {
     private User user;
-    private ArrayList<Mood> moods;
+    private ArrayList<Mood> moods = new ArrayList<>();
     private ProfileMoodAdapter adapter;
     private ListView moodsListview;
+    private Filter filter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +31,9 @@ public class MyProfileActivity extends Profile {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        moods = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods();
+        new NavDrawerSetup(this, toolbar).setupNav();
+
+        moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
         user = CurrentUserSingleton.getInstance().getUser();
         setTitle(user.getName());
 
@@ -51,6 +52,10 @@ public class MyProfileActivity extends Profile {
 
         moodsListview = (ListView) findViewById(R.id.profile_moodlist);
         adapter = new ProfileMoodAdapter(this, moods);
+
+        filter = adapter.getFilter();
+        setFilter(filter);
+
         moodsListview.setAdapter(adapter);
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -59,7 +64,6 @@ public class MyProfileActivity extends Profile {
             }
         });
     }
-
 
     /**
      * goes to add mood activity to add a mood
@@ -74,6 +78,7 @@ public class MyProfileActivity extends Profile {
      * @param i index of the mood in moodList
      */
     private void goToMood(int i){
+        i = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods().indexOf(moods.get(i));
         Intent intent = new Intent(this, ViewMyMoodActivity.class);
         intent.putExtra("index", i);
         startActivityForResult(intent, 1);
@@ -82,17 +87,18 @@ public class MyProfileActivity extends Profile {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
+
+                Log.d("RESULT_OK", Integer.toString(requestCode));
+                // on any change to moods, the filter will reset.
+
                 for (Mood mood : moods){
                     Log.d("Mood", mood.getEmotion().getName());
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            }
+
+                moods.clear();
+                moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
+                adapter.notifyDataSetChanged();
+
         }
     }
 }
