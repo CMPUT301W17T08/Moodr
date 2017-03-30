@@ -46,6 +46,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/profile_moodlist"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@drawable/ic_heart_add" />
 
 </android.support.design.widget.CoordinatorLayout>
