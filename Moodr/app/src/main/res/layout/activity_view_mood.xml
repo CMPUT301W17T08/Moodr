@@ -20,9 +20,13 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/viewMoodMood" />
+            android:id="@+id/viewMoodMood"
+            android:textColor="@color/md_black_1000"
+            android:textSize="20dp"
+
+            />
 
         <ImageView
             android:layout_width="50dp"
@@ -40,25 +44,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:id="@+id/viewMoodDate" />
+        android:id="@+id/viewMoodDate"
+        android:textColor="@color/md_black_1000"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:id="@+id/viewMoodSocialSituation" />
+        android:id="@+id/viewMoodSocialSituation"
+        android:textColor="@color/md_black_1000"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:id="@+id/viewMoodTrigger" />
+        android:id="@+id/viewMoodTrigger"
+        android:textColor="@color/md_black_1000"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:id="@+id/viewMoodLocation" />
+        android:id="@+id/viewMoodLocation"
+        android:textColor="@color/md_black_1000"
+        />
 
     <ImageView
         android:layout_width="match_parent"
