@@ -80,13 +80,13 @@ public class Profile extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                filter.filter("K:" + searchView.getQuery());
                 searchView.clearFocus();
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                filter.filter("K:" + searchView.getQuery());
                 return false;
             }
         });

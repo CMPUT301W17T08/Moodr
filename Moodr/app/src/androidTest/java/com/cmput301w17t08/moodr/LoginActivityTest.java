@@ -30,42 +30,44 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
     }
 
 
+    // username must be changed before running for this to pass.
     public void testSignUp(){
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
 
-        ElasticSearchUserController.IsExist isExist = new ElasticSearchUserController.IsExist();
+        ElasticSearchUserController.GetUserTask getUserTask =
+                new ElasticSearchUserController.GetUserTask();
 
-        isExist.execute("bob");
+        String username = "LoginIntentTest";
+        getUserTask.execute(username);
 
-        boolean exists = false;
+        User user = null;
 
         try{
-            exists = (boolean) isExist.get();
+            user = getUserTask.get().get(0);
         }
         catch(Exception e){
             Log.d("Error", "failed to get info from elastic search");
         }
 
-        assertFalse(exists);
+        assertNull(user);
 
-        solo.enterText((EditText) solo.getView(R.id.username), "bob");
+        solo.enterText((EditText) solo.getView(R.id.username), username);
 
-        solo.clickOnButton("Login or Sign up");
+        solo.clickOnButton("SIGN UP");
 
-        solo.assertCurrentActivity("Wrong Activity", MyProfileActivity.class);
+        ElasticSearchUserController.GetUserTask getUserTask2  = new ElasticSearchUserController.GetUserTask();
+        getUserTask2.execute(username);
 
-        isExist.execute("bob");
 
         try{
-            exists = (boolean) isExist.get();
+            user = getUserTask2.get().get(0);
         }
         catch(Exception e){
             Log.d("Error", "failed to get info from elastic search");
         }
 
-        assertTrue(exists);
+        assertEquals(user.getName(), username);
 
-        solo.assertCurrentActivity("Wrong Activity", MyProfileActivity.class);
     }
 
     public void testLogin(){
@@ -73,9 +75,11 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.username), "bob");
 
-        solo.clickOnButton("Login or Sign up");
+        solo.clickOnButton("LOGIN");
 
         solo.assertCurrentActivity("Wrong Activity", MyProfileActivity.class); // does it go there or main?
+
+        assertEquals(CurrentUserSingleton.getInstance().getUser().getName(), "bob");
     }
 
 
