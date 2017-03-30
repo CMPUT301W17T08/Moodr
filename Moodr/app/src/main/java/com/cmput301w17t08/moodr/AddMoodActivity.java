@@ -254,11 +254,9 @@ public class AddMoodActivity extends AppCompatActivity {
             case R.id.action_add_complete:
                 // Create mood and send it right to elasticSearch
                 createMood(emotion, situation, trigger);
-
                 setResult(RESULT_OK);
-
                 // Add the mood to MoodList
-                finish();
+                //finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -315,6 +313,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
                 Toast.makeText(AddMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
+                finish();
             } else {
                 ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
                 addMoodTask.execute(mood);
@@ -325,6 +324,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.i("Error", "Error getting moods out of async object");
                 }
+                finish();
             }
         }
         else {
