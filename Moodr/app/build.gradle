@@ -39,4 +39,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:24.2.1'
     testCompile 'junit:junit:4.12'
+    compile('com.mikepenz:materialdrawer:5.8.2@aar') {
+        transitive = true
+    }
 }
