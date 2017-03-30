@@ -6,10 +6,12 @@
     android:weightSum="1">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_emotion"
         android:text="Mood"
+        android:textSize="25dp"
+        android:gravity="center"
 
         />
 
@@ -18,14 +20,17 @@
         android:layout_height="wrap_content"
         android:id="@+id/sp_emotion"
         android:spinnerMode="dropdown"
+        android:minHeight="48dp"
 
         />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_social_situation"
         android:text="Social Situation"
+        android:textSize="25dp"
+        android:gravity="center"
 
         />
 
@@ -34,15 +39,17 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_social_situation"
         android:spinnerMode="dropdown"
+        android:minHeight="48dp"
 
         />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="357dp"
         android:layout_height="wrap_content"
         android:id="@+id/tv_trigger"
-        android:text="Trigger"
-
+        android:text="Trigger (3 words or 20 characters)"
+        android:textSize="20dp"
+        android:gravity="center"
 
         />
 
@@ -51,6 +58,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/et_trigger"
         android:inputType="text"
+        android:minHeight="50dp"
 
         />
 
@@ -62,13 +70,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="                    "
+            android:text="               "
             />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_camera"
+            android:text="Camera"
+            />
+
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_picture"
-            android:text="ADD PICTURE"
+            android:text="Gallery"
 
 
             />
@@ -77,8 +94,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_location"
-            android:text="ADD LOCATIOn"
+            android:text="Location"
+
             />
+
     </LinearLayout>
 
     <ImageView
@@ -96,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_location"
-        />
+        android:layout_weight="0.52" />
 
 
 </LinearLayout>
