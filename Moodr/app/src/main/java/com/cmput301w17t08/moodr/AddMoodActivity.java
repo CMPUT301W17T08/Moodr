@@ -254,7 +254,6 @@ public class AddMoodActivity extends AppCompatActivity {
             case R.id.action_add_complete:
                 // Create mood and send it right to elasticSearch
                 createMood(emotion, situation, trigger);
-                setResult(RESULT_OK);
                 // Add the mood to MoodList
                 //finish();
                 return true;
