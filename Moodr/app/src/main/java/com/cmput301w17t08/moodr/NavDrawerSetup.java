@@ -39,12 +39,13 @@ public class NavDrawerSetup {
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(name)).withSelectionListEnabledForSingleProfile(false).build();
+                        new ProfileDrawerItem().withName(name)).withSelectionListEnabledForSingleProfile(false).withHeaderBackground(R.drawable.gradient_background).build();
 
         drawer = new DrawerBuilder()
                 .withActivity(activity)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
+                .withDelayOnDrawerClose(-1)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home),
                         new PrimaryDrawerItem().withIdentifier(2).withName("Latest").withIcon(R.drawable.ic_latest),
@@ -60,8 +61,9 @@ public class NavDrawerSetup {
                         drawer.closeDrawer();
                         switch (position){
                             case 1:
+                                if (!activity.equals(MyProfileActivity.class)){
                                 intent = new Intent(activity, MyProfileActivity.class);
-                                activity.startActivity(intent);
+                                activity.startActivity(intent);}
                                 break;
                             case 2:
                                 intent = new Intent(activity, LatestActivity.class);
