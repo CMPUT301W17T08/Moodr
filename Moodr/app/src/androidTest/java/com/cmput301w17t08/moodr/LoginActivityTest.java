@@ -29,13 +29,13 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         Activity activity = getActivity();
     }
 
-
     // username must be changed before running for this to pass.
     public void testSignUp(){
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
 
         ElasticSearchUserController.GetUserTask getUserTask =
                 new ElasticSearchUserController.GetUserTask();
+
 
         String username = "LoginIntentTest";
         getUserTask.execute(username);
