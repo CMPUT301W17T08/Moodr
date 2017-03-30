@@ -1,8 +1,10 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -114,6 +116,23 @@ public class LatestActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.latest_menu, menu);
         getMenuInflater().inflate(R.menu.filter_menu, menu);
+
+        MenuItem searchViewItem = menu.findItem(R.id.filter_keyword);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filter.filter("K:" + searchView.getQuery());
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter.filter("K:" + searchView.getQuery());
+                return false;
+            }
+        });
         return true;
     }
 
