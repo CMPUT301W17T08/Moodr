@@ -159,8 +159,8 @@ public class ElasticSearchMoodController {
 
             ArrayList<Mood> moods = new ArrayList<Mood>();
 
-            double current_latitude = search_parameters[0];
-            double current_longitude = search_parameters[1];
+            Double current_latitude = search_parameters[0];
+            Double current_longitude = search_parameters[1];
 
             String query = "{ \"size\" : 0, \"aggs\" : { \"group\" : { \"terms\" : { \"field\" : \"owner\", \"size\" : 0 }, \"aggs\" : { \"group_docs\" : { \"terms\" : { \"field\" : \"date\", \"order\" : { \"_term\" : \"desc\" }, \"size\" : 1 }, \"aggs\" : { \"geof\" : { \"filter\" : { \"geo_distance\" : { \"distance\" : \"5\", \"distance_unit\" : \"km\", \"location\" : { \"lat\" : "+ current_latitude +", \"lon\" : "+ current_longitude +" }}}, \"aggs\" : { \"top_hits_geo\" : { \"top_hits\" : {}}}}}}}}}}";
 

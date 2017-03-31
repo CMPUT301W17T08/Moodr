@@ -23,8 +23,8 @@ public class Mood implements Serializable {
         this.emotion = emotion;
         this.situation = "";
         this.trigger = "";
+        this.location = null;
         this.imgUrl = "";
-        this.location = new Coordinate();
     }
 
     public String getUsername() {
