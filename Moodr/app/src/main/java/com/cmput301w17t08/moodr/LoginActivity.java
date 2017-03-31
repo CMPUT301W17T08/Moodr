@@ -1,9 +1,8 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -44,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
                 if(validUser(UserName)){
-                    Log.d("TEST", "THIS RUNS");
                     setCurrentUser(UserName);
                     Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
@@ -129,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
         User user = new User();
         try{
             user = getUserTask.get().get(0);
-            Log.d("USERNAME", user.getName());
         }
         catch(Exception e){
             Log.d("ERROR", "Error getting user from elastic search");
