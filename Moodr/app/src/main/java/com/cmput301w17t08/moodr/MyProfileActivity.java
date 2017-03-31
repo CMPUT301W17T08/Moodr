@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 /**
@@ -42,6 +44,14 @@ public class MyProfileActivity extends Profile {
             @Override
             public void onClick(View view) {
                 addMood();
+            }
+        });
+
+        FloatingActionButton map_buttom = (FloatingActionButton) findViewById(R.id.go_to_map);
+        map_buttom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MyProfileActivity.this, "Go to map activity", Toast.LENGTH_SHORT).show();
             }
         });
     }

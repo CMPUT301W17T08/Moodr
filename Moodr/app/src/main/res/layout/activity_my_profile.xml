@@ -47,4 +47,16 @@
         android:layout_gravity="bottom|right"
         app:srcCompat="@drawable/ic_heart_add" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/go_to_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:clickable="true"
+        app:layout_anchor="@id/fab"
+        app:srcCompat="@android:drawable/ic_dialog_map"
+        app:layout_anchorGravity="top"
+        app:useCompatPadding="true"
+        />
+
 </android.support.design.widget.CoordinatorLayout>

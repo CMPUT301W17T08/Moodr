@@ -1,6 +1,7 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,14 @@ public class LatestActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 goToMood(latestMoods.get(position));
+            }
+        });
+
+        FloatingActionButton map_buttom = (FloatingActionButton) findViewById(R.id.go_to_map);
+        map_buttom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(LatestActivity.this, "Go to map activity", Toast.LENGTH_SHORT).show();
             }
         });
 

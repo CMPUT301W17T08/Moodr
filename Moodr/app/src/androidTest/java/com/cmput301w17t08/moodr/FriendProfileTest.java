@@ -7,6 +7,8 @@ package com.cmput301w17t08.moodr;
 import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
+import android.widget.ListView;
 
 import com.robotium.solo.Solo;
 
@@ -18,10 +20,12 @@ import junit.framework.TestCase;
 
 public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile> {
     private Solo solo;
-    String name = CurrentUserSingleton.getInstance().getUser().getFriends().get(0);
 
     public FriendProfileTest() {
         super(com.cmput301w17t08.moodr.Profile.class);
+        Intent intent = new Intent();
+        intent.putExtra("name", "potato");
+        setActivityIntent(intent);
     }
 
     public void setUp() throws Exception {
@@ -29,9 +33,6 @@ public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile>
     }
 
     public void testStart() throws Exception {
-        Intent intent = new Intent();
-        intent.putExtra("name", name);
-        setActivityIntent(intent);
         Activity activity = getActivity();
     }
 
@@ -43,14 +44,27 @@ public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile>
         solo.assertCurrentActivity("Wrong Activity", ViewFriendMoodActivity.class);
     }
 
-    public void testUnfollow(){
-        solo.assertCurrentActivity("Wrong Activity", Profile.class);
+//    public void testUnfollow(){
+//        solo.assertCurrentActivity("Wrong Activity", Profile.class);
+//
+//        solo.clickOnButton("Unfollow");
+//
+//        solo.assertCurrentActivity("Wrong Activity", FriendsActivity.class);
+//
+//        assert(CurrentUserSingleton.getInstance().getUser().getFriends().contains(name));
+//    }
 
-        solo.clickOnButton("Unfollow");
+    public void testFilter() {
+        View view = solo.getView(R.id.filter_menu);
+        solo.clickOnView(view);
 
-        solo.assertCurrentActivity("Wrong Activity", FriendsActivity.class);
+        solo.clickOnText("Filter by Mood");
+        solo.clickOnText("Happy");
 
-        assert(CurrentUserSingleton.getInstance().getUser().getFriends().contains(name));
+        solo.sleep(1000);
+
+        ListView list = solo.getCurrentViews(ListView.class).get(0);
+        assertEquals(2,list.getAdapter().getCount()); // the amount of happ moods already there is 2.
     }
 
     @Override
