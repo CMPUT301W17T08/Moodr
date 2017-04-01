@@ -59,13 +59,27 @@ public enum CurrentUserSingleton {
     public OfflineMode getMyOfflineActions() {
         return myOfflineActions;
     }
-    
+
+
     /**
-     * Reset singleton.
+     * set current user on login.
+     * @param user
      */
-    public void reset () {
-        user.reset();
-        myMoodList.reset();
-        myOfflineActions.reset();
+    public void setSingleton(User user){
+        this.user.setName(user.getName());
+        this.user.setUser_Id(user.getUser_Id());
+        this.user.setPending(user.getPending());
+        this.user.setFriends(user.getFriends());
+        this.user.setStories(user.getStories());
+    }
+
+    /**
+     * Reset singleton. used when logging out.
+     */
+    public void reset(){
+        user.setName("");
+        user.setFriends(null);
+        user.setPending(null);
+        user.setUser_Id(null);
     }
 }

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 /**
  * This activity displays the user's moods. The user has the option to add a mood from this activity.
+ * The user can create a new story from here.
+ *
  * Due to the common load method, this extends Profile.
  * @see Profile
  */

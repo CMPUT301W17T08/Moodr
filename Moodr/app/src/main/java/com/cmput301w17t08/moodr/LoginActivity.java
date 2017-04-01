@@ -149,14 +149,12 @@ public class LoginActivity extends AppCompatActivity {
         catch(Exception e){
             Log.d("ERROR", "Error getting user from elastic search");
         }
-        CurrentUserSingleton.getInstance().reset();
-        User currentUser = CurrentUserSingleton.getInstance().getUser();
-        currentUser.setName(user.getName());
-        currentUser.setUser_Id(user.getUser_Id());
-        currentUser.setFriends(user.getFriends());
-        currentUser.setPending(user.getPending());
+        CurrentUserSingleton singleton = CurrentUserSingleton.getInstance();
+        singleton.reset();
+        singleton.setSingleton(user);
 
         // populate all current user's mood
+        // This is the first thing that is done when you start myProfile. leave it out of here.
         ElasticSearchMoodController.GetMoodTask getMoodTask
                 = new ElasticSearchMoodController.GetMoodTask();
         ArrayList<Mood> moods = new ArrayList<>();

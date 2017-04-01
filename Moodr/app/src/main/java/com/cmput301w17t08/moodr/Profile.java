@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * This activity displays the moods for a friend. The user can select a mood to view its details.
@@ -187,6 +189,13 @@ public class Profile extends AppCompatActivity {
                 Log.d("Error", "Error getting moods from elastic search.");
             }
         }
+
+        Collections.sort(moods, new Comparator<Mood>() {
+            @Override
+            public int compare(Mood mood, Mood t1) {
+                return t1.getDate().compareTo(mood.getDate());
+            }
+        });
 
         return moods;
     }

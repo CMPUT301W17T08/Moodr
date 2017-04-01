@@ -11,15 +11,21 @@ public class User {
     private ArrayList<String> friends;
     private ArrayList<String> pending;
     private String user_ID;
+    private ArrayList<Story> stories;
 
     public User(String username) {
         this.name = username;
         friends = new ArrayList<String>();
         pending = new ArrayList<String>();
+        stories = new ArrayList<Story>();
         user_ID = "";
     }
 
     public User(){
+        friends = new ArrayList<String>();
+        pending = new ArrayList<String>();
+        stories = new ArrayList<Story>();
+        user_ID = "";
     }
 
     public void setUser_Id(String id) {
@@ -72,10 +78,23 @@ public class User {
         }
     }
 
-    public void reset(){
-        this.name = "placeholder";
-        friends.clear();
-        pending.clear();
-        user_ID = "";
+
+    public void addStory(Story story){
+        stories.add(story);
+    }
+    
+    public Story getStory(int index){
+        return stories.get(index);
+    }
+
+    public ArrayList<Story> getStories(){
+        return stories;
+    }
+    public void setStories(ArrayList<Story> stories){
+        stories.addAll(stories);
+    }
+
+    public void removeStory(int index){
+        stories.remove(index);
     }
 }
