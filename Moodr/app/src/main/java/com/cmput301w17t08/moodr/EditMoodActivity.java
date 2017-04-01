@@ -1,5 +1,7 @@
 package com.cmput301w17t08.moodr;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,15 +29,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import static android.os.Build.VERSION_CODES.M;
 
 /*
 *
@@ -43,7 +52,7 @@ import java.util.List;
  */
 
 
-public class EditMoodActivity extends AppCompatActivity {
+public class EditMoodActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final int SELECT_PICTURE = 100;
     private ImageView imageView;
     private Button locationButton;
@@ -53,9 +62,15 @@ public class EditMoodActivity extends AppCompatActivity {
     private ArrayAdapter<String> emotionAdapter;
     private ArrayAdapter<String> situationAdapter;
     private EditText editTrigger;
+    private Button editDate;
     private InputFilter filter;
 
+    int day, month, year, hour, minute;
+    int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
+
     private Date date;
+    private Date editDate_copy;
+    private Coordinate editCoordinate = null;
     private String owner;
     private int id;
     private String selected_emotion;
@@ -170,6 +185,27 @@ public class EditMoodActivity extends AppCompatActivity {
         int situation_spinner_position = situationAdapter.getPosition(mood.getSituation());
         situation_spinner.setSelection(situation_spinner_position);
 
+        // set Date to button
+        editDate = (Button) findViewById(R.id.date);
+
+        // date needs to be converted to a string
+        editDate_copy = mood.getDate();
+        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
+        editDate.setText(dateFormat.format(editDate_copy));
+
+        // Date&Time Dialog - https://www.youtube.com/watch?v=a_Ap6T4RlYU - by Tihomir RAdeff
+        editDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                year = editDate_copy.getYear() + 1900;
+                month = editDate_copy.getMonth();
+                day = editDate_copy.getDate();
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EditMoodActivity.this, EditMoodActivity.this, year, month, day);
+                datePickerDialog.show();
+            }
+        });
+
         // Need to set limit of text field to 20 characters or 3 words
 //        http://stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
         editTrigger = (EditText) findViewById(R.id.et_trigger);
@@ -205,11 +241,24 @@ public class EditMoodActivity extends AppCompatActivity {
         locationButton = (Button) findViewById(R.id.btn_location);
         locationText = (TextView) findViewById(R.id.tv_location);
 
+        if (mood.getLocation() != null) {
+            editCoordinate = mood.getLocation();
+            locationText.setText(editCoordinate.getLat().toString() + " " + editCoordinate.getLon().toString());
+        }
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                locationText.setText(location.getLongitude() + " " + location.getLatitude());
+                locationText.setText(location.getLatitude() + " " + location.getLongitude());
+
+                if (editCoordinate != null) {
+                    editCoordinate.setLat(location.getLatitude());
+                    editCoordinate.setLon(location.getLongitude());
+                }
+                else {
+                    editCoordinate = new Coordinate(location.getLatitude(), location.getLongitude());
+                }
             }
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
@@ -225,7 +274,7 @@ public class EditMoodActivity extends AppCompatActivity {
 
         };
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= M) {
                 requestPermissions(new String[]{
                         android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
                         android.Manifest.permission.INTERNET
@@ -235,6 +284,33 @@ public class EditMoodActivity extends AppCompatActivity {
         } else {
             acquireLocation();
         }
+    }
+
+    // setDate - https://www.youtube.com/watch?v=a_Ap6T4RlYU - by Tihomir RAdeff
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        yearFinal = year;
+        monthFinal = month + 1;
+        dayFinal = day;
+
+        hour = editDate_copy.getHours();
+        minute = editDate_copy.getMinutes();
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(EditMoodActivity.this, EditMoodActivity.this, hour, minute, DateFormat.is24HourFormat(this));
+        timePickerDialog.show();
+    }
+
+    // setTime - https://www.youtube.com/watch?v=a_Ap6T4RlYU - by Tihomir RAdeff
+    @Override
+    public void onTimeSet (TimePicker timePicker,int hour, int minute) {
+        hourFinal = hour;
+        minuteFinal = minute;
+
+        editDate_copy = new Date(yearFinal - 1900, monthFinal - 1, dayFinal, hourFinal, minuteFinal);
+
+        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
+        editDate.setText(dateFormat.format(editDate_copy));
+
     }
 
     // When button for image is pressed
@@ -339,14 +415,16 @@ public class EditMoodActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Edit the mood
     public void editMood() {
-        // Edit the mood
+        mood.setDate(editDate_copy);
         mood.setEmotion(emotion);
         location = locationText.getText().toString();
         mood.setSituation(situation);
-        mood.setLocation(location);
+        if (editCoordinate != null) {
+            mood.setLocation(editCoordinate);
+        }
         mood.setTrigger(trigger);
-
 
         // Check if app is connected to a network.
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -17,6 +17,7 @@ import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
+import io.searchbox.core.search.aggregation.TermsAggregation;
 
 /**
  *
@@ -147,6 +148,55 @@ public class ElasticSearchMoodController {
             return moods;
         }
     }
+
+
+    // get a list moods within 5km of current location.
+    public static class GetNearByMoodsTask extends AsyncTask<Double, Void, ArrayList<Mood>> {
+
+        @Override
+        protected ArrayList<Mood> doInBackground(Double... search_parameters) {
+            verifySettings();
+
+            ArrayList<Mood> moods = new ArrayList<Mood>();
+
+            Double current_latitude = search_parameters[0];
+            Double current_longitude = search_parameters[1];
+
+            String query = "{ \"size\" : 0, \"aggs\" : { \"group\" : { \"terms\" : { \"field\" : \"owner\", \"size\" : 0 }, \"aggs\" : { \"group_docs\" : { \"terms\" : { \"field\" : \"date\", \"order\" : { \"_term\" : \"desc\" }, \"size\" : 1 }, \"aggs\" : { \"geof\" : { \"filter\" : { \"geo_distance\" : { \"distance\" : \"5\", \"distance_unit\" : \"km\", \"location\" : { \"lat\" : "+ current_latitude +", \"lon\" : "+ current_longitude +" }}}, \"aggs\" : { \"top_hits_geo\" : { \"top_hits\" : {}}}}}}}}}}";
+
+
+
+            Search search = new Search.Builder(query)
+                    .addIndex("cmput301w17t8")
+                    .addType("mood")
+                    .build();
+
+            try {
+                // get result
+                SearchResult result = client.execute(search);
+
+                if (result.isSucceeded()) {
+                    List<TermsAggregation.Entry> agg = result.getAggregations().getTermsAggregation("group").getBuckets();
+                    for (TermsAggregation.Entry entry : agg) {
+                        List<TermsAggregation.Entry> agg1 = entry.getTermsAggregation("group_docs").getBuckets();
+                        for (TermsAggregation.Entry entry1 : agg1) {
+                            List<Mood> foundMoods = entry1.getFilterAggregation("geof").getTopHitsAggregation("top_hits_geo").getSourceAsObjectList(Mood.class);
+                            moods.addAll(foundMoods);
+                        }
+                    }
+                } else {
+                    Log.i("Error", "The search query failed to find any mood that matched.");
+                }
+            } catch (Exception e) {
+                Log.i("Error", "Something went wrong when we tried to communicate with the elasticsearch server!");
+            }
+
+
+
+            return moods;
+        }
+    }
+
 
     // delete moods from elasticsearch
     public static class DeleteMoodTask extends AsyncTask<Mood, Void, Void> {

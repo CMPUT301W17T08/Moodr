@@ -22,9 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -60,7 +58,7 @@ public class AddMoodActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
-
+    private Coordinate coordinate = null;
     private ImageView imageView;
     private Button locationButton;
     private Button btnChoosePhoto;
@@ -201,9 +199,16 @@ public class AddMoodActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                locationText.setText(location.getLongitude() + " " + location.getLatitude());
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
+                locationText.setText(location.getLatitude() + " " + location.getLongitude());
+                if (coordinate != null){
+                    coordinate.setLat(location.getLatitude());
+                    coordinate.setLon(location.getLongitude());
+                }
+
+                else{
+                    coordinate = new Coordinate(location.getLatitude(), location.getLongitude());
+                }
+
             }
 
             @Override
@@ -291,16 +296,11 @@ public class AddMoodActivity extends AppCompatActivity {
         // Create the mood
         Mood mood = new Mood(owner, emotion);
 
-//        id = CurrentUserSingleton.getInstance().getUser().getPostID();
-//        mood.setId(id);
-
-//        CurrentUserSingleton.getInstance().getUser().incrementPostID();
-
-
         mood.setSituation(situation);
 
-        // mood.setLocation(location);
-        // set Longitude and Latitude onto elasticSearch
+        if (coordinate != null) {
+            mood.setLocation(coordinate);
+        }
 
         trigger = editTrigger.getText().toString();
         boolean checkLimit = countLimit();
@@ -367,6 +367,7 @@ public class AddMoodActivity extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
+
                 locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
             }
         });

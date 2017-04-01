@@ -8,24 +8,23 @@ import java.util.Date;
  */
 public class Mood implements Serializable {
     private Date date;
-    private String owner;
     private String id;
+    private String owner;
     private Emotion emotion;
-    private String imgUrl;
-    private String trigger;
     private String situation;
-    private String location;
+    private String trigger;
+    private Coordinate location;
+    private String imgUrl;
 
     public Mood(String owner, Emotion emotion) {
         this.date = new Date(System.currentTimeMillis());
         this.id = "";
-        this.emotion = emotion;
         this.owner = owner;
-        setImgUrl(imgUrl);
-//        setTrigger(trigger);
-        setSituation(situation);
-        setLocation(location);
-
+        this.emotion = emotion;
+        this.situation = "";
+        this.trigger = "";
+        this.location = null;
+        this.imgUrl = "";
     }
 
     public String getUsername() {
@@ -88,11 +87,11 @@ public class Mood implements Serializable {
         this.situation = situation;
     }
 
-    public String getLocation() {
+    public Coordinate getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Coordinate location) {
         this.location = location;
     }
 }
