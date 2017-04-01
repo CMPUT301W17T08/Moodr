@@ -5,6 +5,8 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
 
+import java.util.ArrayList;
+
 /**
  * Created by kskwong on 3/13/17.
  */
@@ -18,6 +20,13 @@ public class LatestActivityTest extends ActivityInstrumentationTestCase2<LatestA
     }
 
     public void setUp() throws Exception {
+        User user = CurrentUserSingleton.getInstance().getUser();
+        user.setName("Potato");
+        ArrayList<String> friends = new ArrayList<String>();
+        friends.add("aa");
+
+        user.setFriends(friends);
+
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
