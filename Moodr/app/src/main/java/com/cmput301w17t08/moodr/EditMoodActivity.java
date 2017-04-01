@@ -396,8 +396,9 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         switch (item.getItemId()) {
             // X button
             case R.id.action_edit_cancel:
-                Intent intent_cancel = new Intent(EditMoodActivity.this, MyProfileActivity.class);
-                startActivity(intent_cancel);
+//                Intent intent_cancel = new Intent(EditMoodActivity.this, MyProfileActivity.class);
+//                startActivity(intent_cancel);
+                finish();
                 return true;
 
             // Checkmark button
@@ -408,8 +409,9 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
 
                 setResult(RESULT_OK);
 
-                Intent intent_complete = new Intent(EditMoodActivity.this, MyProfileActivity.class);
-                startActivity(intent_complete);
+//                Intent intent_complete = new Intent(EditMoodActivity.this, MyProfileActivity.class);
+//                startActivity(intent_complete);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);

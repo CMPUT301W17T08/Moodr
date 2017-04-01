@@ -196,7 +196,6 @@ public class Profile extends AppCompatActivity {
                 return t1.getDate().compareTo(mood.getDate());
             }
         });
-
         return moods;
     }
 
@@ -230,7 +229,7 @@ public class Profile extends AppCompatActivity {
                 throw new Exception();
             }
             user2.removeFriend(CurrentUserSingleton.getInstance().getUser().getName());
-            // update on elastic search - implement later
+
             ElasticSearchUserController.UpdateUserTask updateUserTask_user2 = new ElasticSearchUserController.UpdateUserTask();
             updateUserTask_user2.execute(user2);
         }

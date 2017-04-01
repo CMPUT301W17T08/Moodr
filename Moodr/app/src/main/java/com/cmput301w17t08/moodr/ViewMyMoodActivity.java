@@ -59,7 +59,6 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
             ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
             deleteMoodTask.execute(mood);
         }
-        finish();
     }
 
     /**
@@ -68,7 +67,7 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
     private void editMood(){
         Intent intent = new Intent(this, EditMoodActivity.class);
         intent.putExtra("index", index);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
 
@@ -104,13 +103,17 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // do something
                         deleteMood();
-                        Intent intent = new Intent(ViewMyMoodActivity.this, MyProfileActivity.class);
-                        startActivity(intent);
+                        finish();
                         Toast.makeText(ViewMyMoodActivity.this, "Mood deleted", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .create();
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            loadMood(mood);
+        }
+    }
 }

@@ -154,7 +154,6 @@ public class LoginActivity extends AppCompatActivity {
         singleton.setSingleton(user);
 
         // populate all current user's mood
-        // This is the first thing that is done when you start myProfile. leave it out of here.
         ElasticSearchMoodController.GetMoodTask getMoodTask
                 = new ElasticSearchMoodController.GetMoodTask();
         ArrayList<Mood> moods = new ArrayList<>();
