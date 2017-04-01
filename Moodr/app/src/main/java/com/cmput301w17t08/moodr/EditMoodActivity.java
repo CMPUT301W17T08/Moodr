@@ -251,8 +251,14 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public void onLocationChanged(Location location) {
                 locationText.setText(location.getLatitude() + " " + location.getLongitude());
-                editCoordinate.setLat(location.getLatitude());
-                editCoordinate.setLon(location.getLongitude());
+
+                if (editCoordinate != null) {
+                    editCoordinate.setLat(location.getLatitude());
+                    editCoordinate.setLon(location.getLongitude());
+                }
+                else {
+                    editCoordinate = new Coordinate(location.getLatitude(), location.getLongitude());
+                }
             }
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {

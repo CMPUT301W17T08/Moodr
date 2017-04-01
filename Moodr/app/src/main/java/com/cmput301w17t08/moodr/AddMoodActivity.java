@@ -200,8 +200,15 @@ public class AddMoodActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 locationText.setText(location.getLatitude() + " " + location.getLongitude());
-                coordinate.setLat(location.getLatitude());
-                coordinate.setLon(location.getLongitude());
+                if (coordinate != null){
+                    coordinate.setLat(location.getLatitude());
+                    coordinate.setLon(location.getLongitude());
+                }
+
+                else{
+                    coordinate = new Coordinate(location.getLatitude(), location.getLongitude());
+                }
+
             }
 
             @Override
@@ -360,6 +367,7 @@ public class AddMoodActivity extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
+
                 locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
             }
         });
