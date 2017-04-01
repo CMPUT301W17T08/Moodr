@@ -8,12 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Locale;
 
 /**
@@ -56,7 +54,7 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
 
         moodName.setText(mood.getEmotion().getName());
 
-        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy hh:mm", Locale.US);
+        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy HH:mm", Locale.US);
         date.setText(format.format(mood.getDate()));
 
         // Return the completed view to render on screen

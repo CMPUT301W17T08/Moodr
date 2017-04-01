@@ -1,17 +1,12 @@
 package com.cmput301w17t08.moodr;
 
 
-import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.text.format.DateFormat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -56,7 +51,7 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
         mood_icon.setImageResource(mood.getEmotion().getEmoticon());
 
         // date needs to be converted to a string
-        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy hh:mm", Locale.US);
+        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
 
         date.setText(dateFormat.format(mood.getDate()));
 

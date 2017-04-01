@@ -1,7 +1,6 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +59,7 @@ public class LatestMoodListAdapter extends ArrayAdapter<Mood> implements Filtera
         icon.setImageResource(mood.getEmotion().getEmoticon());
         friendName.setText(mood.getUsername());
 
-        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy hh:mm", Locale.US);
+        java.text.DateFormat format = new SimpleDateFormat("MMM-dd-yyyy HH:mm", Locale.US);
         date.setText(format.format(mood.getDate()));
 
         // Return the completed view to render on screen
