@@ -51,8 +51,9 @@ public class NavDrawerSetup {
                         new PrimaryDrawerItem().withIdentifier(2).withName("Latest").withIcon(R.drawable.ic_latest),
                         new PrimaryDrawerItem().withIdentifier(3).withName("Friends").withIcon(R.drawable.ic_friends),
                         new PrimaryDrawerItem().withIdentifier(4).withName("Near Me").withIcon(R.drawable.ic_map),
+                        new PrimaryDrawerItem().withIdentifier(5).withName("Story").withIcon(R.drawable.heart),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withIdentifier(5).withName("Log Out").withIcon(R.drawable.ic_logout)
+                        new PrimaryDrawerItem().withIdentifier(6).withName("Log Out").withIcon(R.drawable.ic_logout)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -75,6 +76,10 @@ public class NavDrawerSetup {
                                 break;
                             case 4:
                                 intent = new Intent(activity, MapsActivity.class);
+                                activity.startActivity(intent);
+                                break;
+                            case 5:
+                                intent = new Intent(activity, StoryActivity.class);
                                 activity.startActivity(intent);
                                 break;
                             case 6:

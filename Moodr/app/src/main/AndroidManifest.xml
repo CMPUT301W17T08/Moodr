@@ -34,9 +34,10 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            </activity>
+        </activity>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -55,34 +56,26 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".Profile"
-
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".ViewMyMoodActivity"/>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ViewMyMoodActivity" />
         <activity android:name=".AddMoodActivity" />
         <activity android:name=".ViewFriendMoodActivity" />
         <activity
             android:name=".StrangerProfile"
             android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FriendsActivity"
-            android:exported="true"/>
-
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" >
-
-
-            </activity>
-
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".MyProfileActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".EditMoodActivity"/>
+        <activity android:name=".EditMoodActivity" />
+        <activity android:name=".StoryActivity"></activity>
     </application>
 
 </manifest>
