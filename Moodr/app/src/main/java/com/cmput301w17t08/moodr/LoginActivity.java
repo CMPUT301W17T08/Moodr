@@ -1,6 +1,9 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,13 +45,20 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
-                if(validUser(UserName)){
-                    setCurrentUser(UserName);
-                    Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
-                    startActivity(intent);
+                // Check if app is connected to a network.
+                ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                if (null == activeNetwork) {
+                    Toast.makeText(LoginActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Username doesn't exist", Toast.LENGTH_SHORT).show();
+                    if(validUser(UserName)){
+                        setCurrentUser(UserName);
+                        Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Username doesn't exist", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -61,11 +71,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UserName = loginText.getText().toString();
-                if (!validUser(UserName)) {
-                    createUser(UserName);
-                }
-                else{
-                    Toast.makeText(LoginActivity.this, "Username taken" , Toast.LENGTH_SHORT).show();
+                // Check if app is connected to a network.
+                ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                if (null == activeNetwork) {
+                    Toast.makeText(LoginActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (!validUser(UserName)) {
+                        createUser(UserName);
+                        Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Username taken", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -99,15 +117,15 @@ public class LoginActivity extends AppCompatActivity {
             try{
                 String userId = addUserTask.get();
                 CurrentUserSingleton.getInstance().getUser().setUser_Id(userId);
+                Toast.makeText(LoginActivity.this, "New user created" , Toast.LENGTH_SHORT).show();
+
             }
             catch(Exception e){
                 Log.i("Error", "Error getting user out of async object");
             }
 
-            Toast.makeText(LoginActivity.this, "New user created" , Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
             CurrentUserSingleton.getInstance().getUser().setName(Username);
-            startActivity(intent);
+
             return true;
         }
         catch (Exception e){

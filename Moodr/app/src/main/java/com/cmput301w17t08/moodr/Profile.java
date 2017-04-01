@@ -1,6 +1,9 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -167,17 +171,21 @@ public class Profile extends AppCompatActivity {
      */
     protected ArrayList<Mood> loadPosts(String user){
         ArrayList<Mood> moods = new ArrayList<>();
-
-        ElasticSearchMoodController.GetMoodTask getMoodTask
-                = new ElasticSearchMoodController.GetMoodTask();
-
-        getMoodTask.execute(user);
-
-        try{
-            moods.addAll(getMoodTask.get());
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null == activeNetwork) {
+            Toast.makeText(getApplicationContext(), "Unable to load moods when offline.", Toast.LENGTH_SHORT).show();
         }
-        catch(Exception e){
-            Log.d("Error", "Error getting moods from elastic search.");
+        else {
+            ElasticSearchMoodController.GetMoodTask getMoodTask
+                    = new ElasticSearchMoodController.GetMoodTask();
+            getMoodTask.execute(user);
+            try {
+                moods.addAll(getMoodTask.get());
+            } catch (Exception e) {
+                Log.d("Error", "Error getting moods from elastic search.");
+            }
         }
 
         return moods;
@@ -190,29 +198,33 @@ public class Profile extends AppCompatActivity {
      */
 
     private void unfollowUser(String name) throws Exception{
-        // remove from own list
-        CurrentUserSingleton.getInstance().getUser().removeFriend(name);
-        // update on ElasticSearch - implement later
-
-        //remove from follow list of user 2
-        User user2;
-
-        ElasticSearchUserController.GetUserTask getUserTask
-                = new ElasticSearchUserController.GetUserTask();
-
-        getUserTask.execute(name);
-
-        try{
-            user2 = getUserTask.get().get(0);
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null == activeNetwork) {
+            Toast.makeText(getApplicationContext(), "Unable to unfollow when offline.", Toast.LENGTH_SHORT).show();
         }
-        catch(Exception e){
-            throw new Exception();
+        else {
+            // remove from own list
+            CurrentUserSingleton.getInstance().getUser().removeFriend(name);
+            // update on ElasticSearch - implement later
+            ElasticSearchUserController.UpdateUserTask updateUserTask_own = new ElasticSearchUserController.UpdateUserTask();
+            updateUserTask_own.execute(CurrentUserSingleton.getInstance().getUser());
+            //remove from follow list of user 2
+            User user2;
+            ElasticSearchUserController.GetUserTask getUserTask
+                    = new ElasticSearchUserController.GetUserTask();
+            getUserTask.execute(name);
+            try {
+                user2 = getUserTask.get().get(0);
+            } catch (Exception e) {
+                throw new Exception();
+            }
+            user2.removeFriend(CurrentUserSingleton.getInstance().getUser().getName());
+            // update on elastic search - implement later
+            ElasticSearchUserController.UpdateUserTask updateUserTask_user2 = new ElasticSearchUserController.UpdateUserTask();
+            updateUserTask_user2.execute(user2);
         }
-
-
-        user2.removeFriend(CurrentUserSingleton.getInstance().getUser().getName());
-        // update on elastic search - implement later
-
     }
 
 

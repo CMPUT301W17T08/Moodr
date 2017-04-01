@@ -41,39 +41,43 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
         TextView location = (TextView) findViewById(R.id.viewMoodLocation);
         ImageView image = (ImageView) findViewById(R.id.viewMoodImage);
 
+        // set title
         setTitle(mood.getUsername());
 
+        // set background color
         layout.setBackgroundColor(mood.getEmotion().getColor());
 
+        // set mood's name
         mood_name.setText(mood.getEmotion().getName());
 
-//         set emoticon
+        // set emoticon
         mood_icon.setImageResource(mood.getEmotion().getEmoticon());
 
+        // set date
         // date needs to be converted to a string
         java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
-
         date.setText(dateFormat.format(mood.getDate()));
 
+        // set situation
         String situation = mood.getSituation();
         if (situation != null){
             social.setText(situation);
         }
 
-
+        // set trigger
         String trig = mood.getTrigger();
         Log.d("Trigger", "Trigger is: " + mood.getTrigger());
         if (trig != null){
             trigger.setText(trig);
         }
 
-/*
-        Location loc = mood.getLocation();
+        // set location
+        Coordinate loc = mood.getLocation();
         if (loc != null){
-           location.setText(loc.toString());
+           location.setText(loc.getLat().toString() + " " + loc.getLon().toString());
         }
-*/
 
+        // set image
         String imgURL = mood.getImgUrl();
         if (imgURL != null){
             image.setImageURI(Uri.parse(mood.getImgUrl()));

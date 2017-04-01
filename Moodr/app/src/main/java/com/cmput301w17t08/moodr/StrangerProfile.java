@@ -1,13 +1,15 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * This activity is a stranger's profile. This shows no moods and only allows the user to follow
@@ -70,21 +72,25 @@ public class StrangerProfile extends AppCompatActivity {
      */
 
     private Boolean checkPending(String name) throws Exception{ // change to more specific exception later.
-        User user2;
-        ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-        getUserTask.execute(name);
-
-        try{
-            user2 = getUserTask.get().get(0); // get first user from result
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null == activeNetwork) {
+            Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
+        } else {
+            ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
+            getUserTask.execute(name);
+            try {
+                User user2 = getUserTask.get().get(0); // get first user from result
+                String currentUsername = CurrentUserSingleton.getInstance().getUser().getName();
+                return user2.getPending().contains(currentUsername);
+            } catch (Exception e) {
+                Log.d("Error", "Unable to get user from elastic search");
+                throw new Exception();
+            }
         }
-        catch(Exception e){
-            Log.d("Error", "Unable to get user from elastic search");
-            throw new Exception();
-        }
 
-        String currentUsername = CurrentUserSingleton.getInstance().getUser().getName();
-
-        return user2.getPending().contains(currentUsername);
+        return false;
     }
 
     /**
@@ -93,22 +99,30 @@ public class StrangerProfile extends AppCompatActivity {
      * @throws Exception
      */
 
-    private void addPending(String name) throws Exception{
-        User user2;
+    private void addPending(String name) throws Exception {
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null == activeNetwork) {
+            Toast.makeText(getApplicationContext(), "Unable to send request when offline.", Toast.LENGTH_SHORT).show();
+        } else {
+            User user2;
 
-        ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-        getUserTask.execute(name);
+            ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
+            getUserTask.execute(name);
 
-        try{
-            user2 = getUserTask.get().get(0); // get first user from result
+            try {
+                user2 = getUserTask.get().get(0); // get first user from result
+            } catch (Exception e) {
+                Log.d("Error", "Unable to get user from elastic search");
+                throw new Exception();
+            }
+
+            user2.addPending(CurrentUserSingleton.getInstance().getUser().getName());
+
+            // update on elastic search
+            ElasticSearchUserController.UpdateUserTask updateUserTask = new ElasticSearchUserController.UpdateUserTask();
+            updateUserTask.execute(user2);
         }
-        catch(Exception e){
-            Log.d("Error", "Unable to get user from elastic search");
-            throw new Exception();
-        }
-
-        user2.addPending(CurrentUserSingleton.getInstance().getUser().getName());
-
-        // update on elastic search
     }
 }

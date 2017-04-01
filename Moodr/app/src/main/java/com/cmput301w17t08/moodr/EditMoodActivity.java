@@ -70,6 +70,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
 
     private Date date;
     private Date editDate_copy;
+    private Coordinate editCoordinate = null;
     private String owner;
     private int id;
     private String selected_emotion;
@@ -240,11 +241,18 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         locationButton = (Button) findViewById(R.id.btn_location);
         locationText = (TextView) findViewById(R.id.tv_location);
 
+        if (mood.getLocation() != null) {
+            editCoordinate = mood.getLocation();
+            locationText.setText(editCoordinate.getLat().toString() + " " + editCoordinate.getLon().toString());
+        }
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                locationText.setText(location.getLongitude() + " " + location.getLatitude());
+                locationText.setText(location.getLatitude() + " " + location.getLongitude());
+                editCoordinate.setLat(location.getLatitude());
+                editCoordinate.setLon(location.getLongitude());
             }
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
@@ -401,15 +409,16 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         return super.onOptionsItemSelected(item);
     }
 
+    // Edit the mood
     public void editMood() {
-        // Edit the mood
         mood.setDate(editDate_copy);
         mood.setEmotion(emotion);
         location = locationText.getText().toString();
         mood.setSituation(situation);
-//        mood.setLocation(location);
+        if (editCoordinate != null) {
+            mood.setLocation(editCoordinate);
+        }
         mood.setTrigger(trigger);
-
 
         // Check if app is connected to a network.
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);

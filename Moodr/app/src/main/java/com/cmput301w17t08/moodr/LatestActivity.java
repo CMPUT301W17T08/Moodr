@@ -1,17 +1,19 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -68,18 +70,20 @@ public class LatestActivity extends AppCompatActivity {
         ArrayList<String> friendsList= currentUser.getFriends();
         ArrayList<Mood> latest = new ArrayList<>();
 
-        ElasticSearchMoodController.GetLatestMoodsTask getMoodTask
-                = new ElasticSearchMoodController.GetLatestMoodsTask();
-
-        getMoodTask.execute(friendsList);
-
-        try {
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null == activeNetwork) {
+            Toast.makeText(LatestActivity.this, "Unable to load moods when offline.", Toast.LENGTH_SHORT).show();
+        } else {
+            ElasticSearchMoodController.GetLatestMoodsTask getMoodTask = new ElasticSearchMoodController.GetLatestMoodsTask();
+            getMoodTask.execute(friendsList);
+            try {
                 latest.addAll(getMoodTask.get());
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 Log.i("Error", "Failed to get the moods out of the async object");
             }
-
+        }
 
         return latest;
     }

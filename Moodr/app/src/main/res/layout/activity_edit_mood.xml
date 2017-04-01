@@ -150,7 +150,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_location"
-        android:layout_weight="0.52" />
+        android:layout_weight="0.52"
+        android:textAlignment="center" />
 
 
 </LinearLayout>
