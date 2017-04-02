@@ -64,10 +64,10 @@ public class LoginActivity extends AppCompatActivity {
             ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             if (null == activeNetwork) {
-                Toast.makeText(LoginActivity.this, "Unable to AutoLogin when offline.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Unable to AutoLogin when offline.", Toast.LENGTH_SHORT).show();
             } else {
                 setCurrentUser(UserName);
-                Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                 startActivity(intent);
             }
@@ -83,16 +83,16 @@ public class LoginActivity extends AppCompatActivity {
                 ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
                 if (null == activeNetwork) {
-                    Toast.makeText(LoginActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
                 } else {
                     if(validUser(UserName)){
                         setCurrentUser(UserName);
                         saveUsernameInFile(UserName); // save username for auto login
-                        Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(LoginActivity.this, "Username doesn't exist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Username doesn't exist", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                 ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
                 if (null == activeNetwork) {
-                    Toast.makeText(LoginActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (!validUser(UserName)) {
                         createUser(UserName);
@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(LoginActivity.this, "Username taken", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Username taken", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -153,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
             try{
                 String userId = addUserTask.get();
                 CurrentUserSingleton.getInstance().getUser().setUser_Id(userId);
-                Toast.makeText(LoginActivity.this, "New user created" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "New user created" , Toast.LENGTH_SHORT).show();
 
             }
             catch(Exception e){
@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         catch (Exception e){
             Log.i("Error", "Failed to create the User");
-            Toast.makeText(LoginActivity.this,
+            Toast.makeText(getApplicationContext(),
                     "Can not create user. Internet connection Error",
                     Toast.LENGTH_SHORT).show();
             return false;

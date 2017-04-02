@@ -66,7 +66,7 @@ public class ViewMyMoodActivity extends AppCompatActivity{
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         CurrentUserSingleton.getInstance().getMyMoodList().delete(mood);
         if (null == activeNetwork) {
-            Toast.makeText(ViewMyMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
             CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(3, mood);
         }
         else {
@@ -119,7 +119,7 @@ public class ViewMyMoodActivity extends AppCompatActivity{
                         // do something
                         deleteMood();
                         finish();
-                        Toast.makeText(ViewMyMoodActivity.this, "Mood deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Mood deleted", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .create();

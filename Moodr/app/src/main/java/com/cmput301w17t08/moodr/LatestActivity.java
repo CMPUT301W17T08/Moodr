@@ -61,7 +61,7 @@ public class LatestActivity extends AppCompatActivity {
         map_buttom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LatestActivity.this, "Go to map activity", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Go to map activity", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -80,7 +80,7 @@ public class LatestActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null == activeNetwork) {
-            Toast.makeText(LatestActivity.this, "Unable to load moods when offline.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Unable to load moods when offline.", Toast.LENGTH_SHORT).show();
         } else {
             ElasticSearchMoodController.GetLatestMoodsTask getMoodTask = new ElasticSearchMoodController.GetLatestMoodsTask();
             getMoodTask.execute(friendsList);

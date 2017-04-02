@@ -440,7 +440,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
         if (null == activeNetwork) {
-            Toast.makeText(EditMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
             CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
         }
         else {

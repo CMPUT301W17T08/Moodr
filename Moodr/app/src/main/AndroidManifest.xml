@@ -76,7 +76,6 @@
         <activity
             android:name=".ViewStoryActivity"
             android:label="@string/title_activity_view_story"/>
-        <activity android:name=".StoryActivity" />
 
     </application>
 

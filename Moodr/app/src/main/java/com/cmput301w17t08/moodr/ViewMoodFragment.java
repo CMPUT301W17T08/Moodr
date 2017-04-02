@@ -2,9 +2,12 @@ package com.cmput301w17t08.moodr;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,10 +74,10 @@ public class ViewMoodFragment extends Fragment {
         loadMood(mood);
     }
 
-    protected void loadMood(Mood mood){
+    protected void loadMood(Mood mood) {
         View view = getView();
 
-        if (getView() != null){
+        if (getView() != null) {
             Log.d("VIEW", "NOT NULL");
         }
 
@@ -86,6 +89,7 @@ public class ViewMoodFragment extends Fragment {
         TextView trigger = (TextView) view.findViewById(R.id.viewMoodTrigger);
         TextView location = (TextView) view.findViewById(R.id.viewMoodLocation);
         ImageView image = (ImageView) view.findViewById(R.id.viewMoodImage);
+        Bitmap imageToDisplay;
 
         // set title
         getActivity().setTitle(mood.getUsername());
@@ -101,31 +105,44 @@ public class ViewMoodFragment extends Fragment {
 
         // set date
         // date needs to be converted to a string
-        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
+        java.text.DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
         date.setText(dateFormat.format(mood.getDate()));
 
         // set situation
         String situation = mood.getSituation();
-        if (situation != null && situation.length() > 0){
+        if (situation != null && situation.length() > 0) {
             social.setText("Social Situation: " + situation);
         }
 
         // set trigger
         String trig = mood.getTrigger();
-        if (trig != null && trig.length() > 0){
-            trigger.setText("Trigger: "+ trig);
+        if (trig != null && trig.length() > 0) {
+            trigger.setText("Trigger: " + trig);
         }
 
         // set location
         Coordinate loc = mood.getLocation();
-        if (loc != null){
+        if (loc != null) {
             location.setText("Location:" + loc.getLat().toString() + " " + loc.getLon().toString());
         }
 
         // set image
         String imgURL = mood.getImgUrl();
-        if (imgURL != null){
+        imageToDisplay = decodeImage(imgURL);
+        image.setImageBitmap(imageToDisplay);
+        if (imgURL != null) {
             image.setImageURI(Uri.parse(mood.getImgUrl()));
+        }
+    }
+
+    public static Bitmap decodeImage(String imageString) {
+        try {
+            byte[] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
         }
     }
 
