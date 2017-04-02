@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.cmput301w17t08.moodr.ViewMyMoodActivity">
 
-    <include layout="@layout/activity_view_mood"
+    <include layout="@layout/view_mood"
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
 

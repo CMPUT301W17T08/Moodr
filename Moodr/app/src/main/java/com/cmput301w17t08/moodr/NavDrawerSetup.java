@@ -44,7 +44,6 @@ public class NavDrawerSetup {
                 .withActivity(activity)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
-                .withDelayOnDrawerClose(-1)
                 .withSelectedItem(-1)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home),

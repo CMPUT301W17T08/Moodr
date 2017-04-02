@@ -212,15 +212,4 @@ public class AddStory extends Fragment {
     public interface OnCompleteListener {
         public abstract void OnComplete();
     }
-
-//     Fragment doesn't have a layout.
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//
-//
-//        return null;
-//    }
-
-
 }
