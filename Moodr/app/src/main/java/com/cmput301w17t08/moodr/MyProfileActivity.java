@@ -172,7 +172,6 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
 
     // when returning from adding story. restores menu items and floating buttons.
     public void OnComplete(){
-        Log.d("EXIT", "FRAGMENT KILLED");
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.remove(manager.findFragmentByTag("AddStoryFragment_1"));
@@ -183,6 +182,5 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
         findViewById(R.id.go_to_map).setVisibility(View.VISIBLE);
         findViewById(R.id.fab).setVisibility(View.VISIBLE);
     }
-
 
 }
