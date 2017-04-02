@@ -7,6 +7,8 @@ import android.widget.ListView;
 
 /**
  * Created by kirsten on 02/04/17.
+ * From http://stackoverflow.com/questions/18813296/non-scrollable-listview-inside-scrollview
+ * April 2 2017 3:03 am
  */
 
 public class NonScrollListView extends ListView {

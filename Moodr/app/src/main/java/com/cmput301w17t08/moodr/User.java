@@ -91,7 +91,7 @@ public class User {
         return stories;
     }
     public void setStories(ArrayList<Story> stories){
-        stories.addAll(stories);
+        this.stories.addAll(stories);
     }
 
     public void removeStory(int index){

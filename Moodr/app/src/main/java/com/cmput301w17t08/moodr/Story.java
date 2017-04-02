@@ -32,4 +32,9 @@ public class Story {
     public String getName(){
         return name;
     }
+
+    @Override
+    public String toString(){
+        return owner + " shared " + name + " story with you!";
+    }
 }

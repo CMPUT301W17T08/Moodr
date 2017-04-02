@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -34,7 +35,10 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
     private ArrayList<Mood> moods = new ArrayList<>();
     private ProfileMoodAdapter adapter;
     private ListView moodsListview;
+    private ListView notifications;
+    private ArrayList<Story> stories;
     private Filter filter;
+    private ArrayAdapter notificationAdapter;
 
 
     @Override
@@ -140,6 +144,23 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
                 goToMood(i);
             }
         });
+
+
+
+        notifications = (ListView) findViewById(R.id.notifications);
+        stories = CurrentUserSingleton.getInstance().getUser().getStories();
+
+        Log.d("STORIES", Integer.toString(stories.size()));
+
+        notificationAdapter = new ArrayAdapter<>(this, R.layout.notification, stories);
+        notifications.setAdapter(notificationAdapter);
+
+        notifications.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // view Story
+            }
+        });
     }
 
     /**
@@ -168,6 +189,12 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
             adapter.setMoods(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
 
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        adapter.setMoods(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
     }
 
     // when returning from adding story. restores menu items and floating buttons.

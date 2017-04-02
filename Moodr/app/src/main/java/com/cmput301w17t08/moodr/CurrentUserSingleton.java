@@ -1,5 +1,7 @@
 package com.cmput301w17t08.moodr;
 
+import android.util.Log;
+
 /**
  *
  * This class is a singleton used to store an instance of the User class for the current logged in
@@ -78,9 +80,10 @@ public enum CurrentUserSingleton {
      */
     public void reset(){
         user.setName("");
-        user.setFriends(null);
-        user.setPending(null);
-        user.setUser_Id(null);
+        user.getFriends().clear();
+        user.getPending().clear();
+        user.setUser_Id("");
+        user.getStories().clear();
         myMoodList.getListOfMoods().clear();
     }
 }
