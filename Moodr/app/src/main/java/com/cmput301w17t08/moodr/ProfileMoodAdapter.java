@@ -1,6 +1,7 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,19 +43,16 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
         this.moods = new ArrayList<Mood>();
         this.moods.addAll(moods);
         this.context = context;
+        checked = new ArrayList<Mood>();
     }
 
-    public void setcheck(){
-        if (check) {
+    public ArrayList<Mood> getChecked(){
+        return checked;
+    }
 
-            check = false;
-            checked.clear();
-        }
-        else{
-            check = true;
-            checked = new ArrayList<Mood>();
-        }
-
+    public void setcheck(Boolean check){
+        this.check = check;
+        checked.clear();
         notifyDataSetChanged();
     }
 
@@ -72,16 +70,19 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
             CheckBox checkbox = new CheckBox(context);
             checkbox.setId(R.id.moodCheckbox);
 
-            LinearLayout item = (LinearLayout) convertView.findViewById(R.id.item);
+            final LinearLayout item = (LinearLayout) convertView.findViewById(R.id.item);
             item.addView(checkbox, 0);
             checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b){
                         checked.add(mood);
+                        //TODO: set to a less ugly color later.
+                        item.setBackgroundColor(Color.LTGRAY);
                     }
                     else{
                         checked.remove(mood);
+                        item.setBackgroundColor(Color.alpha(0));
                     }
                 }
 
@@ -90,6 +91,7 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
         else if (!check && convertView.findViewById(R.id.moodCheckbox) != null){
             LinearLayout item = (LinearLayout) convertView.findViewById(R.id.item);
             item.removeView(convertView.findViewById(R.id.moodCheckbox));
+            item.setBackgroundColor(Color.alpha(0));
         }
 
 

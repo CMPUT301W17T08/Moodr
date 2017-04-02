@@ -11,13 +11,14 @@ public class Story {
     private String name;
     private ArrayList<Mood> moodList;
 
-    public Story(String name, String owner){
+    public Story(String owner, String name){
         this.owner = owner;
         this.name = name;
+        moodList = new ArrayList<>();
     }
 
-    public void addMood(Mood mood) {
-        moodList.add(mood);
+    public void addMoods(ArrayList<Mood> mood) {
+        moodList.addAll(mood);
     }
 
     public ArrayList<Mood> getMoodList(){

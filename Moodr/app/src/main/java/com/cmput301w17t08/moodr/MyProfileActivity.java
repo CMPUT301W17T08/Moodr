@@ -1,21 +1,24 @@
 package com.cmput301w17t08.moodr;
 
-import android.content.DialogInterface;
+
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
+
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.firebase.database.Transaction;
 
 import java.util.ArrayList;
 
@@ -26,7 +29,7 @@ import java.util.ArrayList;
  * Due to the common load method, this extends Profile.
  * @see Profile
  */
-public class MyProfileActivity extends Profile {
+public class MyProfileActivity extends Profile implements AddStory.OnCompleteListener{
     private User user;
     private ArrayList<Mood> moods = new ArrayList<>();
     private ProfileMoodAdapter adapter;
@@ -65,20 +68,59 @@ public class MyProfileActivity extends Profile {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_my_profile, menu); // inflate the story icon.
+    public boolean onPrepareOptionsMenu(Menu menu){
+        MenuItem item1 = menu.findItem(R.id.storyButton);
+        MenuItem item2 = menu.findItem(R.id.filter_menu);
+        MenuItem item3 = menu.findItem(R.id.action_add_complete);
+        MenuItem item4 = menu.findItem(R.id.action_add_cancel);
+
+        if (item1 != null){
+            item1.setVisible(true);
+        }
+
+        if (item2 != null){
+            item2.setVisible(true);
+        }
+
+        if (item3 != null){
+            item3.setVisible(false);
+        }
+
+        if (item4 != null){
+            item4.setVisible(false);
+        }
+
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_my_profile, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.storyButton){
-           // start fragment
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.add(new AddStory(), "AddStoryFragment_1");
+            fragmentTransaction.commit();
         }
-        return true;
+        return false;
     }
+
+
+    public void toggleCheckBoxes(Boolean checked){
+        adapter.setcheck(checked);
+    }
+
+    public ArrayList<Mood> getSelected(){
+        return adapter.getChecked();
+    }
+
 
 
     @Override
@@ -127,4 +169,20 @@ public class MyProfileActivity extends Profile {
 
         }
     }
+
+    // when returning from adding story. restores menu items and floating buttons.
+    public void OnComplete(){
+        Log.d("EXIT", "FRAGMENT KILLED");
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.remove(manager.findFragmentByTag("AddStoryFragment_1"));
+        transaction.commit();
+
+        adapter.setcheck(false);
+        supportInvalidateOptionsMenu();
+        findViewById(R.id.go_to_map).setVisibility(View.VISIBLE);
+        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+    }
+
+
 }
