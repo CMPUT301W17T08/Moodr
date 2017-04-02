@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ViewStoryActivity extends AppCompatActivity implements EndFragment.OnCompleteListener{
+public class ViewStoryActivity extends AppCompatActivity {
     private ArrayList<Mood> moodList;
 
     /**
@@ -96,8 +96,41 @@ public class ViewStoryActivity extends AppCompatActivity implements EndFragment.
         }
     }
 
-    public void OnComplete(){
-        Log.d("clicked", "does something");
-        finish();
+    public static class EndFragment extends Fragment {
+        public EndFragment() {
+        }
+
+        @Override
+        public void onStart( ) {
+            super.onStart();
+
+            Button button = (Button) getView().findViewById(R.id.story_finish);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().finish();
+                }
+            });
+        }
+
+        public static EndFragment newInstance() {
+            EndFragment fragment = new EndFragment();
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.story_end, container, false);
+            return rootView;
+        }
+
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+
+        }
+
     }
 }

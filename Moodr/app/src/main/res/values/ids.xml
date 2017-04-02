@@ -2,4 +2,5 @@
 <resources>
     <item name="moodCheckbox" type="id"/>
     <item name="addMoodFragment" type="id"/>
+    <item name="stranger_button2" type="id"/>
 </resources>
