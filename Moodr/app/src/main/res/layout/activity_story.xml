@@ -17,16 +17,16 @@
         android:id="@+id/latest_list"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/go_to_map"
+        android:id="@+id/send_story"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="59dp"
         android:clickable="true"
         app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_dialog_map" />
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 
 </RelativeLayout>

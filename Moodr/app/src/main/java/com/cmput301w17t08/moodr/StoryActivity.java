@@ -1,11 +1,13 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -14,7 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -44,11 +48,12 @@ public class StoryActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton map_buttom = (FloatingActionButton) findViewById(R.id.go_to_map);
+        FloatingActionButton map_buttom = (FloatingActionButton) findViewById(R.id.send_story);
         map_buttom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(StoryActivity.this, "Go to map activity", Toast.LENGTH_SHORT).show();
+                SendStory();
+
             }
         });
 
@@ -100,6 +105,41 @@ public class StoryActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
+
+    public void SendStory() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(StoryActivity.this);
+        alertDialog.setTitle("Send Your Story");
+        alertDialog.setMessage("Please enter the name of user that you want to send to");
+
+        final EditText input = new EditText(StoryActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+
+
+        alertDialog.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String followName = input.getText().toString();
+                        //addFollow(followName);
+                    }
+                });
+
+        alertDialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+
 
     @Override
     public void onStart() {

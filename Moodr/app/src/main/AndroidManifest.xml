@@ -56,7 +56,7 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".Profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ViewMyMoodActivity" />
         <activity android:name=".AddMoodActivity" />
         <activity android:name=".ViewFriendMoodActivity" />
@@ -70,12 +70,12 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MyProfileActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".EditMoodActivity" />
-        <activity android:name=".StoryActivity"></activity>
+        <activity android:name=".StoryActivity" />
     </application>
 
 </manifest>
