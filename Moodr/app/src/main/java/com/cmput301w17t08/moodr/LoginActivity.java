@@ -12,6 +12,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,10 +45,33 @@ public class LoginActivity extends AppCompatActivity {
 
     protected EditText loginText;
     private String UserName;
+    private  static final String FILENAME = "AutoLogin.sav";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // save username to null if pressed logout.
+        if (getIntent().getIntExtra("logout", -1) == 1) {
+            saveUsernameInFile(null);
+        }
+
+        // load username from disk and auto login if username is not null.
+        loadUsernameFromFile(); // load Last Username for auto login
+        if (UserName != null) {
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (null == activeNetwork) {
+                Toast.makeText(LoginActivity.this, "Unable to AutoLogin when offline.", Toast.LENGTH_SHORT).show();
+            } else {
+                setCurrentUser(UserName);
+                Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+                startActivity(intent);
+            }
+        }
 
         Button SignInButton = (Button) findViewById(R.id.login_button);
         loginText = (EditText) findViewById(R.id.username);
@@ -53,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     if(validUser(UserName)){
                         setCurrentUser(UserName);
+                        saveUsernameInFile(UserName); // save username for auto login
                         Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                         startActivity(intent);
@@ -79,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     if (!validUser(UserName)) {
                         createUser(UserName);
+                        saveUsernameInFile(UserName); // save username for auto login
                         Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                         startActivity(intent);
                     } else {
@@ -172,5 +208,43 @@ public class LoginActivity extends AppCompatActivity {
         }
         MoodList userMoods = CurrentUserSingleton.getInstance().getMyMoodList();
         userMoods.setListOfMoods(moods);
+    }
+
+    /**
+     * Loads Last username for auto login from file.
+     * @exception FileNotFoundException if the  file is not created.
+     */
+    private void loadUsernameFromFile() {
+        try {
+            FileInputStream fis = openFileInput(FILENAME);
+            BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+            Gson gson = new Gson();
+            UserName = gson.fromJson(in, new TypeToken<String>() {
+            }.getType());
+            fis.close();
+        } catch (FileNotFoundException e) {
+            UserName = null;
+        } catch (IOException e) {
+            throw  new RuntimeException();
+        }
+    }
+
+    /**
+     * Saves username in file in JSON format.
+     * @throws FileNotFoundException if folder not exists.
+     */
+    private void saveUsernameInFile(String username) {
+        try {
+            FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fos));
+            Gson gson = new Gson();
+            gson.toJson(username,out);
+            out.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException();
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
     }
 }
