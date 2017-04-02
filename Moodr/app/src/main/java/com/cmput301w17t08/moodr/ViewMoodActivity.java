@@ -44,6 +44,8 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
         TextView location = (TextView) findViewById(R.id.viewMoodLocation);
         ImageView image = (ImageView) findViewById(R.id.viewMoodImage);
 
+        Bitmap imageToDisplay;
+
         // set title
         setTitle(mood.getUsername());
 
@@ -82,6 +84,8 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
 
         // set image
         String imgURL = mood.getImgUrl();
+        imageToDisplay = decodeImage(imgURL);
+        image.setImageBitmap(imageToDisplay);
         if (imgURL != null) {
             image.setImageURI(Uri.parse(mood.getImgUrl()));
         }
