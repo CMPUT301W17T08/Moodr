@@ -28,6 +28,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('src/include/jest-droid-2.4.0.jar')
+    compile('com.mikepenz:materialdrawer:5.8.2@aar') {
+        transitive = true
+    }
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:multidex:1.0.1'
     compile('com.mikepenz:materialdrawer:5.8.2@aar') {
         transitive = true
