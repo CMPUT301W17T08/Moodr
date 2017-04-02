@@ -247,9 +247,4 @@ public class Profile extends AppCompatActivity {
         filter = adapter.getFilter();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
 }

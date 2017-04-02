@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/story_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter Story Name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:id="@+id/story_name_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:textAlignment="center"/>
+</LinearLayout>

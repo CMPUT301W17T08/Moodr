@@ -1,13 +1,18 @@
 package com.cmput301w17t08.moodr;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -28,21 +33,66 @@ import java.util.Locale;
 public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable {
     private MoodFilterHolder moodFilter;
     private ArrayList<Mood> moods;
+    private Boolean check = false;
+    private ArrayList<Mood> checked;
+    private Context context;
 
     public ProfileMoodAdapter(Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
         this.moods = new ArrayList<Mood>();
         this.moods.addAll(moods);
+        this.context = context;
+    }
+
+    public void setcheck(){
+        if (check) {
+
+            check = false;
+            checked.clear();
+        }
+        else{
+            check = true;
+            checked = new ArrayList<Mood>();
+        }
+
+        notifyDataSetChanged();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Mood mood = getItem(position);
+        final Mood mood = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.profile_mood_item, parent, false);
         }
+
+
+        if (check && (convertView.findViewById(R.id.moodCheckbox) == null) ){
+            CheckBox checkbox = new CheckBox(context);
+            checkbox.setId(R.id.moodCheckbox);
+
+            LinearLayout item = (LinearLayout) convertView.findViewById(R.id.item);
+            item.addView(checkbox, 0);
+            checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b){
+                        checked.add(mood);
+                    }
+                    else{
+                        checked.remove(mood);
+                    }
+                }
+
+            });
+        }
+        else if (!check && convertView.findViewById(R.id.moodCheckbox) != null){
+            LinearLayout item = (LinearLayout) convertView.findViewById(R.id.item);
+            item.removeView(convertView.findViewById(R.id.moodCheckbox));
+        }
+
+
         // Lookup view for data population
         TextView moodName = (TextView) convertView.findViewById(R.id.profileMood);
         TextView date = (TextView) convertView.findViewById(R.id.profilePostDate);
