@@ -326,7 +326,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 // Generate a unique UUID ID for offline mode.
                 mood.setId(UUID.randomUUID().toString());
                 CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-                Toast.makeText(AddMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
                 finish();
             } else {
@@ -440,7 +440,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 imageView.setImageBitmap(bitmapImage);
                 saveToInternalStorage(bitmapImage);
                 encodedImage = encodeImage(bitmapImage);
-                Toast.makeText(AddMoodActivity.this, "Image Added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Image Added", Toast.LENGTH_SHORT).show();
 
             }
         }

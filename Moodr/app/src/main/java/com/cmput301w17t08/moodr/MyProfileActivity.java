@@ -69,7 +69,7 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
         map_buttom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MyProfileActivity.this, "Go to map activity", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Go to map activity", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -141,7 +141,7 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             if (null != activeNetwork) {
                 CurrentUserSingleton.getInstance().getMyOfflineActions().syncAction();
-                Toast.makeText(MyProfileActivity.this, "Synchronization completed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Synchronization completed.", Toast.LENGTH_SHORT).show();
             }
         }
 
