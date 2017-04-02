@@ -47,6 +47,10 @@ public class OfflineMode {
         correspondingMood.add(mood);
     }
 
+    public Mood getCorrespondingMoodByIndex(int index) {
+        return correspondingMood.get(index);
+    }
+
     public void popFirstAction() {
         allActions.remove(0);
         correspondingMood.remove(0);
@@ -55,5 +59,34 @@ public class OfflineMode {
     public void reset() {
         allActions.clear();
         correspondingMood.clear();
+    }
+
+    public int getSize() {
+        return allActions.size();
+    }
+
+    public void syncAction(){
+        int index = 0;
+        for (Integer action : allActions) {
+            Mood mood = getCorrespondingMoodByIndex(index);
+            switch (action) {
+                case 1:
+                    ElasticSearchMoodController.OfflineAddMoodByIdTask offlineAddMoodByIdTask = new ElasticSearchMoodController.OfflineAddMoodByIdTask();
+                    offlineAddMoodByIdTask.execute(mood);
+                    break;
+
+                case 2:
+                    ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
+                    updateMoodTask.execute(mood);
+                    break;
+
+                case 3:
+                    ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
+                    deleteMoodTask.execute(mood);
+                    break;
+            }
+            index++;
+        }
+        reset();
     }
 }

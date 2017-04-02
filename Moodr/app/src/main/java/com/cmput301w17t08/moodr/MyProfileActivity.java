@@ -1,13 +1,14 @@
 package com.cmput301w17t08.moodr;
 
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -18,8 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.google.firebase.database.Transaction;
 
 import java.util.ArrayList;
 
@@ -48,12 +47,15 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Setup drawer.
         new NavDrawerSetup(this, toolbar).setupNav();
 
+        // Get list of Moods from singleton and put it in moods ArrayList.
         moods.addAll(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
         user = CurrentUserSingleton.getInstance().getUser();
         setTitle(user.getName());
 
+        // Setup fab for add mood.
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +64,7 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
             }
         });
 
+        // Setup fab for map activity.
         FloatingActionButton map_buttom = (FloatingActionButton) findViewById(R.id.go_to_map);
         map_buttom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,13 +134,29 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
     public void onStart(){
         super.onStart();
 
+        // Offline mode sync procedure.
+        if (CurrentUserSingleton.getInstance().getMyOfflineActions().getSize() > 0) {
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (null != activeNetwork) {
+                CurrentUserSingleton.getInstance().getMyOfflineActions().syncAction();
+                Toast.makeText(MyProfileActivity.this, "Synchronization completed.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        // Setup adapter
         moodsListview = (ListView) findViewById(R.id.profile_moodlist);
         adapter = new ProfileMoodAdapter(this, moods);
 
+        // Setup filter for adapter
         filter = adapter.getFilter();
         setFilter(filter);
 
+        // Put moods in adapter
         moodsListview.setAdapter(adapter);
+
+        // on item click listener for adapter.
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

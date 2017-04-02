@@ -67,6 +67,35 @@ public class ElasticSearchMoodController {
         }
     }
 
+    // Explicitly made for Offline Mode. Adds mood to elasticsearch by Id.
+    public static class OfflineAddMoodByIdTask extends AsyncTask<Mood, Void, String> {
+
+        @Override
+        protected String doInBackground(Mood... moods) {
+            verifySettings();
+
+            String moodId = null;
+
+            for (Mood mood:moods) {
+                Index index1 = new Index.Builder(mood).index("cmput301w17t8").type("mood").id(mood.getId()).build();
+
+                try {
+                    DocumentResult result = client.execute(index1);
+                    if (!result.isSucceeded()) {
+                        Log.i("Error", "Elasticsearch was not able to add mood.");
+                    }
+                    else {
+                        moodId = result.getId();
+                    }
+                }
+                catch (Exception e) {
+                    Log.i("Error", "The application failed to build and send mood.");
+                }
+            }
+            return moodId;
+        }
+    }
+
     // gets moods from elasticsearch
     public static class GetMoodTask extends AsyncTask<String, Void, ArrayList<Mood>> {
 
