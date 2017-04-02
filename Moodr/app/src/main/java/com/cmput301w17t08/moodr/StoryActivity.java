@@ -31,7 +31,7 @@ public class StoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_latest);
+        setContentView(R.layout.activity_story);
 
         currentUser = CurrentUserSingleton.getInstance().getUser();
 
