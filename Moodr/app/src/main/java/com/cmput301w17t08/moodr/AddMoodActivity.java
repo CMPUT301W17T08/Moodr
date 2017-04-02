@@ -277,24 +277,6 @@ public class AddMoodActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-/*
-    public String encodeIMG(Uri uri){
-        InputStream inputStream = new FileInputStream(uri);
-        byte[] bytes;
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                output.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        bytes = output.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-    */
 
     public void createMood(Emotion emotion, String situation, String trigger, String encodedImage) {
         // Grab owner
