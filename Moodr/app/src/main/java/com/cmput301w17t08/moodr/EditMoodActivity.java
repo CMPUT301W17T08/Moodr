@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -88,6 +89,11 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_mood);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        new NavDrawerSetup(this, toolbar).setupNav();
+
         Intent intent = getIntent();
         index = intent.getIntExtra("index", -1);
         try {
@@ -96,6 +102,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         catch (Exception e){
             Log.d("Error", "Invalid mood index");
         }
+
 
         // Create the spinner drop-down
         Spinner emotion_spinner = (Spinner) findViewById(R.id.sp_emotion);

@@ -27,6 +27,8 @@ public class StrangerProfile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        new NavDrawerSetup(this, toolbar).setupNav();
+
         final String name = getIntent().getStringExtra("name");
 
         setTitle(name);

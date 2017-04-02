@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.util.Base64;
 import android.util.Log;
@@ -84,6 +85,11 @@ public class AddMoodActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_mood);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        new NavDrawerSetup(this, toolbar).setupNav();
 
         // Create the spinner drop-down
         Spinner emotion_spinner = (Spinner) findViewById(R.id.sp_emotion);

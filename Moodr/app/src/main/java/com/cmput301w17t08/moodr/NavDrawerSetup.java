@@ -45,6 +45,7 @@ public class NavDrawerSetup {
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
                 .withDelayOnDrawerClose(-1)
+                .withSelectedItem(-1)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home),
                         new PrimaryDrawerItem().withIdentifier(2).withName("Latest").withIcon(R.drawable.ic_latest),
@@ -61,27 +62,43 @@ public class NavDrawerSetup {
                         drawer.closeDrawer();
                         switch (position){
                             case 1:
-                                if (!activity.equals(MyProfileActivity.class)){
-                                intent = new Intent(activity, MyProfileActivity.class);
-                                activity.startActivity(intent);}
+                                if (!activity.getClass().equals((MyProfileActivity.class))) {
+                                    intent = new Intent(activity, MyProfileActivity.class);
+                                    activity.startActivity(intent);
+                                }
                                 break;
+
                             case 2:
-                                intent = new Intent(activity, LatestActivity.class);
-                                activity.startActivity(intent);
+                                if (!activity.getClass().equals((LatestActivity.class))) {
+                                    intent = new Intent(activity, LatestActivity.class);
+                                    activity.startActivity(intent);
+                                }
                                 break;
+
                             case 3:
-                                intent = new Intent(activity, FriendsActivity.class);
-                                activity.startActivity(intent);
-                                break;
+                                if (!activity.getClass().equals((FriendsActivity.class))) {
+                                    intent = new Intent(activity, FriendsActivity.class);
+                                    activity.startActivity(intent);
+                                }
+                                    break;
                             case 4:
-                                intent = new Intent(activity, MapsActivity.class);
-                                activity.startActivity(intent);
+                                if (!activity.getClass().equals((MapsActivity.class))) {
+                                    intent = new Intent(activity, MapsActivity.class);
+                                    activity.startActivity(intent);
+                                }
+
                                 break;
+
                             case 5:
-                                intent = new Intent(activity, StoryActivity.class);
-                                activity.startActivity(intent);
+                                if (!activity.getClass().equals((StoryActivity.class))) {
+                                    intent = new Intent(activity, StoryActivity.class);
+                                    activity.startActivity(intent);
+                                }
+
                                 break;
                             case 7:
+                                // http://stackoverflow.com/questions/7075349/android-clear-activity-stack
+                                // April 2 2017 4:25 am
                                 CurrentUserSingleton.getInstance().reset();
                                 intent = new Intent(activity, LoginActivity.class);
                                 intent.putExtra("logout", 1);

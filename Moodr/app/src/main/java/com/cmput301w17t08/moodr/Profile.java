@@ -40,6 +40,8 @@ public class Profile extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        new NavDrawerSetup(this, toolbar).setupNav();
+
         name = getIntent().getStringExtra("name");
 
         setTitle(name);
