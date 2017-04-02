@@ -158,7 +158,12 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
         notifications.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // view Story
+                Intent intent = new Intent(MyProfileActivity.this, ViewStoryActivity.class);
+                intent.putExtra("story", stories.get(i));
+                startActivity(intent);
+                stories.remove(i);
+                notificationAdapter.notifyDataSetChanged();
+                Log.d("Stories", Integer.toString(CurrentUserSingleton.getInstance().getUser().getStories().size()));
             }
         });
     }
