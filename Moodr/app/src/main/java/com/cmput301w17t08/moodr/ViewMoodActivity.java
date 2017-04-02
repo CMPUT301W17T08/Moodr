@@ -87,9 +87,9 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
         }
     }
 
-    public static Bitmap decodeImage(String encodedString) {
+    public static Bitmap decodeImage(String imageString) {
         try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            byte[] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
         } catch (Exception e) {
