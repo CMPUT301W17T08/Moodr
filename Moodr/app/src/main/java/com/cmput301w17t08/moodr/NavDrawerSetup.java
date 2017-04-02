@@ -1,10 +1,9 @@
 package com.cmput301w17t08.moodr;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -85,6 +84,7 @@ public class NavDrawerSetup {
                             case 7:
                                 CurrentUserSingleton.getInstance().reset();
                                 intent = new Intent(activity, LoginActivity.class);
+                                intent.putExtra("logout", 1);
                                 activity.startActivity(intent);
                                 break;
                         }
