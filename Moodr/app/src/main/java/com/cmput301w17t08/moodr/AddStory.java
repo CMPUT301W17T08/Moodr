@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class AddStory extends Fragment {
         // hide floating buttons
         activity.findViewById(R.id.fab).setVisibility(View.GONE);
         activity.findViewById(R.id.go_to_map).setVisibility(View.GONE);
+        activity.findViewById(R.id.notifications).setVisibility(View.GONE);
 
         ConnectivityManager cm = (ConnectivityManager) activity.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -52,6 +54,8 @@ public class AddStory extends Fragment {
         }
 
         else {
+            // http://stackoverflow.com/questions/4016313/how-to-keep-an-alertdialog-open-after-button-onclick-is-fired
+            // April 2 2017 4:43 pm
 
             // prompt user for story name
             LayoutInflater inflater = LayoutInflater.from(activity);
@@ -60,17 +64,11 @@ public class AddStory extends Fragment {
             nameDialog.setView(view);
 
 
-            // TODO: if and save pressed, keep dialog open.
-
             final EditText nameInput = (EditText) view.findViewById(R.id.story_name_field);
             nameDialog
                     .setCancelable(false)
                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogBox, int id) {
-                            name = nameInput.getText().toString();
-                            if (!name.equals("")) {
-                                activity.toggleCheckBoxes(true);
-                            } else mListener.OnComplete();
                         }
                     })
                     .setNegativeButton("Cancel",
@@ -81,7 +79,27 @@ public class AddStory extends Fragment {
                                 }
                             });
 
-            AlertDialog alertDialog = nameDialog.create();
+            final AlertDialog alertDialog = nameDialog.create();
+
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    Button button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            name = nameInput.getText().toString();
+                            if (name.equals("")) {
+                                Toast.makeText(activity, "Please enter a story name.", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                activity.toggleCheckBoxes(true);
+                                alertDialog.dismiss();
+                            }
+                        }
+                    });
+                }
+            });
             alertDialog.show();
         }
     }
@@ -118,7 +136,6 @@ public class AddStory extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        Log.d("SELECTS", "WORKS");
         switch (item.getItemId()) {
             case R.id.action_add_complete:
                 ArrayList<Mood> moods = activity.getSelected();
@@ -172,24 +189,6 @@ public class AddStory extends Fragment {
         builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                for (String friend : selected) {
-                    User user = new User();
-                    ElasticSearchUserController.GetUserTask getUserTask =
-                            new ElasticSearchUserController.GetUserTask();
-                    getUserTask.execute(friend);
-
-                    try {
-                        user = getUserTask.get().get(0);
-                    } catch (Exception e) {
-                        Log.i("Error", "Failed to get user from elastic search");
-                    }
-
-                    user.addStory(story);
-
-                    new ElasticSearchUserController.UpdateUserTask().execute(user);
-                }
-
-                Toast.makeText(activity, "Story sent!", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -206,8 +205,48 @@ public class AddStory extends Fragment {
             }
         });
 
-        AlertDialog dialog = builder.create();
+        builder.setCancelable(false);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if (selected.size() == 0) {
+                            Toast.makeText(activity, "No friends selected", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            for (String friend : selected) {
+                                User user = new User();
+                                ElasticSearchUserController.GetUserTask getUserTask =
+                                        new ElasticSearchUserController.GetUserTask();
+                                getUserTask.execute(friend);
+
+                                try {
+                                    user = getUserTask.get().get(0);
+                                } catch (Exception e) {
+                                    Log.i("Error", "Failed to get user from elastic search");
+                                }
+
+                                user.addStory(story);
+
+                                new ElasticSearchUserController.UpdateUserTask().execute(user);
+                            }
+
+                            Toast.makeText(activity, "Story sent!", Toast.LENGTH_SHORT).show();
+
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
         dialog.show();
+
     }
 
 

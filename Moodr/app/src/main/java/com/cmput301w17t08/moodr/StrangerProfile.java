@@ -13,9 +13,11 @@ import android.widget.Toast;
 
 /**
  * This activity is a stranger's profile. This shows no moods and only allows the user to follow
- * the user if not already pending. This does not share any common methods with Profile, therefore
- * even though it is a profile, it does not inherit from profile.
- */
+ * the user if not already pending.
+ *
+ * If this user has requested to follow the logged in user, it will give the option to accept
+ * or decline instead.
+ * */
 public class StrangerProfile extends AppCompatActivity {
     private Boolean status;
     private Button follow;
