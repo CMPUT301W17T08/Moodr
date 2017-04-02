@@ -1,9 +1,11 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -25,13 +27,13 @@ public class NavDrawerSetup {
     private String name;
     private Drawer drawer;
 
-    public NavDrawerSetup(AppCompatActivity activity, Toolbar toolbar){
+    public NavDrawerSetup(AppCompatActivity activity, Toolbar toolbar) {
         this.activity = activity;
-        this.name =  CurrentUserSingleton.getInstance().getUser().getName();
+        this.name = CurrentUserSingleton.getInstance().getUser().getName();
         this.toolbar = toolbar;
     }
 
-    public void setupNav(){
+    public void setupNav() {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("My Profile");
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName("");
 
@@ -59,7 +61,7 @@ public class NavDrawerSetup {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         Intent intent;
                         drawer.closeDrawer();
-                        switch (position){
+                        switch (position) {
                             case 1:
                                 if (!activity.getClass().equals((MyProfileActivity.class))) {
                                     intent = new Intent(activity, MyProfileActivity.class);
@@ -79,7 +81,7 @@ public class NavDrawerSetup {
                                     intent = new Intent(activity, FriendsActivity.class);
                                     activity.startActivity(intent);
                                 }
-                                    break;
+                                break;
                             case 4:
                                 if (!activity.getClass().equals((MapsActivity.class))) {
                                     intent = new Intent(activity, MapsActivity.class);
@@ -98,11 +100,12 @@ public class NavDrawerSetup {
                             case 7:
                                 // http://stackoverflow.com/questions/7075349/android-clear-activity-stack
                                 // April 2 2017 4:25 am
-                                CurrentUserSingleton.getInstance().reset();
-                                intent = new Intent(activity, LoginActivity.class);
-                                intent.putExtra("logout", 1);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                activity.startActivity(intent);
+
+                                if (CurrentUserSingleton.getInstance().getMyOfflineActions().getSize() > 0) {
+                                    confirmLogout();
+                                } else {
+                                    logout();
+                                }
                                 break;
                         }
                         return true;
@@ -112,5 +115,29 @@ public class NavDrawerSetup {
 
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+    }
+
+    private void confirmLogout() {
+
+        new android.app.AlertDialog.Builder(activity)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle("Warning! Moods not synced!")
+                .setMessage("Changes you made while offline will not be saved. Are you sure you want to log out?")
+                .setNegativeButton("No", null)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                        Toast.makeText(activity, "Logged out!", Toast.LENGTH_SHORT).show();
+                    }
+                }).create().show();
+    }
+
+    private void logout() {
+        CurrentUserSingleton.getInstance().reset();
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.putExtra("logout", 1);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
     }
 }

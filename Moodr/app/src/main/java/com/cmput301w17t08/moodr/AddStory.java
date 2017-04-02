@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -35,41 +37,53 @@ public class AddStory extends Fragment {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
 
+
         activity = (MyProfileActivity) getActivity();
 
         // hide floating buttons
         activity.findViewById(R.id.fab).setVisibility(View.GONE);
         activity.findViewById(R.id.go_to_map).setVisibility(View.GONE);
 
-        // prompt user for story name
-        LayoutInflater inflater = LayoutInflater.from(activity);
-        View view = inflater.inflate(R.layout.add_story_dialog, null);
-        AlertDialog.Builder nameDialog = new AlertDialog.Builder(activity);
-        nameDialog.setView(view);
+        ConnectivityManager cm = (ConnectivityManager) activity.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null == activeNetwork) {
+            Toast.makeText(activity, "Cannot send story when offline.", Toast.LENGTH_SHORT).show();
+            mListener.OnComplete();
+        }
 
-        // TODO: if and save pressed, keep dialog open.
+        else {
 
-        final EditText nameInput = (EditText) view.findViewById(R.id.story_name_field);
-        nameDialog
-                .setCancelable(false)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogBox, int id) {
-                        name = nameInput.getText().toString();
-                        if (!name.equals("")) {
-                            activity.toggleCheckBoxes(true);
-                        } else mListener.OnComplete();
-                    }
-                })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogBox, int id) {
-                                dialogBox.cancel();
-                                mListener.OnComplete();
-                            }
-                        });
+            // prompt user for story name
+            LayoutInflater inflater = LayoutInflater.from(activity);
+            View view = inflater.inflate(R.layout.add_story_dialog, null);
+            AlertDialog.Builder nameDialog = new AlertDialog.Builder(activity);
+            nameDialog.setView(view);
 
-        AlertDialog alertDialog = nameDialog.create();
-        alertDialog.show();
+
+            // TODO: if and save pressed, keep dialog open.
+
+            final EditText nameInput = (EditText) view.findViewById(R.id.story_name_field);
+            nameDialog
+                    .setCancelable(false)
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogBox, int id) {
+                            name = nameInput.getText().toString();
+                            if (!name.equals("")) {
+                                activity.toggleCheckBoxes(true);
+                            } else mListener.OnComplete();
+                        }
+                    })
+                    .setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogBox, int id) {
+                                    dialogBox.cancel();
+                                    mListener.OnComplete();
+                                }
+                            });
+
+            AlertDialog alertDialog = nameDialog.create();
+            alertDialog.show();
+        }
     }
 
     @Override
