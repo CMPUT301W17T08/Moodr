@@ -25,7 +25,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="59dp"
         android:clickable="true"
-        app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_dialog_map" />
 
 

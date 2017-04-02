@@ -81,5 +81,6 @@ public enum CurrentUserSingleton {
         user.setFriends(null);
         user.setPending(null);
         user.setUser_Id(null);
+        myMoodList.getListOfMoods().clear();
     }
 }

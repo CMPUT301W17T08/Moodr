@@ -82,7 +82,7 @@ public class NavDrawerSetup {
                                 intent = new Intent(activity, StoryActivity.class);
                                 activity.startActivity(intent);
                                 break;
-                            case 6:
+                            case 7:
                                 CurrentUserSingleton.getInstance().reset();
                                 intent = new Intent(activity, LoginActivity.class);
                                 activity.startActivity(intent);
