@@ -56,6 +56,7 @@ public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile>
         assertEquals(2,list.getAdapter().getCount()); // the amount of happ moods already there is 2.
     }
 
+
     @Override
     public void tearDown() throws Exception{
         solo.finishOpenedActivities();

@@ -9,7 +9,7 @@ import android.widget.ListView;
 import com.robotium.solo.Solo;
 
 /**
- * Created by kirsten on 29/03/17.
+ *
  */
 
 public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity> {
@@ -64,7 +64,7 @@ public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity> 
         View view = solo.getView(R.id.filter_keyword);
         solo.clickOnView(view);
 
-        solo.enterText(0, "potato");
+        solo.enterText(0, "a");
 
 
         solo.sleep(1000);

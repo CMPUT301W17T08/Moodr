@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.robotium.solo.Solo;
 
@@ -92,10 +93,64 @@ public class OfflineTest extends ActivityInstrumentationTestCase2<MyProfileActiv
     }
 
     public void testEdit(){
+        solo.clickInList(1,1);
 
+        TextView textview = (TextView) solo.getView(R.id.viewMoodMood);
+        String mood = textview.getText().toString();
+
+        solo.waitForActivity(ViewMyMoodActivity.class);
+
+        solo.clickOnView(solo.getView(R.id.edit_mood));
+
+        solo.waitForActivity(EditMoodActivity.class);
+
+        solo.pressSpinnerItem(0, 1);
+
+        solo.clickOnView(solo.getView(R.id.action_edit_complete));
+
+        solo.waitForActivity(ViewMyMoodActivity.class);
+        solo.waitForText("You are offline");
+
+        assertNotSame(mood, textview.getText().toString());
+
+        solo.setWiFiData(true);
+        solo.goBack();
+
+        solo.waitForActivity(MyProfileActivity.class);
+
+        solo.waitForText("Synchronization completed.");
+
+        solo.setWiFiData(false);
     }
 
     public void testDelete(){
+
+        ListView listview = (ListView) solo.getView(R.id.profile_moodlist);
+
+        int count = listview.getChildCount();
+
+        solo.clickInList(1,1);
+
+        TextView textview = (TextView) solo.getView(R.id.viewMoodMood);
+        String mood = textview.getText().toString();
+
+        solo.waitForActivity(ViewMyMoodActivity.class);
+
+        solo.clickOnView(solo.getView(R.id.delete_mood));
+
+        solo.assertCurrentActivity("Wrong activity", MyProfileActivity.class);
+
+        assertEquals(count-1, listview.getChildCount());
+
+        solo.setWiFiData(true);
+        solo.sleep(2000);
+
+        solo.clickInList(1);
+        solo.goBack();
+
+        solo.waitForText("Synchronization completed.");
+
+        solo.setWiFiData(false);
 
     }
 

@@ -38,36 +38,13 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
                 new ElasticSearchUserController.GetUserTask();
 
 
-        String username = "LoginIntentTest";
-        getUserTask.execute(username);
+        String username = "LoginTest";
 
-        User user = null;
-
-        try{
-            user = getUserTask.get().get(0);
-        }
-        catch(Exception e){
-            Log.d("Error", "failed to get info from elastic search");
-        }
-
-        assertNull(user);
-
-        solo.enterText((EditText) solo.getView(R.id.username), username);
+        solo.enterText(0, username);
 
         solo.clickOnButton("SIGN UP");
 
-        ElasticSearchUserController.GetUserTask getUserTask2  = new ElasticSearchUserController.GetUserTask();
-        getUserTask2.execute(username);
-
-
-        try{
-            user = getUserTask2.get().get(0);
-        }
-        catch(Exception e){
-            Log.d("Error", "failed to get info from elastic search");
-        }
-
-        assertEquals(user.getName(), username);
+        solo.waitForText("New user created");
 
     }
 
