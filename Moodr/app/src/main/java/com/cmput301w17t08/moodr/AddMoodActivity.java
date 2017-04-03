@@ -80,7 +80,7 @@ public class AddMoodActivity extends AppCompatActivity {
     private String imgUrl;
     private String trigger;
     private String situation;
-    private String encodedImage;
+    private String encodedImage ="";
 
 
     @Override
@@ -90,6 +90,12 @@ public class AddMoodActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            encodedImage = extras.getString("addcam");
+        }
 
         new NavDrawerSetup(this, toolbar).setupNav();
 
@@ -291,7 +297,9 @@ public class AddMoodActivity extends AppCompatActivity {
         boolean checkLimit = countLimit();
         mood.setTrigger(trigger);
 
-        mood.setImgUrl(encodedImage);
+        if (encodedImage != "") {
+            mood.setImgUrl(encodedImage);
+        }
 
         // Check if limit is reached
         if (checkLimit) {
@@ -374,16 +382,19 @@ public class AddMoodActivity extends AppCompatActivity {
     };
 
     public void openCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, RESULT_OPEN_CAMERA);
-        }
+        Intent intent = new Intent(AddMoodActivity.this,Camera.class);
+        intent.putExtra("add", 1);
+        startActivity(intent);
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, RESULT_OPEN_CAMERA);
+//        }
     }
 
 
     public void chooseImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, RESULT_LOAD_IMAGE);
+//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
 
 

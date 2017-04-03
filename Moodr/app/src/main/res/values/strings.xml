@@ -70,5 +70,6 @@
     <string name="title_activity_view_story">ViewStoryActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="addStory">Create Story</string>
+    <string name="title_activity_camera">Camera</string>
 
 </resources>

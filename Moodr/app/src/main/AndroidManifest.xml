@@ -7,9 +7,9 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <!--for testing-->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- for testing -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <!-- For elasticSearch internet access -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -64,14 +64,11 @@
         <activity
             android:name=".MapsProfileActivity"
             android:label="LatestMap" />
-
-
-        <activity
-            android:name=".Profile" />
-
+        <activity android:name=".Profile" />
         <activity android:name=".ViewMyMoodActivity" />
-        <activity android:name=".AddMoodActivity"
-            android:noHistory="true"/>
+        <activity
+            android:name=".AddMoodActivity"
+            android:noHistory="true" />
         <activity android:name=".ViewFriendMoodActivity" />
         <activity
             android:name=".StrangerProfile"
@@ -79,16 +76,16 @@
         <activity
             android:name=".FriendsActivity"
             android:exported="true" />
-
+        <activity android:name=".MyProfileActivity" />
         <activity
-            android:name=".MyProfileActivity" />
-        <activity android:name=".EditMoodActivity"
-            android:noHistory="true"/>
-
+            android:name=".EditMoodActivity"
+            android:noHistory="true" />
         <activity
             android:name=".ViewStoryActivity"
-            android:label="@string/title_activity_view_story"/>
-
+            android:label="@string/title_activity_view_story" />
+        <activity
+            android:name=".Camera"
+            android:label="@string/title_activity_camera" />
     </application>
 
 </manifest>
