@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,10 +23,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +58,9 @@ import static android.os.Build.VERSION_CODES.M;
 
 
 public class EditMoodActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    private static final int SELECT_PICTURE = 100;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    private static final int RESULT_OPEN_CAMERA = 2;
+    private static final int byteLimit = 65536;
 
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
@@ -83,6 +87,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
     private String trigger;
     private String situation;
     private String location;
+    private String encodedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,35 +305,6 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
 
     }
 
-    /* Choose an image from Gallery */
-    void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
-    }
-
-    // When button for image is pressed
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
-
-    /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-        }
-        cursor.close();
-        return res;
-    }
-
 
     /* Gets new location and makes changex to the old one if need be */
     public void acquireLocation() {
@@ -395,7 +371,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
             if (null == activeNetwork) {
-                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "This mood will be edited in database once Moodr has internet connection.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
             } else {
                 ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
@@ -452,4 +428,89 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
                 .show();
     }
 
+    /* ------------------- Functions for image addition ------------------ */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+
+
+    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            openCamera();
+        }
+    };
+
+    public void openCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, RESULT_OPEN_CAMERA);
+        }
+    }
+
+
+    public void chooseImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, RESULT_LOAD_IMAGE);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        this.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            displayAndSetImage(picturePath);
+
+        }
+        if (requestCode == RESULT_OPEN_CAMERA && resultCode == RESULT_OK && null != data) {
+            Bundle extras = data.getExtras();
+            Bitmap photo = (Bitmap) extras.get("data");
+            encodedImage = encodeImage(photo);
+            Double imageSize = 4*Math.ceil((encodedImage.length()/3));
+            if(imageSize > byteLimit){
+                Toast.makeText(EditMoodActivity.this, "File size is too large",Toast.LENGTH_SHORT).show();
+            }else{
+                imageView.setImageBitmap(photo);
+            }
+
+            Toast.makeText(EditMoodActivity.this, "Image Added",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private void displayAndSetImage(String imagePath) {
+        if (imagePath != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            imageView.setImageBitmap(bitmap);
+            encodedImage = encodeImage(bitmap);
+        } else {
+            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    /* When button for image is pressed */
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
+
+
+    public static String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
 }

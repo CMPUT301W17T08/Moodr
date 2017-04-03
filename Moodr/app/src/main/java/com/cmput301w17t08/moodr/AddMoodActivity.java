@@ -1,7 +1,6 @@
 package com.cmput301w17t08.moodr;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -41,7 +39,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -199,7 +196,7 @@ public class AddMoodActivity extends AppCompatActivity {
 
         // Get image file on button click
         btnChoosePhoto = (Button) findViewById(R.id.btn_picture);
-        btnChoosePhoto.setOnClickListener(btnChoosePhotoPressed);
+        //btnChoosePhoto.setOnClickListener(btnChoosePhotoPressed);
 
         // Get user location on button click
         locationButton = (Button) findViewById(R.id.btn_location);
@@ -305,7 +302,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 // Generate a unique UUID ID for offline mode.
                 mood.setId(UUID.randomUUID().toString());
                 CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "This mood will be saved in database once Moodr has internet connection.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
                 new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 finish();
@@ -368,10 +365,13 @@ public class AddMoodActivity extends AppCompatActivity {
     /* ------------------------------------------------------------------- */
     /* ------------------------------------------------------------------- */
 
-    public void chooseImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, RESULT_LOAD_IMAGE);
-    }
+
+    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            openCamera();
+        }
+    };
 
     public void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -379,6 +379,13 @@ public class AddMoodActivity extends AppCompatActivity {
             startActivityForResult(takePictureIntent, RESULT_OPEN_CAMERA);
         }
     }
+
+
+    public void chooseImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, RESULT_LOAD_IMAGE);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -426,13 +433,6 @@ public class AddMoodActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             chooseImage();
-        }
-    };
-    /* When button for camera is pressed */
-    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            openCamera();
         }
     };
 
