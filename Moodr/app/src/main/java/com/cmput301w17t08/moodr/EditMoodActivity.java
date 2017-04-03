@@ -428,8 +428,8 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
     public void editMood() {
         mood.setDate(editDate_copy);
         mood.setEmotion(emotion);
-        location = locationText.getText().toString();
         mood.setSituation(situation);
+//        mood.setImgUrl(); // FOR SAL // NEED IMAGE ENCODED STRING
         if (editCoordinate != null) {
             mood.setLocation(editCoordinate);
         }

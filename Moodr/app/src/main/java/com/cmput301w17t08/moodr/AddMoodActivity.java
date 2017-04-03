@@ -295,7 +295,7 @@ public class AddMoodActivity extends AppCompatActivity {
         mood.setTrigger(trigger);
 
         // Set image encoded string
-        encodedImage = "SDFKDMKDM";
+        encodedImage = "SDFKDMKDM";  // PLACEHOLER
         Log.d("ImageURL", encodedImage);
         mood.setImgUrl(encodedImage);
 
