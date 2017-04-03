@@ -7,10 +7,15 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 /**
@@ -18,7 +23,7 @@ import android.widget.Toast;
  * user can choose to edit or delete the mood. On delete, the user is returned to the list of their
  * moods.
  */
-public class ViewMyMoodActivity extends ViewMoodActivity {
+public class ViewMyMoodActivity extends AppCompatActivity{
 
     Mood mood;
     int index;
@@ -26,7 +31,7 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_my_mood);
+        setContentView(R.layout.view_mood);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,7 +49,11 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
             Log.d("Error", "Invalid mood index");
         }
 
-        loadMood(mood);
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+
+        ft.add(R.id.mood_content, ViewMoodFragment.newInstance(mood));
+        ft.commit();
     }
 
     /**
@@ -73,7 +82,7 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
     private void editMood(){
         Intent intent = new Intent(this, EditMoodActivity.class);
         intent.putExtra("index", index);
-        startActivityForResult(intent, 1);
+        startActivity(intent);
     }
 
 
@@ -114,12 +123,5 @@ public class ViewMyMoodActivity extends ViewMoodActivity {
                     }
                 })
                 .create();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            loadMood(mood);
-        }
     }
 }

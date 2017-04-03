@@ -10,7 +10,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +24,12 @@ import java.util.ArrayList;
 /**
  * This activity displays the user's moods. The user has the option to add a mood from this activity.
  * The user can create a new story from here.
- *
+ * <p>
  * Due to the common load method, this extends Profile.
+ *
  * @see Profile
  */
-public class MyProfileActivity extends Profile implements AddStory.OnCompleteListener{
+public class MyProfileActivity extends Profile implements AddStory.OnCompleteListener {
     private User user;
     private ArrayList<Mood> moods = new ArrayList<>();
     private ProfileMoodAdapter adapter;
@@ -75,25 +75,25 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
+    public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item1 = menu.findItem(R.id.storyButton);
         MenuItem item2 = menu.findItem(R.id.filter_menu);
         MenuItem item3 = menu.findItem(R.id.action_add_complete);
         MenuItem item4 = menu.findItem(R.id.action_add_cancel);
 
-        if (item1 != null){
+        if (item1 != null) {
             item1.setVisible(true);
         }
 
-        if (item2 != null){
+        if (item2 != null) {
             item2.setVisible(true);
         }
 
-        if (item3 != null){
+        if (item3 != null) {
             item3.setVisible(false);
         }
 
-        if (item4 != null){
+        if (item4 != null) {
             item4.setVisible(false);
         }
 
@@ -102,14 +102,18 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_my_profile, menu);
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null != activeNetwork) {
+            getMenuInflater().inflate(R.menu.menu_my_profile, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.storyButton){
+        if (item.getItemId() == R.id.storyButton) {
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -120,18 +124,17 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
     }
 
 
-    public void toggleCheckBoxes(Boolean checked){
+    public void toggleCheckBoxes(Boolean checked) {
         adapter.setcheck(checked);
     }
 
-    public ArrayList<Mood> getSelected(){
+    public ArrayList<Mood> getSelected() {
         return adapter.getChecked();
     }
 
 
-
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
         // Offline mode sync procedure.
@@ -165,36 +168,48 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
         });
 
 
-
         notifications = (ListView) findViewById(R.id.notifications);
         stories = CurrentUserSingleton.getInstance().getUser().getStories();
-
-        Log.d("STORIES", Integer.toString(stories.size()));
-
         notificationAdapter = new ArrayAdapter<>(this, R.layout.notification, stories);
         notifications.setAdapter(notificationAdapter);
 
         notifications.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // view Story
+                ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                if (null != activeNetwork) {
+                    Intent intent = new Intent(MyProfileActivity.this, ViewStoryActivity.class);
+                    intent.putExtra("story", stories.get(i));
+                    startActivity(intent);
+                    stories.remove(i);
+                    notificationAdapter.notifyDataSetChanged();
+                    new ElasticSearchUserController.UpdateUserTask().execute(user);
+                }
+                else{
+                    Toast.makeText(MyProfileActivity.this, "Cannot view story while offline.", Toast.LENGTH_SHORT).show();
+                    notifications.setVisibility(View.INVISIBLE);
+                }
             }
+
         });
+
     }
 
     /**
      * goes to add mood activity to add a mood
      */
-    private void addMood(){
-        Intent intent  = new Intent(this, AddMoodActivity.class);
-        startActivityForResult(intent,1);
+    private void addMood() {
+        Intent intent = new Intent(this, AddMoodActivity.class);
+        startActivityForResult(intent, 1);
     }
 
     /**
      * To view the details of the mood. Passes an index instead of a mood instance in the parent
+     *
      * @param i index of the mood in moodList
      */
-    private void goToMood(int i){
+    private void goToMood(int i) {
         i = CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods().indexOf(moods.get(i));
         Intent intent = new Intent(this, ViewMyMoodActivity.class);
         intent.putExtra("index", i);
@@ -211,13 +226,23 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
+        invalidateOptionsMenu();
         adapter.setMoods(CurrentUserSingleton.getInstance().getMyMoodList().getListOfMoods());
+
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null != activeNetwork) {
+            notifications.setVisibility(View.VISIBLE);
+        }
+        else {
+            notifications.setVisibility(View.INVISIBLE);
+        }
     }
 
     // when returning from adding story. restores menu items and floating buttons.
-    public void OnComplete(){
+    public void OnComplete() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.remove(manager.findFragmentByTag("AddStoryFragment_1"));

@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:orientation="vertical"
+    tools:context="com.cmput301w17t08.moodr.ViewMoodFragment"
+    android:id="@+id/frame">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/viewMoodIcon"
+            android:layout_margin="15dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+
+
+    <TextView
+            android:id="@+id/viewMoodMood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_black_1000"
+            android:textSize="30sp"
+        android:textAlignment="center"/>
+
+
+    <TextView
+        android:id="@+id/viewMoodDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp" android:textAlignment="center"
+        android:textColor="@color/md_black_1000"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/viewMoodSocialSituation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:textAlignment="center"
+        android:textColor="@color/md_black_1000" />
+
+    <TextView
+        android:id="@+id/viewMoodTrigger"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:textColor="@color/md_black_1000"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/viewMoodLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:textColor="@color/md_black_1000"
+        android:textAlignment="center"/>
+
+
+    <ImageView
+        android:layout_margin="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewMoodImage"/>
+
+</LinearLayout>
