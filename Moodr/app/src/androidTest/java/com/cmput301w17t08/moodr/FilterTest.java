@@ -12,7 +12,7 @@ import com.robotium.solo.Solo;
  * Created by kirsten on 29/03/17.
  */
 
-public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity>{
+public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity> {
     private Solo solo;
 
     public FilterTest() {
@@ -29,7 +29,7 @@ public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity>{
 
 //    02.04 Mood Filter
 
-    public void testFilterByEmotion() throws  Exception {
+    public void testFilterByEmotion() throws Exception {
         solo.enterText((EditText) solo.getView(R.id.username), "potato");
 
         solo.clickOnButton("LOGIN");
@@ -46,14 +46,14 @@ public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity>{
         solo.sleep(1000);
 
         ListView list = solo.getCurrentViews(ListView.class).get(0);
-        for (int i= 1 ; i <= list.getAdapter().getCount(); i++){
+        for (int i = 1; i <= list.getAdapter().getCount(); i++) {
             solo.clickInList(i);
             solo.waitForText("Happy");
             solo.goBack();
         }
     }
 
-    public void testFilterByKeyword() throws  Exception {
+    public void testFilterByKeyword() throws Exception {
         solo.enterText((EditText) solo.getView(R.id.username), "potato");
 
         solo.clickOnButton("LOGIN");
@@ -70,7 +70,7 @@ public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity>{
         solo.sleep(1000);
 
         ListView list = solo.getCurrentViews(ListView.class).get(0);
-        for (int i= 1 ; i <= list.getAdapter().getCount(); i++){
+        for (int i = 1; i <= list.getAdapter().getCount(); i++) {
             solo.clickInList(i);
             solo.waitForText("potato");
             solo.goBack();
@@ -78,9 +78,8 @@ public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity>{
     }
 
 
-
     @Override
-    public void tearDown() throws Exception{
+    public void tearDown() throws Exception {
         solo.finishOpenedActivities();
     }
 

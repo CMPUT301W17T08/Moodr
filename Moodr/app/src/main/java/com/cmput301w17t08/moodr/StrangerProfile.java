@@ -2,6 +2,7 @@ package com.cmput301w17t08.moodr;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -29,10 +30,12 @@ import android.widget.Toast;
 public class StrangerProfile extends AppCompatActivity {
     private boolean status;
     private Button follow;
+    private static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_stranger_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,7 +87,6 @@ public class StrangerProfile extends AppCompatActivity {
         @Override
         public void onStart() {
             super.onStart();
-            Log.d("USERNAME!!!", user);
             final Activity activity = getActivity();
 
             Button accept = (Button) activity.findViewById(R.id.stranger_button1);
@@ -97,6 +99,7 @@ public class StrangerProfile extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     acceptRequest(user);
+                    activity.setResult(RESULT_OK);
                     activity.finish();
                 }
             });
@@ -105,23 +108,52 @@ public class StrangerProfile extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     declineRequest(user);
+                    activity.setResult(RESULT_OK);
                     activity.finish();
                 }
             });
         }
 
         public void acceptRequest(String user) {
-            User usr = CurrentUserSingleton.getInstance().getUser();
-            usr.addFriend(user);
-            usr.removePending(user);
+            final String  name = user;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    CurrentUserSingleton.getInstance().getUser().removePending(name);
+                    CurrentUserSingleton.getInstance().getUser().addFriend(name);
+                }
+            });
 
-            new ElasticSearchUserController.UpdateUserTask().execute(usr);
+            new ElasticSearchUserController.UpdateUserTask()
+                    .execute(CurrentUserSingleton.getInstance().getUser());
+
+            ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
+            getUserTask.execute(name);
+
+            User u2 = new User();
+
+            try{
+                u2 = getUserTask.get().get(0);
+            }
+            catch (Exception e){
+                // nothing.
+            }
+
+            u2.addFriend(CurrentUserSingleton.getInstance().getUser().getName());
+            new ElasticSearchUserController.UpdateUserTask().execute(u2);
         }
 
         public void declineRequest(String user) {
-            User usr = CurrentUserSingleton.getInstance().getUser();
-            usr.removePending(user);
-            new ElasticSearchUserController.UpdateUserTask().execute(usr);
+            final String  name = user;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    CurrentUserSingleton.getInstance().getUser().removePending(name);
+                }
+            });
+
+            new ElasticSearchUserController.UpdateUserTask()
+                    .execute(CurrentUserSingleton.getInstance().getUser());
         }
 
     }
@@ -171,6 +203,13 @@ public class StrangerProfile extends AppCompatActivity {
                 });
             } else {
                 add.setText("Pending");
+            }
+
+            if (CurrentUserSingleton.getInstance().getUser().getFriends().contains(user)){
+                Intent intent = new Intent(context, Profile.class);
+                intent.putExtra("name", user);
+                startActivity(intent);
+                getActivity().finish();
             }
 
         }

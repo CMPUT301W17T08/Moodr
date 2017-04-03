@@ -1,7 +1,6 @@
 package com.cmput301w17t08.moodr;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -41,7 +39,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -305,7 +302,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 // Generate a unique UUID ID for offline mode.
                 mood.setId(UUID.randomUUID().toString());
                 CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "This mood will be saved in database once Moodr has internet connection.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
                 new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 finish();

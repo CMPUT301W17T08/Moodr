@@ -1,11 +1,9 @@
 package com.cmput301w17t08.moodr;
 
-
 import android.app.Activity;
-import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
-import android.widget.Spinner;
+import android.widget.ListView;
 
 import com.robotium.solo.Solo;
 
@@ -14,16 +12,16 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- *
- *
+ * Created by kirsten on 03/04/17.
+ * - test add, edit, delete while offline
  */
 
-public class EditMoodTest extends ActivityInstrumentationTestCase2<MyProfileActivity> {
-    Solo solo;
+public class OfflineTest extends ActivityInstrumentationTestCase2<MyProfileActivity>{
+    private Solo solo;
 
-    public EditMoodTest() {
+    public OfflineTest(){
         super(com.cmput301w17t08.moodr.MyProfileActivity.class);
-        // log in
+
         ElasticSearchUserController.GetUserTask getUser = new ElasticSearchUserController.GetUserTask();
         getUser.execute("bob");
 
@@ -53,52 +51,59 @@ public class EditMoodTest extends ActivityInstrumentationTestCase2<MyProfileActi
             Log.d("Error", "Error getting moods from elastic search.");
         }
         CurrentUserSingleton.getInstance().getMyMoodList().setListOfMoods(moods);
-    }
 
+    }
     public void setUp() throws Exception {
         solo = new Solo(getInstrumentation(), getActivity());
+        solo.setWiFiData(false);
     }
 
     public void testStart() throws Exception {
         Activity activity = getActivity();
+        solo.waitForText("Unable to load moods from database");
     }
 
-    // test loading
-    public void testLoad() {
-        solo.clickInList(1, 1);
-        solo.assertCurrentActivity("Wrong activity", ViewMyMoodActivity.class);
+    public void testAdd(){
+        solo.waitForText("Unable to load moods from database");
+        ListView listview = (ListView) solo.getView(R.id.profile_moodlist);
 
-//        solo.clickOnActionBarItem(R.id.edit_mood);  does not click on this for some reason...
-        solo.clickOnView(solo.getView(R.id.edit_mood));
+        int count = listview.getChildCount();
 
-        solo.assertCurrentActivity("Wrong activity", EditMoodActivity.class);
+        solo.clickOnView(solo.getView(R.id.fab));
+
+        solo.waitForActivity(AddMoodActivity.class);
+
+        solo.clickOnView(solo.getView(R.id.action_add_complete));
+
+        solo.waitForActivity(MyProfileActivity.class);
+        solo.sleep(1000);
+
+        assertEquals(count+1, listview.getChildCount());
+
+        solo.setWiFiData(true);
+        solo.sleep(2000);
+
+        solo.clickInList(1);
+        solo.goBack();
+
+        solo.waitForText("Synchronization completed.");
+
+        solo.setWiFiData(false);
+    }
+
+    public void testEdit(){
 
     }
 
-    // test editing emotion
-    public void testEditEmotion() {
-        solo.clickInList(1, 1);
-        solo.assertCurrentActivity("Wrong activity", ViewMyMoodActivity.class);
+    public void testDelete(){
 
-        solo.clickOnView(solo.getView(R.id.edit_mood
-        ));
-        solo.pressSpinnerItem(0, 1);
-
-        Spinner spinner = (Spinner) solo.getView(R.id.sp_emotion);
-
-        String string = spinner.getSelectedItem().toString();
-
-        solo.clickOnView(solo.getView(R.id.action_edit_complete));
-
-        solo.waitForActivity(ViewMyMoodActivity.class);
-        solo.waitForText(string);
     }
-
 
     @Override
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception{
+        solo.setWiFiData(true);
         solo.finishOpenedActivities();
     }
 
-}
 
+}

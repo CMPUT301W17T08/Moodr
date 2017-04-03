@@ -21,9 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -395,7 +393,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
             if (null == activeNetwork) {
-                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "This mood will be edited in database once Moodr has internet connection.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
             } else {
                 ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
