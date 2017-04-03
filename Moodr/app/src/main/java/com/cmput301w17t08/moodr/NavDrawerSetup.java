@@ -1,6 +1,5 @@
 package com.cmput301w17t08.moodr;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -94,7 +93,7 @@ public class NavDrawerSetup {
                                 // April 2 2017 4:25 am
 
                                 if (CurrentUserSingleton.getInstance().getMyOfflineActions().getSize() > 0) {
-                                    confirmLogout();
+                                    DisableLogout();
                                 } else {
                                     logout();
                                 }
@@ -109,20 +108,14 @@ public class NavDrawerSetup {
         drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
     }
 
-    private void confirmLogout() {
+    private void DisableLogout() {
 
         new android.app.AlertDialog.Builder(activity)
                 .setIcon(R.drawable.ic_warning_black_24dp)
-                .setTitle("Warning! Moods not synced!")
-                .setMessage("Changes you made while offline will not be saved. Are you sure you want to log out?")
-                .setNegativeButton("No", null)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        logout();
-                        Toast.makeText(activity, "Logged out!", Toast.LENGTH_SHORT).show();
-                    }
-                }).create().show();
+                .setTitle("Logout failed! Moods not synced!")
+                .setMessage("Moodr did not save the changes you made while offline! Get internet connection and refresh the page!")
+                .setNegativeButton("Gotcha!", null)
+                .create().show();
     }
 
     private void logout() {
@@ -130,6 +123,29 @@ public class NavDrawerSetup {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.putExtra("logout", 1);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Toast.makeText(activity, "Logged out!", Toast.LENGTH_SHORT).show();
         activity.startActivity(intent);
     }
+
+
+
+
+
+//    private void LogoutDisable() {
+//
+//        new android.app.AlertDialog.Builder(activity)
+//                .setIcon(R.drawable.ic_warning_black_24dp)
+//                .setTitle("Logout failed! Moods not synced!")
+//                .setMessage("Moodr did not save changes you made while offline!")
+//                .setNegativeButton("Gotcha!", null);
+//    }
+//
+//    private void logout() {
+//        CurrentUserSingleton.getInstance().reset();
+//        Intent intent = new Intent(activity, LoginActivity.class);
+//        intent.putExtra("logout", 1);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        Toast.makeText(activity, "Logged out!", Toast.LENGTH_SHORT).show();
+//        activity.startActivity(intent);
+//    }
 }

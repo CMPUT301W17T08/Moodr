@@ -70,6 +70,7 @@ public class ViewMyMoodActivity extends AppCompatActivity {
             ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
             deleteMoodTask.execute(mood);
         }
+        new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
     }
 
     /**

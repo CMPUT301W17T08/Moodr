@@ -217,6 +217,7 @@ public class Profile extends AppCompatActivity {
         } else {
             // remove from own list
             CurrentUserSingleton.getInstance().getUser().removeFriend(name);
+            new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
             // update on ElasticSearch - implement later
             ElasticSearchUserController.UpdateUserTask updateUserTask_own = new ElasticSearchUserController.UpdateUserTask();
             updateUserTask_own.execute(CurrentUserSingleton.getInstance().getUser());

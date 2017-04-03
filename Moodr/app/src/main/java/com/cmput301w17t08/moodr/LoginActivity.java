@@ -60,10 +60,24 @@ public class LoginActivity extends AppCompatActivity {
         // load username from disk and auto login if username is not null.
         loadUsernameFromFile(); // load Last Username for auto login
         if (UserName != null) {
-            setCurrentUser(UserName);
-            Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
-            startActivity(intent);
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (null == activeNetwork) {
+                CurrentUserSingleton.getInstance().reset();
+                SaveSingleton saveSingleton = new SaveSingleton(getApplicationContext());
+                saveSingleton.LoadSingletons(); // load singleton from disk.
+                Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+                startActivity(intent);
+            } else {
+                setCurrentUser(UserName);
+                SaveSingleton saveSingleton = new SaveSingleton(getApplicationContext());
+                saveSingleton.LoadOfflineActionsSingleton(); // load offlineActionsSingleton from disk.
+                Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+                startActivity(intent);
+            }
         }
 
         Button SignInButton = (Button) findViewById(R.id.login_button);

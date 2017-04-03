@@ -447,6 +447,8 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
             ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
             updateMoodTask.execute(mood);
         }
+        new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
+
     }
 
 }
