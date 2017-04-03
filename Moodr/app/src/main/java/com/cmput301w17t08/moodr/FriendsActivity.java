@@ -45,8 +45,6 @@ public class FriendsActivity extends AppCompatActivity {
     public static ArrayList<String> modPending;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,9 +109,6 @@ public class FriendsActivity extends AppCompatActivity {
         public int getCount() {return mNumOfTabs;}
 
     }
-
-
-
 
 
     public static class FriendsFragment extends Fragment {
