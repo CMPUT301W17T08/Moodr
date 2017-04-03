@@ -277,24 +277,6 @@ public class AddMoodActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-/*
-    public String encodeIMG(Uri uri){
-        InputStream inputStream = new FileInputStream(uri);
-        byte[] bytes;
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try {
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                output.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        bytes = output.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-    */
 
     public void createMood(Emotion emotion, String situation, String trigger, String encodedImage) {
         // Grab owner
@@ -313,7 +295,7 @@ public class AddMoodActivity extends AppCompatActivity {
         mood.setTrigger(trigger);
 
         // Set image encoded string
-        encodedImage = "SDFKDMKDM";
+        encodedImage = "SDFKDMKDM";  // PLACEHOLER
         Log.d("ImageURL", encodedImage);
         mood.setImgUrl(encodedImage);
 
@@ -326,8 +308,9 @@ public class AddMoodActivity extends AppCompatActivity {
                 // Generate a unique UUID ID for offline mode.
                 mood.setId(UUID.randomUUID().toString());
                 CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
-                Toast.makeText(AddMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
+                new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 finish();
             } else {
                 ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
@@ -336,6 +319,7 @@ public class AddMoodActivity extends AppCompatActivity {
                     String moodId = addMoodTask.get();
                     mood.setId(moodId);
                     CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+                    new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 } catch (Exception e) {
                     Log.i("Error", "Error getting moods out of async object");
                 }
@@ -440,7 +424,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 imageView.setImageBitmap(bitmapImage);
                 saveToInternalStorage(bitmapImage);
                 encodedImage = encodeImage(bitmapImage);
-                Toast.makeText(AddMoodActivity.this, "Image Added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Image Added", Toast.LENGTH_SHORT).show();
 
             }
         }

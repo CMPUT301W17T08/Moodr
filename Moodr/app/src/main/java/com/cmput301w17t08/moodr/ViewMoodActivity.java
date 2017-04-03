@@ -1,9 +1,11 @@
 package com.cmput301w17t08.moodr;
 
 
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,7 +33,7 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
      *
      * @param mood the mood to be loaded
      */
-    protected void loadMood(Mood mood){
+    protected void loadMood(Mood mood) {
         LinearLayout layout = (LinearLayout) findViewById(R.id.activity_view_mood);
         TextView mood_name = (TextView) findViewById(R.id.viewMoodMood);
         ImageView mood_icon = (ImageView) findViewById(R.id.viewMoodIcon);
@@ -40,6 +42,8 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
         TextView trigger = (TextView) findViewById(R.id.viewMoodTrigger);
         TextView location = (TextView) findViewById(R.id.viewMoodLocation);
         ImageView image = (ImageView) findViewById(R.id.viewMoodImage);
+
+        Bitmap imageToDisplay;
 
         // set title
         setTitle(mood.getUsername());
@@ -55,33 +59,44 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
 
         // set date
         // date needs to be converted to a string
-        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
+        java.text.DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
         date.setText(dateFormat.format(mood.getDate()));
 
         // set situation
         String situation = mood.getSituation();
-        if (situation != null){
+        if (situation != null) {
             social.setText(situation);
         }
 
         // set trigger
         String trig = mood.getTrigger();
         Log.d("Trigger", "Trigger is: " + mood.getTrigger());
-        if (trig != null){
+        if (trig != null) {
             trigger.setText(trig);
         }
 
         // set location
         Coordinate loc = mood.getLocation();
-        if (loc != null){
-           location.setText(loc.getLat().toString() + " " + loc.getLon().toString());
+        if (loc != null) {
+            location.setText(loc.getLat().toString() + " " + loc.getLon().toString());
         }
 
         // set image
         String imgURL = mood.getImgUrl();
-        if (imgURL != null){
-            image.setImageURI(Uri.parse(mood.getImgUrl()));
+        if (imgURL != "") {
+            imageToDisplay = decodeImage(imgURL);
+            image.setImageBitmap(imageToDisplay);
         }
     }
 
+    public static Bitmap decodeImage(String imageString) {
+        try {
+            byte[] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
 }

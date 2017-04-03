@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -25,13 +26,13 @@ public class NavDrawerSetup {
     private String name;
     private Drawer drawer;
 
-    public NavDrawerSetup(AppCompatActivity activity, Toolbar toolbar){
+    public NavDrawerSetup(AppCompatActivity activity, Toolbar toolbar) {
         this.activity = activity;
-        this.name =  CurrentUserSingleton.getInstance().getUser().getName();
+        this.name = CurrentUserSingleton.getInstance().getUser().getName();
         this.toolbar = toolbar;
     }
 
-    public void setupNav(){
+    public void setupNav() {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("My Profile");
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName("");
 
@@ -44,23 +45,21 @@ public class NavDrawerSetup {
                 .withActivity(activity)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
-                .withDelayOnDrawerClose(-1)
                 .withSelectedItem(-1)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home),
                         new PrimaryDrawerItem().withIdentifier(2).withName("Latest").withIcon(R.drawable.ic_latest),
                         new PrimaryDrawerItem().withIdentifier(3).withName("Friends").withIcon(R.drawable.ic_friends),
                         new PrimaryDrawerItem().withIdentifier(4).withName("Near Me").withIcon(R.drawable.ic_map),
-                        new PrimaryDrawerItem().withIdentifier(5).withName("Story").withIcon(R.drawable.heart),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withIdentifier(6).withName("Log Out").withIcon(R.drawable.ic_logout)
+                        new PrimaryDrawerItem().withIdentifier(5).withName("Log Out").withIcon(R.drawable.ic_logout)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         Intent intent;
                         drawer.closeDrawer();
-                        switch (position){
+                        switch (position) {
                             case 1:
                                 if (!activity.getClass().equals((MyProfileActivity.class))) {
                                     intent = new Intent(activity, MyProfileActivity.class);
@@ -80,7 +79,7 @@ public class NavDrawerSetup {
                                     intent = new Intent(activity, FriendsActivity.class);
                                     activity.startActivity(intent);
                                 }
-                                    break;
+                                break;
                             case 4:
                                 if (!activity.getClass().equals((MapsActivity.class))) {
                                     intent = new Intent(activity, MapsActivity.class);
@@ -89,21 +88,15 @@ public class NavDrawerSetup {
 
                                 break;
 
-                            case 5:
-                                if (!activity.getClass().equals((StoryActivity.class))) {
-                                    intent = new Intent(activity, StoryActivity.class);
-                                    activity.startActivity(intent);
-                                }
-
-                                break;
-                            case 7:
+                            case 6:
                                 // http://stackoverflow.com/questions/7075349/android-clear-activity-stack
                                 // April 2 2017 4:25 am
-                                CurrentUserSingleton.getInstance().reset();
-                                intent = new Intent(activity, LoginActivity.class);
-                                intent.putExtra("logout", 1);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                activity.startActivity(intent);
+
+                                if (CurrentUserSingleton.getInstance().getMyOfflineActions().getSize() > 0) {
+                                    DisableLogout();
+                                } else {
+                                    logout();
+                                }
                                 break;
                         }
                         return true;
@@ -114,4 +107,45 @@ public class NavDrawerSetup {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
     }
+
+    private void DisableLogout() {
+
+        new android.app.AlertDialog.Builder(activity)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle("Logout failed! Moods not synced!")
+                .setMessage("Moodr did not save the changes you made while offline! Get internet connection and refresh the page!")
+                .setNegativeButton("Gotcha!", null)
+                .create().show();
+    }
+
+    private void logout() {
+        CurrentUserSingleton.getInstance().reset();
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.putExtra("logout", 1);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Toast.makeText(activity, "Logged out!", Toast.LENGTH_SHORT).show();
+        activity.startActivity(intent);
+    }
+
+
+
+
+
+//    private void LogoutDisable() {
+//
+//        new android.app.AlertDialog.Builder(activity)
+//                .setIcon(R.drawable.ic_warning_black_24dp)
+//                .setTitle("Logout failed! Moods not synced!")
+//                .setMessage("Moodr did not save changes you made while offline!")
+//                .setNegativeButton("Gotcha!", null);
+//    }
+//
+//    private void logout() {
+//        CurrentUserSingleton.getInstance().reset();
+//        Intent intent = new Intent(activity, LoginActivity.class);
+//        intent.putExtra("logout", 1);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        Toast.makeText(activity, "Logged out!", Toast.LENGTH_SHORT).show();
+//        activity.startActivity(intent);
+//    }
 }

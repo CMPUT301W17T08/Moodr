@@ -19,13 +19,13 @@ public class StrangerProfileTest extends ActivityInstrumentationTestCase2<Strang
     }
 
     public void setUp() throws Exception {
+        Intent intent = new Intent();
+        intent.putExtra("name", "Sally");
+        setActivityIntent(intent);
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
     public void testStart() throws Exception {
-        Intent intent = new Intent();
-        intent.putExtra("name", "Sally");
-        setActivityIntent(intent);
         Activity activity = getActivity();
     }
 
@@ -34,9 +34,12 @@ public class StrangerProfileTest extends ActivityInstrumentationTestCase2<Strang
     }
 
     public void testFollow(){
-        solo.clickOnButton("Follow");
+        solo.clickOnButton("Add");
         solo.searchText("Pending");
-        // because Sally (probably) doesn't exist, not testing if it actually added to Sally's pending
-        // list
+    }
+
+    @Override
+    public void tearDown() throws Exception{
+        solo.finishOpenedActivities();
     }
 }

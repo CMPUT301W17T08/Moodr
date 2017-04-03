@@ -428,8 +428,8 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
     public void editMood() {
         mood.setDate(editDate_copy);
         mood.setEmotion(emotion);
-        location = locationText.getText().toString();
         mood.setSituation(situation);
+//        mood.setImgUrl(); // FOR SAL // NEED IMAGE ENCODED STRING
         if (editCoordinate != null) {
             mood.setLocation(editCoordinate);
         }
@@ -440,13 +440,15 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
         if (null == activeNetwork) {
-            Toast.makeText(EditMoodActivity.this, "You are offline.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
             CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
         }
         else {
             ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
             updateMoodTask.execute(mood);
         }
+        new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
+
     }
 
 }

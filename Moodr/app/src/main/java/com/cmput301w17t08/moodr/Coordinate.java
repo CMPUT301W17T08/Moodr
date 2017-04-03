@@ -1,10 +1,12 @@
 package com.cmput301w17t08.moodr;
 
+import java.io.Serializable;
+
 /**
  * Created by Canopy on 2017-03-31.
  */
 
-public class Coordinate {
+public class Coordinate implements Serializable{
     private Double lat;
     private Double lon;
 
