@@ -4,6 +4,7 @@ package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,7 +46,8 @@ public class FriendsActivity extends AppCompatActivity {
     public static ArrayList<String> modPending;
     public static EditText searchBar;
     public static ListView searchReturnList;
-
+    public static ArrayAdapter<String> friendsAdapter;
+    public static ArrayAdapter<String> pendingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,8 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
 
+
+
     public static class AppSectionsPagerAdapter extends FragmentStatePagerAdapter {
         int mNumOfTabs;
         public AppSectionsPagerAdapter(FragmentManager fm, int NumOfTabs) {
@@ -114,30 +118,45 @@ public class FriendsActivity extends AppCompatActivity {
 
 
     public static class FriendsFragment extends Fragment {
-        ArrayAdapter<String> friendsAdapter;
-        ArrayAdapter<String> pendingAdapter;
+        ListView friendsList;
+        ListView pendingList;
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             return inflater.inflate(R.layout.fragment_friends, container, false);}
 
         @Override
+        public void onResume(){
+            super.onResume();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateUser();
+                    friendsList = (ListView) getView().findViewById(R.id.curFriends_list);
+                    pendingList = (ListView) getView().findViewById(R.id.pending_list);
+                    friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
+                    friendsList.setAdapter(friendsAdapter);
+
+                    pendingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, modPending);
+                    pendingList.setAdapter(pendingAdapter);
+                }
+            }, 1000);
+
+
+
+        }
+
+        @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             updateUser();
-            ListView friendsList = (ListView) view.findViewById(R.id.curFriends_list);
-            ListView pendingList = (ListView) view.findViewById(R.id.pending_list);
+            friendsList = (ListView) view.findViewById(R.id.curFriends_list);
+            pendingList = (ListView) view.findViewById(R.id.pending_list);
 
 
 
-            curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
-
-            curFriends.removeAll(Collections.singleton(null));
-            Pending = CurrentUserSingleton.getInstance().getUser().getPending();
-
-
-            Pending.removeAll(Collections.singleton(null));
-            modPending = pendingTomodPending(Pending);
 
 
 
@@ -279,6 +298,16 @@ public class FriendsActivity extends AppCompatActivity {
         currentUser.setUser_Id(user.getUser_Id());
         currentUser.setFriends(user.getFriends());
         currentUser.setPending(user.getPending());
+
+
+        curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
+
+        curFriends.removeAll(Collections.singleton(null));
+        Pending = CurrentUserSingleton.getInstance().getUser().getPending();
+
+
+        Pending.removeAll(Collections.singleton(null));
+        modPending = pendingTomodPending(Pending);
     }
 
 
