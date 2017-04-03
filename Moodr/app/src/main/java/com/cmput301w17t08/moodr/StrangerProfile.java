@@ -126,6 +126,21 @@ public class StrangerProfile extends AppCompatActivity {
 
             new ElasticSearchUserController.UpdateUserTask()
                     .execute(CurrentUserSingleton.getInstance().getUser());
+
+            ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
+            getUserTask.execute(name);
+
+            User u2 = new User();
+
+            try{
+                u2 = getUserTask.get().get(0);
+            }
+            catch (Exception e){
+                // nothing.
+            }
+
+            u2.addFriend(CurrentUserSingleton.getInstance().getUser().getName());
+            new ElasticSearchUserController.UpdateUserTask().execute(u2);
         }
 
         public void declineRequest(String user) {
