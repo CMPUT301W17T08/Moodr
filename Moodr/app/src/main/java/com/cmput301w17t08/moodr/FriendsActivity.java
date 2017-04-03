@@ -4,6 +4,7 @@ package com.cmput301w17t08.moodr;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,13 +38,16 @@ public class FriendsActivity extends AppCompatActivity {
 
 
     public static AppSectionsPagerAdapter adapter;
-    public static String search_string;
+
     public static ArrayList<String> searchResults;
-    public static ArrayAdapter<String> resultAdapter;
+
     public static ArrayList<String> curFriends;
     public static ArrayList<String> Pending;
     public static ArrayList<String> modPending;
-
+    public static EditText searchBar;
+    public static ListView searchReturnList;
+    public static ArrayAdapter<String> friendsAdapter;
+    public static ArrayAdapter<String> pendingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,8 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
 
+
+
     public static class AppSectionsPagerAdapter extends FragmentStatePagerAdapter {
         int mNumOfTabs;
         public AppSectionsPagerAdapter(FragmentManager fm, int NumOfTabs) {
@@ -112,23 +118,46 @@ public class FriendsActivity extends AppCompatActivity {
 
 
     public static class FriendsFragment extends Fragment {
-        ArrayAdapter<String> friendsAdapter;
-        ArrayAdapter<String> pendingAdapter;
+        ListView friendsList;
+        ListView pendingList;
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             return inflater.inflate(R.layout.fragment_friends, container, false);}
 
         @Override
+        public void onResume(){
+            super.onResume();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateUser();
+                    friendsList = (ListView) getView().findViewById(R.id.curFriends_list);
+                    pendingList = (ListView) getView().findViewById(R.id.pending_list);
+                    friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
+                    friendsList.setAdapter(friendsAdapter);
+
+                    pendingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, modPending);
+                    pendingList.setAdapter(pendingAdapter);
+                }
+            }, 1000);
+
+
+
+        }
+
+        @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             updateUser();
-            ListView friendsList = (ListView) view.findViewById(R.id.curFriends_list);
-            ListView pendingList = (ListView) view.findViewById(R.id.pending_list);
+            friendsList = (ListView) view.findViewById(R.id.curFriends_list);
+            pendingList = (ListView) view.findViewById(R.id.pending_list);
 
-            curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
-            Pending = CurrentUserSingleton.getInstance().getUser().getPending();
-            modPending = pendingTomodPending(Pending);
+
+
+
 
 
             friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
@@ -173,41 +202,37 @@ public class FriendsActivity extends AppCompatActivity {
         public void onViewCreated(View view, Bundle savedInstanceState){
             super.onViewCreated(view,savedInstanceState);
 
-            final EditText searchBar = (EditText)view.findViewById(R.id.search_bar);
-            searchBar.setText("");
+            searchBar = (EditText)view.findViewById(R.id.search_bar);
             ImageView searchIcon = (ImageView)view.findViewById(R.id.search_icon);
             ImageView cancelIcon = (ImageView)view.findViewById(R.id.cancel_icon);
-            searchResults = new ArrayList<String>();
 
-            resultAdapter = new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults);
-            ListView searchReturnList = (ListView) view.findViewById(R.id.search_return_list);
-            searchReturnList.setAdapter(resultAdapter);
+            searchReturnList = (ListView) view.findViewById(R.id.search_return_list);
+
+
+
 
             searchIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(searchBar.getText().toString().isEmpty()){
-                        search_string="";
-                        searchResults.clear();
-                        resultAdapter.notifyDataSetChanged();
-                    }
-                    else{
-                        search_string=searchBar.getText().toString();
-                        searchResults.clear();
-                        searchResults.addAll(searchUser(search_string));
-                        resultAdapter.notifyDataSetChanged();
 
-                    }
+                    String search_string=searchBar.getText().toString();
+                    searchResults=searchUser(search_string);
+
+                    searchResults.removeAll(Collections.singleton(null));
+
+                    searchReturnList.setAdapter(new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults));
+
+
                 }
             });
 
             cancelIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    search_string="";
+
                     searchBar.setText("");
                     searchResults = new ArrayList<String>();
-                    resultAdapter.notifyDataSetChanged();
+                    searchReturnList.setAdapter(new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults));
                 }
             });
 
@@ -231,9 +256,10 @@ public class FriendsActivity extends AppCompatActivity {
     private static ArrayList<String>searchUser(String name){
         ArrayList<User> userList = new ArrayList<User>();
         ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-        getUserTask.execute(name);
+
 
         try{
+            getUserTask.execute(name);
             userList = getUserTask.get();
         }
         catch(Exception e){
@@ -272,6 +298,16 @@ public class FriendsActivity extends AppCompatActivity {
         currentUser.setUser_Id(user.getUser_Id());
         currentUser.setFriends(user.getFriends());
         currentUser.setPending(user.getPending());
+
+
+        curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
+
+        curFriends.removeAll(Collections.singleton(null));
+        Pending = CurrentUserSingleton.getInstance().getUser().getPending();
+
+
+        Pending.removeAll(Collections.singleton(null));
+        modPending = pendingTomodPending(Pending);
     }
 
 
