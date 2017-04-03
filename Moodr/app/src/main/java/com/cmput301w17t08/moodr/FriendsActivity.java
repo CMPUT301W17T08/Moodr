@@ -1,8 +1,10 @@
 package com.cmput301w17t08.moodr;
 
 
-
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -21,10 +23,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 
 /**
@@ -38,7 +40,6 @@ import java.util.Comparator;
  */
 
 public class FriendsActivity extends AppCompatActivity {
-
 
     public static AppSectionsPagerAdapter adapter;
 
@@ -136,7 +137,7 @@ public class FriendsActivity extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    updateUser();
+                    updateUser(getActivity());
                     friendsList = (ListView) getView().findViewById(R.id.curFriends_list);
                     pendingList = (ListView) getView().findViewById(R.id.pending_list);
                     friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
@@ -154,7 +155,7 @@ public class FriendsActivity extends AppCompatActivity {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            updateUser();
+            updateUser(getActivity());
             friendsList = (ListView) view.findViewById(R.id.curFriends_list);
             pendingList = (ListView) view.findViewById(R.id.pending_list);
 
@@ -244,7 +245,7 @@ public class FriendsActivity extends AppCompatActivity {
                 public void onClick(View view) {
 
                     String search_string=searchBar.getText().toString();
-                    searchResults=searchUser(search_string);
+                    searchResults=searchUser(search_string, getActivity());
 
                     searchResults.removeAll(Collections.singleton(null));
 
@@ -281,22 +282,29 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
 
-    private static ArrayList<String>searchUser(String name){
+    private static ArrayList<String> searchUser(String name, Context context){
         ArrayList<User> userList = new ArrayList<User>();
-        ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-
-
-        try{
-            getUserTask.execute(name);
-            userList = getUserTask.get();
-        }
-        catch(Exception e){
-            Log.i("Error", "Error getting users out of async object");
-        }
         ArrayList<String> userNameList = new ArrayList<>();
-        for(User a:userList){
-            userNameList.add(a.getName());
+
+
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null != activeNetwork) {
+            ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
+            try {
+                getUserTask.execute(name);
+                userList = getUserTask.get();
+            } catch (Exception e) {
+                Log.i("Error", "Error getting users out of async object");
+            }
+            for (User a : userList) {
+                userNameList.add(a.getName());
+            }
+        } else {
+            Toast.makeText(context, "You are offline.", Toast.LENGTH_SHORT).show();
         }
+
         return userNameList;
     }
 
@@ -308,34 +316,41 @@ public class FriendsActivity extends AppCompatActivity {
         return B;
     }
 
-    private static void updateUser(){
+    private static void updateUser(Context context){
         // populate all current user info here.
-        ElasticSearchUserController.GetUserTask getUserTask
-                = new ElasticSearchUserController.GetUserTask();
-        getUserTask.execute(CurrentUserSingleton.getInstance().getUser().getName());
-        User user = new User();
-        try{
-            user = getUserTask.get().get(0);
-            Log.d("USERNAME", user.getName());
+        // Check if app is connected to a network.
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null != activeNetwork) {
+            ElasticSearchUserController.GetUserTask getUserTask
+                    = new ElasticSearchUserController.GetUserTask();
+            getUserTask.execute(CurrentUserSingleton.getInstance().getUser().getName());
+            User user = new User();
+            try {
+                user = getUserTask.get().get(0);
+                Log.d("USERNAME", user.getName());
+            } catch (Exception e) {
+                Log.d("ERROR", "Error getting user from elastic search");
+            }
+            User currentUser = CurrentUserSingleton.getInstance().getUser();
+            currentUser.setName(user.getName());
+            currentUser.setUser_Id(user.getUser_Id());
+            currentUser.setFriends(user.getFriends());
+            currentUser.setPending(user.getPending());
+
+            curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
+
+            curFriends.removeAll(Collections.singleton(null));
+            Pending = CurrentUserSingleton.getInstance().getUser().getPending();
+
+
+            Pending.removeAll(Collections.singleton(null));
+            modPending = pendingTomodPending(Pending);
+            new SaveSingleton(context).SaveSingletons(); // save singleton to disk.
+        } else {
+            Toast.makeText(context, "You are offline.", Toast.LENGTH_SHORT).show();
         }
-        catch(Exception e){
-            Log.d("ERROR", "Error getting user from elastic search");
-        }
-        User currentUser = CurrentUserSingleton.getInstance().getUser();
-        currentUser.setName(user.getName());
-        currentUser.setUser_Id(user.getUser_Id());
-        currentUser.setFriends(user.getFriends());
-        currentUser.setPending(user.getPending());
 
-
-        curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
-
-        curFriends.removeAll(Collections.singleton(null));
-        Pending = CurrentUserSingleton.getInstance().getUser().getPending();
-
-
-        Pending.removeAll(Collections.singleton(null));
-        modPending = pendingTomodPending(Pending);
     }
 
 

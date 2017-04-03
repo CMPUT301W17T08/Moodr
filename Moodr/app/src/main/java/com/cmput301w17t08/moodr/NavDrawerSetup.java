@@ -1,6 +1,9 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -61,10 +64,8 @@ public class NavDrawerSetup {
                         drawer.closeDrawer();
                         switch (position) {
                             case 1:
-                                if (!activity.getClass().equals((MyProfileActivity.class))) {
-                                    intent = new Intent(activity, MyProfileActivity.class);
-                                    activity.startActivity(intent);
-                                }
+                                intent = new Intent(activity, MyProfileActivity.class);
+                                activity.startActivity(intent);
                                 break;
 
                             case 2:
@@ -75,9 +76,15 @@ public class NavDrawerSetup {
                                 break;
 
                             case 3:
-                                if (!activity.getClass().equals((FriendsActivity.class))) {
-                                    intent = new Intent(activity, FriendsActivity.class);
-                                    activity.startActivity(intent);
+                                ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                                if (null != activeNetwork) {
+                                    if (!activity.getClass().equals((FriendsActivity.class))) {
+                                        intent = new Intent(activity, FriendsActivity.class);
+                                        activity.startActivity(intent);
+                                    }
+                                } else {
+                                    Toast.makeText(activity, "Unable to go to friend page when offline.", Toast.LENGTH_SHORT).show();
                                 }
                                 break;
                             case 4:
