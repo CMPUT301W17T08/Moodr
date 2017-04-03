@@ -60,17 +60,10 @@ public class LoginActivity extends AppCompatActivity {
         // load username from disk and auto login if username is not null.
         loadUsernameFromFile(); // load Last Username for auto login
         if (UserName != null) {
-            // Check if app is connected to a network.
-            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            if (null == activeNetwork) {
-                Toast.makeText(getApplicationContext(), "Unable to AutoLogin when offline.", Toast.LENGTH_SHORT).show();
-            } else {
-                setCurrentUser(UserName);
-                Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
-                startActivity(intent);
-            }
+            setCurrentUser(UserName);
+            Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
+            startActivity(intent);
         }
 
         Button SignInButton = (Button) findViewById(R.id.login_button);
@@ -86,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
                 } else {
                     if(validUser(UserName)){
+                        CurrentUserSingleton.getInstance().reset();
                         setCurrentUser(UserName);
                         saveUsernameInFile(UserName); // save username for auto login
                         Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
@@ -186,7 +180,6 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("ERROR", "Error getting user from elastic search");
         }
         CurrentUserSingleton singleton = CurrentUserSingleton.getInstance();
-        singleton.reset();
         singleton.setSingleton(user);
 
         // populate all current user's mood

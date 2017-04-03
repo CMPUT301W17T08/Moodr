@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -220,24 +219,30 @@ public class AddStory extends Fragment {
                             Toast.makeText(activity, "No friends selected", Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            for (String friend : selected) {
-                                User user = new User();
-                                ElasticSearchUserController.GetUserTask getUserTask =
-                                        new ElasticSearchUserController.GetUserTask();
-                                getUserTask.execute(friend);
+                            ConnectivityManager cm = (ConnectivityManager) activity.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                            if (null != activeNetwork) {
+                                for (String friend : selected) {
+                                    User user = new User();
+                                    ElasticSearchUserController.GetUserTask getUserTask =
+                                            new ElasticSearchUserController.GetUserTask();
+                                    getUserTask.execute(friend);
 
-                                try {
-                                    user = getUserTask.get().get(0);
-                                } catch (Exception e) {
-                                    Log.i("Error", "Failed to get user from elastic search");
+                                    try {
+                                        user = getUserTask.get().get(0);
+                                    } catch (Exception e) {
+                                        Log.i("Error", "Failed to get user from elastic search");
+                                    }
+
+                                    user.addStory(story);
+
+                                    new ElasticSearchUserController.UpdateUserTask().execute(user);
                                 }
 
-                                user.addStory(story);
-
-                                new ElasticSearchUserController.UpdateUserTask().execute(user);
+                                Toast.makeText(activity, "Story sent!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(activity, "Unable able to send story when offline.", Toast.LENGTH_SHORT).show();
                             }
-
-                            Toast.makeText(activity, "Story sent!", Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
                         }

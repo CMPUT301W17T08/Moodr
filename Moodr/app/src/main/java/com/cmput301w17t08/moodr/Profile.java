@@ -180,7 +180,7 @@ public class Profile extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null == activeNetwork) {
-            Toast.makeText(getApplicationContext(), "Unable to load moods when offline.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Unable to load moods from database.", Toast.LENGTH_SHORT).show();
         }
         else {
             ElasticSearchMoodController.GetMoodTask getMoodTask
