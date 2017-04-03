@@ -39,7 +39,7 @@ import java.util.Comparator;
  */
 public class FriendsActivity extends AppCompatActivity {
 
-    public static boolean isSearching = false;
+
     public static AppSectionsPagerAdapter adapter;
     public static String search_string;
     public static ArrayList<String> searchResults;
@@ -47,8 +47,7 @@ public class FriendsActivity extends AppCompatActivity {
     public static ArrayList<String> curFriends;
     public static ArrayList<String> Pending;
     public static ArrayList<String> modPending;
-    public static ArrayAdapter<String> pendingAdapter;
-    public static ArrayAdapter<String> friendsAdapter;
+
 
 
 
@@ -60,12 +59,10 @@ public class FriendsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        new NavDrawerSetup(this, toolbar).setupNav();
 
-        isSearching = false;
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Friends"));
-        tabLayout.addTab(tabLayout.newTab().setText("Map"));
+        tabLayout.addTab(tabLayout.newTab().setText("Search"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -98,11 +95,9 @@ public class FriendsActivity extends AppCompatActivity {
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    if(isSearching==false){
-                    return new FriendsFragment();}
-                    else{return new FriendSearchedFragment();}
+                    return new FriendsFragment();
                 case 1:
-                    return new MapFragment();
+                    return new SearchFragment();
                 default:
                     return null;
             }
@@ -125,84 +120,60 @@ public class FriendsActivity extends AppCompatActivity {
 
 
     public static class FriendsFragment extends Fragment {
-
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            return inflater.inflate(R.layout.fragment_friends_nosearch, container, false);}
+            return inflater.inflate(R.layout.fragment_friends, container, false);}
 
         @Override
-        public void onViewCreated(View view, Bundle savedInstanceState){
-            super.onViewCreated(view,savedInstanceState);
-            final EditText searchBar = (EditText)view.findViewById(R.id.search_bar);
-            ImageView searchIcon = (ImageView)view.findViewById(R.id.search_icon);
-
-            searchIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(!searchBar.getText().toString().isEmpty()) {
-                        isSearching = true;
-                        search_string = searchBar.getText().toString();
-                        searchResults = searchUser(search_string);
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-            });
-
-            final ListView friendsList = (ListView) view.findViewById(R.id.curFriends_list);
-            ListView pendingList = (ListView) view.findViewById(R.id.pending_list);
-
-            friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                @Override
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id){
-                    //go into friends profile
-
-                }
-            });
-
-            pendingList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                @Override
-                public void onItemClick(AdapterView<?> parent, View v,int position,long id){
-                    // go into pending stranger profile
-
-                    // for testing purpose this will be accepting friends
-                     pendingToFriends(Pending.get(position));
-
-//                    this is to update the lists
-                    curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
-                    Pending = CurrentUserSingleton.getInstance().getUser().getPending();
-                    modPending = pendingTomodPending(Pending);
-                    pendingAdapter.notifyDataSetChanged();
-                    friendsAdapter.notifyDataSetChanged();
-
-                }
-            });
-
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
             updateUser();
-            curFriends =new ArrayList<String>();
-            Pending =new ArrayList<String>();
+            ListView friendsList = (ListView) view.findViewById(R.id.curFriends_list);
+            ListView pendingList = (ListView) view.findViewById(R.id.pending_list);
 
             curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
             Pending = CurrentUserSingleton.getInstance().getUser().getPending();
             modPending = pendingTomodPending(Pending);
 
 
-
-//            btw all the other list items are not in use, but they are still in layout just in case, remember to clean for final version
-            friendsAdapter = new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,curFriends);
+            ArrayAdapter<String> friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
             friendsList.setAdapter(friendsAdapter);
 
-            pendingAdapter = new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,modPending);
+            ArrayAdapter<String> pendingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, modPending);
             pendingList.setAdapter(pendingAdapter);
 
+            friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    //go into friends profile
+                    Intent intent = new Intent(getActivity(), Profile.class);
+                    intent.putExtra("name", curFriends.get(position));
+                    startActivity(intent);
+
+                }
+            });
+            pendingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    //go into friends profile
+                    Intent intent = new Intent(getActivity(), StrangerProfile.class);
+                    intent.putExtra("name", Pending.get(position));
+                    startActivity(intent);
+
+                }
+            });
+
         }
+
     }
 
-    public static class FriendSearchedFragment extends Fragment{
+
+    public static class SearchFragment extends Fragment{
 
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            return inflater.inflate(R.layout.fragment_friends_search, container, false);
+            return inflater.inflate(R.layout.fragment_search, container, false);
         }
 
         @Override
@@ -210,9 +181,10 @@ public class FriendsActivity extends AppCompatActivity {
             super.onViewCreated(view,savedInstanceState);
 
             final EditText searchBar = (EditText)view.findViewById(R.id.search_bar);
-            searchBar.setText(search_string);
+            searchBar.setText("");
             ImageView searchIcon = (ImageView)view.findViewById(R.id.search_icon);
             ImageView cancelIcon = (ImageView)view.findViewById(R.id.cancel_icon);
+            searchResults = new ArrayList<String>();
 
             resultAdapter = new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults);
             ListView searchReturnList = (ListView) view.findViewById(R.id.search_return_list);
@@ -222,16 +194,13 @@ public class FriendsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if(searchBar.getText().toString().isEmpty()){
-                        isSearching=false;
                         search_string="";
                         searchResults = new ArrayList<String>();
-                        adapter.notifyDataSetChanged();
+                        resultAdapter.notifyDataSetChanged();
                     }
                     else{
-                        isSearching = true;
                         search_string=searchBar.getText().toString();
                         searchResults=searchUser(search_string);
-                        adapter.notifyDataSetChanged();
                         resultAdapter.notifyDataSetChanged();
 
                     }
@@ -241,11 +210,10 @@ public class FriendsActivity extends AppCompatActivity {
             cancelIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    isSearching = false;
                     search_string="";
                     searchBar.setText("");
                     searchResults = new ArrayList<String>();
-                    adapter.notifyDataSetChanged();
+                    resultAdapter.notifyDataSetChanged();
                 }
             });
 
@@ -255,8 +223,9 @@ public class FriendsActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v,int position,long id){
                     // go into search return stranger profile
-//                    for testing purpose this will be sending request
-                    addPending(searchResults.get(position));
+                    Intent intent = new Intent(getActivity(), StrangerProfile.class);
+                    intent.putExtra("name", searchResults.get(position));
+                    startActivity(intent);
                 }
             });
 
@@ -265,12 +234,23 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
 
-    public static class MapFragment extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-            return rootView;
+
+    private static ArrayList<String>searchUser(String name){
+        ArrayList<User> userList = new ArrayList<User>();
+        ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
+        getUserTask.execute(name);
+
+        try{
+            userList = getUserTask.get();
         }
+        catch(Exception e){
+            Log.i("Error", "Error getting users out of async object");
+        }
+        ArrayList<String> userNameList = new ArrayList<>();
+        for(User a:userList){
+            userNameList.add(a.getName());
+        }
+        return userNameList;
     }
 
     private static ArrayList<String> pendingTomodPending(ArrayList<String> P){
@@ -300,71 +280,9 @@ public class FriendsActivity extends AppCompatActivity {
         currentUser.setFriends(user.getFriends());
         currentUser.setPending(user.getPending());
 
-        // populate all current user's mood
-        ElasticSearchMoodController.GetMoodTask getMoodTask
-                = new ElasticSearchMoodController.GetMoodTask();
-        ArrayList<Mood> moods = new ArrayList<>();
-        getMoodTask.execute(user.getName());
-        try{
-            moods.addAll(getMoodTask.get());
-            Collections.sort(moods, new Comparator<Mood>() {
-                @Override
-                public int compare(Mood mood, Mood t1) {
-                    return t1.getDate().compareTo(mood.getDate());
-                }
-            });
-        }
-        catch(Exception e){
-            Log.d("Error", "Error getting moods from elastic search.");
-        }
-        MoodList userMoods = CurrentUserSingleton.getInstance().getMyMoodList();
-        userMoods.setListOfMoods(moods);
+
     }
 
-    private static ArrayList<String>searchUser(String name){
-        ArrayList<User> userList = new ArrayList<User>();
-        ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-        getUserTask.execute(name);
 
-        try{
-            userList = getUserTask.get();
-        }
-        catch(Exception e){
-            Log.i("Error", "Error getting users out of async object");
-        }
-        ArrayList<String> userNameList = new ArrayList<>();
-        for(User a:userList){
-            userNameList.add(a.getName());
-        }
-        return userNameList;
-    }
-
-//    these methods needs constrain, such as you can only add a search result to pending if they are not already in pending or friends
-    private static void addPending(String name){
-        try {
-            ElasticSearchUserController.UpdateUserTask updateUserTask = new ElasticSearchUserController.UpdateUserTask();
-            ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-            User user = new User();
-            getUserTask.execute(name);
-            user = getUserTask.get().get(0);
-            updateUserTask.execute(user);
-            user.addPending(CurrentUserSingleton.getInstance().getUser().getName());
-            updateUserTask.equals(CurrentUserSingleton.getInstance().getUser());
-        }catch (Exception e){
-            Log.i("Error","Error adding pending");
-        }
-    }
-
-    private static void pendingToFriends(String name){
-        try {
-            ElasticSearchUserController.UpdateUserTask updateUserTask = new ElasticSearchUserController.UpdateUserTask();
-            updateUserTask.execute(CurrentUserSingleton.getInstance().getUser());
-            CurrentUserSingleton.getInstance().getUser().removePending(name);
-            CurrentUserSingleton.getInstance().getUser().addFriend(name);
-            updateUserTask.equals(CurrentUserSingleton.getInstance().getUser());
-        }catch (Exception e){
-            Log.i("Error","Error moving from pending to friends");
-        }
-    }
 
 }
