@@ -1,6 +1,5 @@
 package com.cmput301w17t08.moodr;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,9 +20,8 @@ import java.util.Locale;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ViewMoodFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * This fragment shows details for individual moods. this is used to display moods when clicked on
+ * profile pages, latest list, and in viewing stories.
  */
 public class ViewMoodFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -53,6 +51,17 @@ public class ViewMoodFragment extends Fragment {
         return fragment;
     }
 
+    public static Bitmap decodeImage(String imageString) {
+        try {
+            byte[] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,11 +74,11 @@ public class ViewMoodFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         return inflater.inflate(R.layout.fragment_view_mood, container, false);
+        return inflater.inflate(R.layout.fragment_view_mood, container, false);
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         loadMood(mood);
     }
@@ -135,19 +144,8 @@ public class ViewMoodFragment extends Fragment {
         }
     }
 
-    public static Bitmap decodeImage(String imageString) {
-        try {
-            byte[] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         loadMood(mood);
     }

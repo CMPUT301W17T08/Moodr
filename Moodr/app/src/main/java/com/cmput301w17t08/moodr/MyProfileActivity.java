@@ -70,6 +70,11 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Go to map activity", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(MyProfileActivity.this, MapsProfileActivity.class);
+                // Send filtered list to the map activity
+                intent.putExtra("profileFilteredList", moods);
+                startActivity(intent);
             }
         });
     }
@@ -186,11 +191,13 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
                     stories.remove(i);
                     notificationAdapter.notifyDataSetChanged();
                     new ElasticSearchUserController.UpdateUserTask().execute(user);
+
                     new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 }
                 else{
+
                     Toast.makeText(MyProfileActivity.this, "Cannot view story while offline.", Toast.LENGTH_SHORT).show();
-                    notifications.setVisibility(View.INVISIBLE);
+                    notifications.setVisibility(View.GONE);
                 }
             }
 
@@ -237,13 +244,14 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null != activeNetwork) {
             notifications.setVisibility(View.VISIBLE);
-        }
-        else {
-            notifications.setVisibility(View.INVISIBLE);
+        } else {
+            notifications.setVisibility(View.GONE);
         }
     }
 
-    // when returning from adding story. restores menu items and floating buttons.
+    /**
+     * Destroys fragment and resets UI after the user either cancels or finishes sending a story.
+     */
     public void OnComplete() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

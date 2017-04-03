@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- *
  * The superclass of the MoodLists. This class holds the necessary functions to add and delete
  * moods on the list.
  */
@@ -13,11 +12,10 @@ public class MoodList {
 
     private ArrayList<Mood> listOfMoods = new ArrayList<Mood>();
 
-    public void add(Mood mood){
-        if(listOfMoods.contains(mood)){
+    public void add(Mood mood) {
+        if (listOfMoods.contains(mood)) {
             throw new IllegalArgumentException();
-        }
-        else {
+        } else {
             listOfMoods.add(mood);
             Collections.sort(listOfMoods, new Comparator<Mood>() {
                 @Override
@@ -33,23 +31,23 @@ public class MoodList {
         add(mood);
     }
 
-    public void delete(Mood mood){
+    public void delete(Mood mood) {
         listOfMoods.remove(mood);
     }
 
-    public Mood getMood(int index){
+    public Mood getMood(int index) {
         return listOfMoods.get(index);
     }
 
-    public void setListOfMoods (ArrayList<Mood> listOfMoods){
-        this.listOfMoods = listOfMoods;
-    }
-
-    public ArrayList<Mood> getListOfMoods(){
+    public ArrayList<Mood> getListOfMoods() {
         return this.listOfMoods;
     }
 
-    public int getSize(){
+    public void setListOfMoods(ArrayList<Mood> listOfMoods) {
+        this.listOfMoods = listOfMoods;
+    }
+
+    public int getSize() {
         return listOfMoods.size();
     }
 

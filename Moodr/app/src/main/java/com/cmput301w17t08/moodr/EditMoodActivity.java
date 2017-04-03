@@ -55,6 +55,17 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class EditMoodActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final int SELECT_PICTURE = 100;
+    // When button for image is pressed
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
+    int day, month, year, hour, minute;
+    int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
+    Mood mood;
+    int index;
     private ImageView imageView;
     private Button locationButton;
     private LocationManager locationManager;
@@ -65,10 +76,6 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
     private EditText editTrigger;
     private Button editDate;
     private InputFilter filter;
-
-    int day, month, year, hour, minute;
-    int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
-
     private Date date;
     private Date editDate_copy;
     private Coordinate editCoordinate = null;
@@ -80,9 +87,6 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
     private String trigger;
     private String situation;
     private String location;
-
-    Mood mood;
-    int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +102,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         index = intent.getIntExtra("index", -1);
         try {
             mood = CurrentUserSingleton.getInstance().getMyMoodList().getMood(index);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.d("Error", "Invalid mood index");
         }
 
@@ -143,7 +146,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected_emotion = parent.getItemAtPosition(position).toString();
-                switch(selected_emotion){
+                switch (selected_emotion) {
                     case "Happy":
                         emotion = Emotion.happy;
                         break;
@@ -170,6 +173,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
                         break;
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -184,6 +188,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 situation = parent.getItemAtPosition(position).toString();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -197,7 +202,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
 
         // date needs to be converted to a string
         editDate_copy = mood.getDate();
-        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
+        java.text.DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
         editDate.setText(dateFormat.format(editDate_copy));
 
         // Date&Time Dialog - https://www.youtube.com/watch?v=a_Ap6T4RlYU - by Tihomir RAdeff
@@ -217,13 +222,14 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
 //        http://stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
         editTrigger = (EditText) findViewById(R.id.et_trigger);
         String trig = mood.getTrigger();
-        if (trig != null){
+        if (trig != null) {
             editTrigger.setText(mood.getTrigger());
         }
         editTrigger.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int wordsLength = countWords(s.toString());// words.length;
@@ -234,6 +240,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
                     removeFilter(editTrigger);
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -262,17 +269,19 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
                 if (editCoordinate != null) {
                     editCoordinate.setLat(location.getLatitude());
                     editCoordinate.setLon(location.getLongitude());
-                }
-                else {
+                } else {
                     editCoordinate = new Coordinate(location.getLatitude(), location.getLongitude());
                 }
             }
+
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
             }
+
             @Override
             public void onProviderEnabled(String s) {
             }
+
             @Override
             public void onProviderDisabled(String s) {
                 Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -309,24 +318,16 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
 
     // setTime - https://www.youtube.com/watch?v=a_Ap6T4RlYU - by Tihomir RAdeff
     @Override
-    public void onTimeSet (TimePicker timePicker,int hour, int minute) {
+    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         hourFinal = hour;
         minuteFinal = minute;
 
         editDate_copy = new Date(yearFinal - 1900, monthFinal - 1, dayFinal, hourFinal, minuteFinal);
 
-        java.text.DateFormat dateFormat =  new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
+        java.text.DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm", Locale.US);
         editDate.setText(dateFormat.format(editDate_copy));
 
     }
-
-    // When button for image is pressed
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
 
     /* Choose an image from Gallery */
     void chooseImage() {
@@ -359,7 +360,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
 
     private void setCharLimit(EditText et, int max) {
         filter = new InputFilter.LengthFilter(max);
-        et.setFilters(new InputFilter[] { filter });
+        et.setFilters(new InputFilter[]{filter});
     }
 
     private void removeFilter(EditText et) {
@@ -442,8 +443,7 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         if (null == activeNetwork) {
             Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
             CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
-        }
-        else {
+        } else {
             ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
             updateMoodTask.execute(mood);
         }

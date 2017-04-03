@@ -18,15 +18,24 @@ import java.util.Locale;
  * This is an abstract activity for viewing details of individual moods.
  * Because the user can edit their own mood, but not others' moods, we created an abstract class
  * for the viewing moods in general.
- *
  */
 public abstract class ViewMoodActivity extends AppCompatActivity {
+
+    public static Bitmap decodeImage(String imageString) {
+        try {
+            byte[] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 
     /**
      * Loads the information contained in the mood. Anything that is blank is left blank.
@@ -86,17 +95,6 @@ public abstract class ViewMoodActivity extends AppCompatActivity {
         if (imgURL != "") {
             imageToDisplay = decodeImage(imgURL);
             image.setImageBitmap(imageToDisplay);
-        }
-    }
-
-    public static Bitmap decodeImage(String imageString) {
-        try {
-            byte[] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
         }
     }
 }

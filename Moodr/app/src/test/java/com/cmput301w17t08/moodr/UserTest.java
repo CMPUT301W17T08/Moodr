@@ -1,5 +1,6 @@
 package com.cmput301w17t08.moodr;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,12 +35,30 @@ public class UserTest {
     }
 
     @Test
-    public void addFriend(){
-        User user;
-        user = new User("something");
-        user.addFriend("friends");
-        assertTrue(user.getFriends().contains("friends"));
+    public void testAddFriend(){
+        User user = new User("test");
+        Assert.assertEquals(user.getFriends().size(), 0);
+        user.addFriend("Bob");
 
+        Assert.assertTrue(user.getFriends().contains("Bob"));
+        Assert.assertEquals(user.getFriends().size(), 1);
+
+        user.addFriend("Bob");
+        Assert.assertEquals(user.getFriends().size(), 0);
+    }
+
+    @Test
+    public void testAddPending(){
+        User user = new User("test");
+        Assert.assertEquals(user.getPending().size(), 0);
+
+        user.addPending("Bob");
+
+        Assert.assertTrue(user.getPending().contains("Bob"));
+        Assert.assertEquals(user.getPending().size(), 1);
+
+        user.addFriend("Bob");
+        Assert.assertEquals(user.getPending().size(), 0);
     }
 
 

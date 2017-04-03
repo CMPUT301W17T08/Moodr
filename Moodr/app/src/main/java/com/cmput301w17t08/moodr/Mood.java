@@ -35,7 +35,6 @@ public class Mood implements Serializable {
         this.owner = Username;
     }
 
-
     public Date getDate() {
         return date;
     }
@@ -73,9 +72,6 @@ public class Mood implements Serializable {
     }
 
     public void setTrigger(String trigger) {
-        if (trigger.length() > 20) {
-            ;
-        }
         this.trigger = trigger;
     }
 

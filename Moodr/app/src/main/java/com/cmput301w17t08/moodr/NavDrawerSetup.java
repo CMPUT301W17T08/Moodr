@@ -120,6 +120,7 @@ public class NavDrawerSetup {
 
     private void logout() {
         CurrentUserSingleton.getInstance().reset();
+        new SaveSingleton(activity).SaveSingletons(); // save singleton to disk.
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.putExtra("logout", 1);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

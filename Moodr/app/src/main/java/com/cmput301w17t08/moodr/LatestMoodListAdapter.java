@@ -15,13 +15,14 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- *
  * This class is the custom ArrayAdapter used to display the moods on the Latest Moods List.
+ * This allows for the moods to be filtered, but unlike the ProfileMoodAdapter, this does not
+ * allow the user to select multiple moods as a checklist.
+ * <p>
  * Taken from https://github.com/codepath/android_guides/wiki/Using-an-ArrayAdapter-with-ListView
- *
  */
 
-public class LatestMoodListAdapter extends ArrayAdapter<Mood> implements Filterable{
+public class LatestMoodListAdapter extends ArrayAdapter<Mood> implements Filterable {
     MoodFilterHolder moodFilter;
     private ArrayList<Mood> origMoods;
 
@@ -31,16 +32,8 @@ public class LatestMoodListAdapter extends ArrayAdapter<Mood> implements Filtera
         origMoods.addAll(moods);
     }
 
-    public void setOrigMoods(ArrayList<Mood> mood){
-        moodFilter.setMoods(mood);
-
-        clear();
-        addAll(mood);
-        notifyDataSetChanged();
-    }
-
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
         Mood mood = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view

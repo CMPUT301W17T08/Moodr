@@ -58,7 +58,20 @@ public class AddMoodActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 100;
     private static final String TAG = "MainActivity";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-
+    /* When button for image is pressed */
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
+    /* When button for camera is pressed */
+    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            openCamera();
+        }
+    };
     private Coordinate coordinate = null;
     private ImageView imageView;
     private Button locationButton;
@@ -80,6 +93,14 @@ public class AddMoodActivity extends AppCompatActivity {
     private String trigger;
     private String situation;
     private String encodedImage;
+
+    public static String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,12 +227,10 @@ public class AddMoodActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 locationText.setText(location.getLatitude() + " " + location.getLongitude());
-                if (coordinate != null){
+                if (coordinate != null) {
                     coordinate.setLat(location.getLatitude());
                     coordinate.setLon(location.getLongitude());
-                }
-
-                else{
+                } else {
                     coordinate = new Coordinate(location.getLatitude(), location.getLongitude());
                 }
 
@@ -277,6 +296,12 @@ public class AddMoodActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /* ------------------- Functions for image addition ------------------ */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
 
     public void createMood(Emotion emotion, String situation, String trigger, String encodedImage) {
         // Grab owner
@@ -363,22 +388,6 @@ public class AddMoodActivity extends AppCompatActivity {
         });
     }
 
-
-    /* ------------------- Functions for image addition ------------------ */
-    /* ------------------------------------------------------------------- */
-    /* ------------------------------------------------------------------- */
-    /* ------------------------------------------------------------------- */
-    /* ------------------------------------------------------------------- */
-
-
-    /* When button for image is pressed */
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
-
     public void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -430,17 +439,8 @@ public class AddMoodActivity extends AppCompatActivity {
         }
     }
 
-
-    public static String encodeImage(Bitmap bitmap){
-        ByteArrayOutputStream baos=new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
-
-   // http://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
-    public boolean saveToInternalStorage(Bitmap bitmapImage){
+    // http://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
+    public boolean saveToInternalStorage(Bitmap bitmapImage) {
         try {
             FileOutputStream fos = AddMoodActivity.this.openFileOutput("desiredFilename.png", Context.MODE_PRIVATE);
 
@@ -455,17 +455,7 @@ public class AddMoodActivity extends AppCompatActivity {
         }
     }
 
-
-
-    /* When button for camera is pressed */
-    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            openCamera();
-        }
-    };
-
-    public void openCamera(){
+    public void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, 2);
@@ -473,31 +463,30 @@ public class AddMoodActivity extends AppCompatActivity {
     }
 
 
-
     /* Functions for character limit on trigger, 20 characters or 3 words */
     /* ------------------------------------------------------------------- */
     /* ------------------------------------------------------------------- */
     /* ------------------------------------------------------------------- */
     /* ------------------------------------------------------------------- */
-    public boolean countLimit(){
+    public boolean countLimit() {
         trigger = editTrigger.getText().toString();
-        int triggerLength= trigger.length();
+        int triggerLength = trigger.length();
         int triggerWords = wordCount(trigger);
         boolean flag = true;
-        if (triggerLength > 20 || triggerWords > 3){
+        if (triggerLength > 20 || triggerWords > 3) {
             flag = false;
         }
         return flag;
 
     }
 
-    public int wordCount (String s){
+    public int wordCount(String s) {
         String input = s.trim();
         int words = input.isEmpty() ? 0 : input.split("\\s+").length;
         return words;
     }
 
-    public void triggerError (){
+    public void triggerError() {
         new AlertDialog.Builder(AddMoodActivity.this)
                 .setTitle("Limit Reached")
                 .setMessage("Please use only 3 words or 20 characters")

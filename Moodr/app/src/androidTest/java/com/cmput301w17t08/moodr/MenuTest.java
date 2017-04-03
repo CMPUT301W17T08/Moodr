@@ -5,4 +5,5 @@ package com.cmput301w17t08.moodr;
  */
 
 public class MenuTest {
+//    01.03 Log Out
 }

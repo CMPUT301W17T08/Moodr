@@ -55,6 +55,14 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
+            android:name=".MapsLatestActivity"
+            android:label="LatestMap" />
+        <activity
+            android:name=".MapsProfileActivity"
+            android:label="LatestMap" />
+
+
+        <activity
             android:name=".Profile" />
 
         <activity android:name=".ViewMyMoodActivity" />
