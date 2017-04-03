@@ -36,6 +36,6 @@ public class Story implements Serializable{
 
     @Override
     public String toString(){
-        return owner + " shared " + name + " story with you!";
+        return owner + " shared " + name + " with you!";
     }
 }

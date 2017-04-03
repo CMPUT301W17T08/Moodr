@@ -9,6 +9,11 @@ import com.robotium.solo.Solo;
  * Created by kskwong on 3/13/17.
  */
 
+/*
+Use Cases
+06.01 View Current User Profile
+ */
+
 public class MyProfileActivityTest extends ActivityInstrumentationTestCase2<MyProfileActivity> {
     Solo solo;
 

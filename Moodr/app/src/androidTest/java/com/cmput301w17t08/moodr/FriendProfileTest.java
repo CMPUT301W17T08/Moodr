@@ -14,8 +14,8 @@ import com.robotium.solo.Solo;
 
 import junit.framework.TestCase;
 
-/**
- * Created by kskwong on 3/13/17.
+/*
+06.02 View Friend Profile
  */
 
 public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile> {

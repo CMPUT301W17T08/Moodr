@@ -11,6 +11,9 @@ import java.util.ArrayList;
  * Created by kskwong on 3/13/17.
  */
 
+// 02.06 Latest Mood
+// Display a list the most recent mood events of the participants I am granted to follow,
+// sorted by date and time, in reverse chronological order
 
 public class LatestActivityTest extends ActivityInstrumentationTestCase2<LatestActivity> {
     private Solo solo;

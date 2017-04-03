@@ -6,8 +6,12 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
 
-/**
- * Created by kskwong on 3/13/17.
+/*
+Use Cases
+03.01 Follow
+03.02 Accept
+03.03 Decline
+06.03 View Stranger Profile
  */
 
 public class StrangerProfileTest extends ActivityInstrumentationTestCase2<StrangerProfile> {
@@ -16,12 +20,13 @@ public class StrangerProfileTest extends ActivityInstrumentationTestCase2<Strang
 
     public StrangerProfileTest() {
         super(com.cmput301w17t08.moodr.StrangerProfile.class);
-    }
 
-    public void setUp() throws Exception {
         Intent intent = new Intent();
         intent.putExtra("name", "Sally");
         setActivityIntent(intent);
+    }
+
+    public void setUp() throws Exception {
         solo = new Solo(getInstrumentation(), getActivity());
     }
 

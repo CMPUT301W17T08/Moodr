@@ -188,7 +188,7 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
                 }
                 else{
                     Toast.makeText(MyProfileActivity.this, "Cannot view story while offline.", Toast.LENGTH_SHORT).show();
-                    notifications.setVisibility(View.INVISIBLE);
+                    notifications.setVisibility(View.GONE);
                 }
             }
 
@@ -237,7 +237,7 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
             notifications.setVisibility(View.VISIBLE);
         }
         else {
-            notifications.setVisibility(View.INVISIBLE);
+            notifications.setVisibility(View.GONE);
         }
     }
 
