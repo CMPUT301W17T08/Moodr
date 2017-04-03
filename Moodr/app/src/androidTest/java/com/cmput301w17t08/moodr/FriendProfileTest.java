@@ -50,7 +50,7 @@ public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile>
         solo.clickOnText("Filter by Mood");
         solo.clickOnText("Happy");
 
-        solo.sleep(1000);
+        solo.waitForActivity(ViewFriendMoodActivity.class);
 
         ListView list = solo.getCurrentViews(ListView.class).get(0);
         assertEquals(2,list.getAdapter().getCount()); // the amount of happ moods already there is 2.
