@@ -149,7 +149,6 @@ public class FriendsActivity extends AppCompatActivity {
                     Intent intent = new Intent(getActivity(), Profile.class);
                     intent.putExtra("name", curFriends.get(position));
                     startActivity(intent);
-
                 }
             });
             pendingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

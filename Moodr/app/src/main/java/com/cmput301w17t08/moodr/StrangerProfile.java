@@ -84,8 +84,8 @@ public class StrangerProfile extends AppCompatActivity {
         @Override
         public void onStart() {
             super.onStart();
+            Log.d("USERNAME!!!", user);
             final Activity activity = getActivity();
-            LinearLayout container = (LinearLayout) activity.findViewById(R.id.button_container);
 
             Button accept = (Button) activity.findViewById(R.id.stranger_button1);
             accept.setText("Accept");
@@ -173,14 +173,6 @@ public class StrangerProfile extends AppCompatActivity {
                 add.setText("Pending");
             }
 
-
-            add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    activity.finish();
-                }
-            });
         }
 
         /**
@@ -200,7 +192,7 @@ public class StrangerProfile extends AppCompatActivity {
             } else {
                 ElasticSearchUserController.GetUserTask getUserTask =
                         new ElasticSearchUserController.GetUserTask();
-                getUserTask.execute(name);
+                getUserTask.execute(name.toLowerCase());
                 try {
                     User user2 = getUserTask.get().get(0); // get first user from result
                     String currentUsername = CurrentUserSingleton.getInstance().getUser().getName();
