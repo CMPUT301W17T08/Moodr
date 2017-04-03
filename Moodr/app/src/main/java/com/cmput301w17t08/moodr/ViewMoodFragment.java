@@ -86,10 +86,6 @@ public class ViewMoodFragment extends Fragment {
     protected void loadMood(Mood mood) {
         View view = getView();
 
-        if (getView() != null) {
-            Log.d("VIEW", "NOT NULL");
-        }
-
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.frame);
         TextView mood_name = (TextView) view.findViewById(R.id.viewMoodMood);
         ImageView mood_icon = (ImageView) view.findViewById(R.id.viewMoodIcon);
@@ -138,9 +134,8 @@ public class ViewMoodFragment extends Fragment {
         // set image
         String imgURL = mood.getImgUrl();
         imageToDisplay = decodeImage(imgURL);
-        image.setImageBitmap(imageToDisplay);
         if (imgURL != null) {
-            image.setImageURI(Uri.parse(mood.getImgUrl()));
+            image.setImageBitmap(imageToDisplay);
         }
     }
 

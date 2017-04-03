@@ -31,7 +31,7 @@ public class MyProfileActivityTest extends ActivityInstrumentationTestCase2<MyPr
     public void testAdd() {
         solo.assertCurrentActivity("Wrong Activity", MyProfileActivity.class);
 
-        solo.clickOnButton(R.id.fab);
+        solo.clickOnView(solo.getView(R.id.fab));
 
         solo.assertCurrentActivity("Wrong Activity", AddMoodActivity.class);
 
@@ -45,6 +45,7 @@ public class MyProfileActivityTest extends ActivityInstrumentationTestCase2<MyPr
         solo.assertCurrentActivity("Wrong Activity", ViewMyMoodActivity.class);
 
     }
+
 
     @Override
     public void tearDown() throws Exception{

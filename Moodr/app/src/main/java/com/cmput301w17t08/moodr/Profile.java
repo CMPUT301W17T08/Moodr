@@ -54,6 +54,7 @@ public class Profile extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     unfollowUser(name);
+                    setResult(RESULT_OK);
                     finish();
                 } catch (Exception e) {
                 }

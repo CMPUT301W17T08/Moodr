@@ -44,7 +44,7 @@ public class EditMoodTest extends ActivityInstrumentationTestCase2<MyProfileActi
         solo.assertCurrentActivity("Wrong activity", ViewMyMoodActivity.class);
 
 //        solo.clickOnActionBarItem(R.id.edit_mood);  does not click on this for some reason...
-        solo.clickOnScreen(850 ,174);
+        solo.clickOnView(solo.getView(R.id.edit_mood));
 
         solo.assertCurrentActivity("Wrong activity", EditMoodActivity.class);
 
@@ -53,7 +53,7 @@ public class EditMoodTest extends ActivityInstrumentationTestCase2<MyProfileActi
     public void testEditEmotion(){
         solo.clickOnText("Sad");
         solo.assertCurrentActivity("Wrong activity", ViewMyMoodActivity.class);
-        solo.clickOnScreen(850 ,174);
+        solo.clickOnView(solo.getView(R.id.action_edit_complete));
         solo.pressSpinnerItem(0,1);
 
         Spinner spinner = (Spinner) solo.getView(R.id.sp_emotion);

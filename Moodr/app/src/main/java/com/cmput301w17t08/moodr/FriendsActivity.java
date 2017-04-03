@@ -32,7 +32,10 @@ import java.util.Comparator;
  * you are following back. It also shows list of pending friend requests. Either can be accessed
  * by pressing one of the tabs
  *
+ * NOTE: there is a bug in the adapter not refreshing the friends and pending lists when accepting
+ * a request. May cause the app to crash if an item is clicked afterwards.
  */
+
 public class FriendsActivity extends AppCompatActivity {
 
 
@@ -143,7 +146,7 @@ public class FriendsActivity extends AppCompatActivity {
                     //go into friends profile
                     Intent intent = new Intent(getActivity(), Profile.class);
                     intent.putExtra("name", curFriends.get(position));
-                    startActivity(intent);
+                    startActivityForResult(intent, 1);
                 }
             });
             pendingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -152,10 +155,35 @@ public class FriendsActivity extends AppCompatActivity {
                     //go into friends profile
                     Intent intent = new Intent(getActivity(), StrangerProfile.class);
                     intent.putExtra("name", Pending.get(position));
-                    startActivity(intent);
+                    startActivityForResult(intent, 2);
                 }
             });
 
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            if (requestCode == 1) {
+                if (resultCode == RESULT_OK){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            friendsAdapter.notifyDataSetChanged();
+                            pendingAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+            else if (requestCode == 2){
+                if (resultCode == RESULT_OK){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pendingAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
         }
 
     }
