@@ -1,11 +1,10 @@
 package com.cmput301w17t08.moodr;
 
 /**
- *
  * This class is a singleton used to store an instance of the User class for the current logged in
- * user, and their mood list. The instance of this class is used throughout the app when information
- * of the user is needed.
- *
+ * user, and their mood list and offline actions. The instance of this class is used throughout the
+ * app when information of the user is needed.
+ * <p>
  * This singleton is implemented using a enum, guaranteeing that there will only ever be one
  * instance.
  */
@@ -29,7 +28,7 @@ public enum CurrentUserSingleton {
      *
      * @return the current user singleton
      */
-    public static CurrentUserSingleton getInstance(){
+    public static CurrentUserSingleton getInstance() {
         return INSTANCE;
     }
 
@@ -38,7 +37,7 @@ public enum CurrentUserSingleton {
      *
      * @return the user
      */
-    public User getUser(){
+    public User getUser() {
         return user;
     }
 
@@ -63,9 +62,10 @@ public enum CurrentUserSingleton {
 
     /**
      * set current user on login.
+     *
      * @param user
      */
-    public void setSingleton(User user){
+    public void setSingleton(User user) {
         this.user.setName(user.getName());
         this.user.setUser_Id(user.getUser_Id());
         this.user.setPending(user.getPending());
@@ -93,7 +93,7 @@ public enum CurrentUserSingleton {
     /**
      * Reset singleton. used when logging out.
      */
-    public void reset(){
+    public void reset() {
         user.setName("");
         user.getFriends().clear();
         user.getPending().clear();

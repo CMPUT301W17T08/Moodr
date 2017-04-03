@@ -31,6 +31,7 @@ public class AddMoodTest extends ActivityInstrumentationTestCase2<AddMoodActivit
         Activity activity = getActivity();
     }
 
+    // 02.01 Add Mood
     public void testAddMoodOnly(){
         ArrayList<Mood> moods = new ArrayList<Mood>();
 

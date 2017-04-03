@@ -3,10 +3,14 @@ package com.cmput301w17t08.moodr;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 
-
 import com.robotium.solo.Solo;
 /**
  * Created by kskwong on 3/13/17.
+ */
+
+/*
+Use Cases
+06.01 View Current User Profile
  */
 
 public class MyProfileActivityTest extends ActivityInstrumentationTestCase2<MyProfileActivity> {

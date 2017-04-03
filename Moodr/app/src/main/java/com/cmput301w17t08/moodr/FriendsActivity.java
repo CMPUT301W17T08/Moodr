@@ -52,6 +52,7 @@ public class FriendsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        new NavDrawerSetup(this, toolbar).setupNav();
 
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -111,6 +112,9 @@ public class FriendsActivity extends AppCompatActivity {
 
 
     public static class FriendsFragment extends Fragment {
+        ArrayAdapter<String> friendsAdapter;
+        ArrayAdapter<String> pendingAdapter;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             return inflater.inflate(R.layout.fragment_friends, container, false);}
@@ -127,10 +131,10 @@ public class FriendsActivity extends AppCompatActivity {
             modPending = pendingTomodPending(Pending);
 
 
-            ArrayAdapter<String> friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
+            friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
             friendsList.setAdapter(friendsAdapter);
 
-            ArrayAdapter<String> pendingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, modPending);
+            pendingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, modPending);
             pendingList.setAdapter(pendingAdapter);
 
             friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -140,7 +144,6 @@ public class FriendsActivity extends AppCompatActivity {
                     Intent intent = new Intent(getActivity(), Profile.class);
                     intent.putExtra("name", curFriends.get(position));
                     startActivity(intent);
-
                 }
             });
             pendingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -150,7 +153,6 @@ public class FriendsActivity extends AppCompatActivity {
                     Intent intent = new Intent(getActivity(), StrangerProfile.class);
                     intent.putExtra("name", Pending.get(position));
                     startActivity(intent);
-
                 }
             });
 
@@ -186,12 +188,13 @@ public class FriendsActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     if(searchBar.getText().toString().isEmpty()){
                         search_string="";
-                        searchResults = new ArrayList<String>();
+                        searchResults.clear();
                         resultAdapter.notifyDataSetChanged();
                     }
                     else{
                         search_string=searchBar.getText().toString();
-                        searchResults=searchUser(search_string);
+                        searchResults.clear();
+                        searchResults.addAll(searchUser(search_string));
                         resultAdapter.notifyDataSetChanged();
 
                     }
@@ -216,14 +219,13 @@ public class FriendsActivity extends AppCompatActivity {
                     // go into search return stranger profile
                     Intent intent = new Intent(getActivity(), StrangerProfile.class);
                     intent.putExtra("name", searchResults.get(position));
-                    startActivity(intent);
+                    startActivityForResult(intent, 1);
                 }
             });
 
 
         }
     }
-
 
 
     private static ArrayList<String>searchUser(String name){
@@ -270,8 +272,6 @@ public class FriendsActivity extends AppCompatActivity {
         currentUser.setUser_Id(user.getUser_Id());
         currentUser.setFriends(user.getFriends());
         currentUser.setPending(user.getPending());
-
-
     }
 
 

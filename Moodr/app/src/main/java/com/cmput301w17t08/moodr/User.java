@@ -21,55 +21,58 @@ public class User {
         user_ID = "";
     }
 
-    public User(){
+    public User() {
         friends = new ArrayList<String>();
         pending = new ArrayList<String>();
         stories = new ArrayList<Story>();
         user_ID = "";
     }
 
-    public void setUser_Id(String id) {
-        this.user_ID = id;
-    }
-
     public String getUser_Id() {
         return this.user_ID;
     }
 
-    public void addPending(String pending){
-        this.pending.add(pending);
+    public void setUser_Id(String id) {
+        this.user_ID = id;
+    }
+
+    public void addPending(String pending) {
+        if (!this.pending.contains(pending)) {
+            this.pending.add(pending);
+        }
     }
 
     public String getName() {
         return this.name;
     }
 
-    public ArrayList<String> getFriends() {
-        return this.friends;
-    }
-
-    public ArrayList<String> getPending() {
-        return this.pending;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public void removeFriend(String name){
-        this.friends.remove(name);
-    }
-
-    public void removePending(String name){
-        this.pending.remove(name);
+    public ArrayList<String> getFriends() {
+        return this.friends;
     }
 
     public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
     }
 
+    public ArrayList<String> getPending() {
+        return this.pending;
+    }
+
     public void setPending(ArrayList<String> pending) {
         this.pending = pending;
+    }
+
+    public void removeFriend(String name) {
+        this.friends.remove(name);
+    }
+
+
+    public void removePending(String name) {
+        this.pending.remove(name);
     }
 
     public void addFriend(String name) {
@@ -79,22 +82,16 @@ public class User {
     }
 
 
-    public void addStory(Story story){
+    public void addStory(Story story) {
         stories.add(story);
     }
-    
-    public Story getStory(int index){
-        return stories.get(index);
-    }
 
-    public ArrayList<Story> getStories(){
+    public ArrayList<Story> getStories() {
         return stories;
     }
-    public void setStories(ArrayList<Story> stories){
+
+    public void setStories(ArrayList<Story> stories) {
         this.stories.addAll(stories);
     }
 
-    public void removeStory(int index){
-        stories.remove(index);
-    }
 }

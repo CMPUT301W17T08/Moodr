@@ -17,12 +17,15 @@ public class NonScrollListView extends ListView {
     public NonScrollListView(Context context) {
         super(context);
     }
+
     public NonScrollListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     public NonScrollListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightMeasureSpec_custom = MeasureSpec.makeMeasureSpec(

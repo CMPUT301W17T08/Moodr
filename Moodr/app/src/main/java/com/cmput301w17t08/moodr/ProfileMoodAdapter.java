@@ -2,7 +2,6 @@ package com.cmput301w17t08.moodr;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +21,9 @@ import java.util.Locale;
 /**
  * This class is a custom adapter for the profile pages. Includes filter to filter results. Filter
  * uses the posts stored in CurrentUserSingleton, so filters can be applied both online and offline.
+ * <p>
+ * This also has checked mode, where checkboxes are added. Checked items can be retrieved by calling
+ * getChecked. Checkboxes are used to select moods to add to a story.
  *
  * @see Profile
  * @see MyProfileActivity
@@ -46,11 +47,16 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
         checked = new ArrayList<Mood>();
     }
 
-    public ArrayList<Mood> getChecked(){
+    public ArrayList<Mood> getChecked() {
         return checked;
     }
 
-    public void setcheck(Boolean check){
+    /**
+     * toggle the checkboxes. Clears the checkd item list when called.
+     *
+     * @param check
+     */
+    public void setcheck(Boolean check) {
         this.check = check;
         checked.clear();
         notifyDataSetChanged();
@@ -66,7 +72,7 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
         }
 
 
-        if (check && (convertView.findViewById(R.id.moodCheckbox) == null) ){
+        if (check && (convertView.findViewById(R.id.moodCheckbox) == null)) {
             CheckBox checkbox = new CheckBox(context);
             checkbox.setId(R.id.moodCheckbox);
 
@@ -75,20 +81,17 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
             checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b){
+                    if (b) {
                         checked.add(mood);
-                        //TODO: set to a less ugly color later.
                         item.setBackgroundColor(Color.LTGRAY);
-                    }
-                    else{
+                    } else {
                         checked.remove(mood);
                         item.setBackgroundColor(Color.alpha(0));
                     }
                 }
 
             });
-        }
-        else if (!check && convertView.findViewById(R.id.moodCheckbox) != null){
+        } else if (!check && convertView.findViewById(R.id.moodCheckbox) != null) {
             LinearLayout item = (LinearLayout) convertView.findViewById(R.id.item);
             item.removeView(convertView.findViewById(R.id.moodCheckbox));
             item.setBackgroundColor(Color.alpha(0));
@@ -113,7 +116,7 @@ public class ProfileMoodAdapter extends ArrayAdapter<Mood> implements Filterable
         return convertView;
     }
 
-    public void setMoods(ArrayList<Mood> moods){
+    public void setMoods(ArrayList<Mood> moods) {
         clear();
         addAll(moods);
         moodFilter.setMoods(moods);

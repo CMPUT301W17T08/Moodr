@@ -22,7 +22,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 /**
- * This fragment handles all the add story actions.
+ * This fragment handles all the add story actions. This allows the user to create a story
+ * after clicking the icon in MyProfileActivity, this fragment is created and continues to
+ * handle getting the name, moods and friends to create and send a story.
  */
 public class AddStory extends Fragment {
     MyProfileActivity activity;
@@ -50,9 +52,7 @@ public class AddStory extends Fragment {
         if (null == activeNetwork) {
             Toast.makeText(activity, "Cannot send story when offline.", Toast.LENGTH_SHORT).show();
             mListener.OnComplete();
-        }
-
-        else {
+        } else {
             // http://stackoverflow.com/questions/4016313/how-to-keep-an-alertdialog-open-after-button-onclick-is-fired
             // April 2 2017 4:43 pm
 
@@ -90,8 +90,7 @@ public class AddStory extends Fragment {
                             name = nameInput.getText().toString();
                             if (name.equals("")) {
                                 Toast.makeText(activity, "Please enter a story name.", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
+                            } else {
                                 activity.toggleCheckBoxes(true);
                                 alertDialog.dismiss();
                             }
@@ -108,6 +107,13 @@ public class AddStory extends Fragment {
         inflater.inflate(R.menu.menu_add_mood, menu);
     }
 
+    /**
+     * Loads menu. Disable the filter menu and the storybutton, replacing them with the save and
+     * cancel buttons.
+     *
+     * @param menu
+     */
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item1 = menu.findItem(R.id.storyButton);
@@ -115,19 +121,19 @@ public class AddStory extends Fragment {
         MenuItem item3 = menu.findItem(R.id.action_add_complete);
         MenuItem item4 = menu.findItem(R.id.action_add_cancel);
 
-        if (item1 != null){
+        if (item1 != null) {
             item1.setVisible(false);
         }
 
-        if (item2 != null){
+        if (item2 != null) {
             item2.setVisible(false);
         }
 
-        if (item3 != null){
+        if (item3 != null) {
             item3.setVisible(true);
         }
 
-        if (item4 != null){
+        if (item4 != null) {
             item4.setVisible(true);
         }
     }
@@ -140,12 +146,11 @@ public class AddStory extends Fragment {
                 ArrayList<Mood> moods = activity.getSelected();
                 if (moods.size() != 0) {
                     // get friends
-                        Story story = createStory(moods);
-                        sendStory(story);
-                        // notify activity
-                        mListener.OnComplete();
-                    }
-                 else {
+                    Story story = createStory(moods);
+                    sendStory(story);
+                    // notify activity
+                    mListener.OnComplete();
+                } else {
                     Toast.makeText(activity, "No moods select.", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -157,11 +162,26 @@ public class AddStory extends Fragment {
         return false;
     }
 
+
+    /**
+     * creates a new story given list of moods
+     *
+     * @param moods
+     * @return
+     */
+
     private Story createStory(ArrayList<Mood> moods) {
         Story story = new Story(CurrentUserSingleton.getInstance().getUser().getName(), name);
         story.addMoods(moods);
         return story;
     }
+
+
+    /**
+     * prompts the user for friends to set moods to and sends on submit.
+     *
+     * @param story1
+     */
 
     private void sendStory(Story story1) {
         final Story story = story1;
@@ -217,9 +237,10 @@ public class AddStory extends Fragment {
 
                         if (selected.size() == 0) {
                             Toast.makeText(activity, "No friends selected", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            ConnectivityManager cm = (ConnectivityManager) activity.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        } else {
+                            ConnectivityManager cm = (ConnectivityManager) activity
+                                    .getApplicationContext()
+                                    .getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
                             if (null != activeNetwork) {
                                 for (String friend : selected) {
@@ -241,7 +262,8 @@ public class AddStory extends Fragment {
 
                                 Toast.makeText(activity, "Story sent!", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(activity, "Unable able to send story when offline.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, "Unable able to send story when offline."
+                                        , Toast.LENGTH_SHORT).show();
                             }
 
                             dialog.dismiss();

@@ -27,6 +27,8 @@ public class FilterTest extends ActivityInstrumentationTestCase2<LoginActivity>{
         Activity activity = getActivity();
     }
 
+//    02.04 Mood Filter
+
     public void testFilterByEmotion() throws  Exception {
         solo.enterText((EditText) solo.getView(R.id.username), "potato");
 

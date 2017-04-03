@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Canopy on 2017-03-31.
  */
 
-public class Coordinate implements Serializable{
+public class Coordinate implements Serializable {
     private Double lat;
     private Double lon;
 

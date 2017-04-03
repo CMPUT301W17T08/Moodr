@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by kirsten on 30/03/17.
+ * This class implements the filter for both the ProfileMoodAdapter and LatestMoodAdapter. It allows
+ * the user to filter by keyword, mood and get the most recent
  */
 
 public class MoodFilterHolder {
@@ -15,25 +16,25 @@ public class MoodFilterHolder {
     private MoodFilter filter;
     private ArrayList<Mood> moods;
 
-    public MoodFilterHolder(ArrayAdapter<Mood> adapter, ArrayList<Mood> moods){
+    public MoodFilterHolder(ArrayAdapter<Mood> adapter, ArrayList<Mood> moods) {
         this.adapter = adapter;
         this.moods = new ArrayList<Mood>();
         this.moods.addAll(moods);
     }
 
-    public void setMoods(ArrayList<Mood> moods){
+    public void setMoods(ArrayList<Mood> moods) {
         this.moods.clear();
         this.moods.addAll(moods);
     }
 
-    public MoodFilter getFilter(){
-        if (filter == null){
+    public MoodFilter getFilter() {
+        if (filter == null) {
             filter = new MoodFilter();
         }
         return filter;
     }
 
-    private class  MoodFilter extends Filter {
+    private class MoodFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
@@ -77,7 +78,7 @@ public class MoodFilterHolder {
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (results != null){
+            if (results != null) {
                 adapter.clear();
                 adapter.addAll((ArrayList<Mood>) results.values);
                 adapter.notifyDataSetChanged();

@@ -29,6 +29,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         Activity activity = getActivity();
     }
 
+    // Use Case 01.01 Sign up
     // username must be changed before running for this to pass.
     public void testSignUp(){
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
@@ -70,6 +71,8 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
     }
 
+
+    // use case 01.02 Log In
     public void testLogin(){
         // an existing user.
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);

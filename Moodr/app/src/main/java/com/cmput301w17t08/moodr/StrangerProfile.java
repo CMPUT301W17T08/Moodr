@@ -2,6 +2,7 @@ package com.cmput301w17t08.moodr;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +40,7 @@ public class StrangerProfile extends AppCompatActivity {
         new NavDrawerSetup(this, toolbar).setupNav();
 
         final String name = getIntent().getStringExtra("name");
+        setTitle(name);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -81,15 +84,14 @@ public class StrangerProfile extends AppCompatActivity {
         @Override
         public void onStart() {
             super.onStart();
+            Log.d("USERNAME!!!", user);
             final Activity activity = getActivity();
-            LinearLayout container = (LinearLayout) activity.findViewById(R.id.button_container);
 
             Button accept = (Button) activity.findViewById(R.id.stranger_button1);
             accept.setText("Accept");
 
-            Button decline = new Button(activity);
-            decline.setId(R.id.stranger_button2);
-            container.addView(decline);
+            Button decline = (Button) activity.findViewById(R.id.stranger_button2);
+            decline.setText("Decline");
 
             accept.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,8 +154,9 @@ public class StrangerProfile extends AppCompatActivity {
         public void onStart() {
             super.onStart();
             final Activity activity = getActivity();
-            LinearLayout container = (LinearLayout) activity.findViewById(R.id.button_container);
-            boolean pending = false;
+
+            Button button2 = (Button) activity.findViewById(R.id.stranger_button2);
+            button2.setVisibility(View.GONE);
 
 
             Button add = (Button) activity.findViewById(R.id.stranger_button1);
@@ -170,14 +173,6 @@ public class StrangerProfile extends AppCompatActivity {
                 add.setText("Pending");
             }
 
-
-            add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    activity.finish();
-                }
-            });
         }
 
         /**
@@ -197,7 +192,7 @@ public class StrangerProfile extends AppCompatActivity {
             } else {
                 ElasticSearchUserController.GetUserTask getUserTask =
                         new ElasticSearchUserController.GetUserTask();
-                getUserTask.execute(name);
+                getUserTask.execute(name.toLowerCase());
                 try {
                     User user2 = getUserTask.get().get(0); // get first user from result
                     String currentUsername = CurrentUserSingleton.getInstance().getUser().getName();
@@ -242,6 +237,7 @@ public class StrangerProfile extends AppCompatActivity {
                 ElasticSearchUserController.UpdateUserTask updateUserTask
                         = new ElasticSearchUserController.UpdateUserTask();
                 updateUserTask.execute(user2);
+
             }
         }
 
