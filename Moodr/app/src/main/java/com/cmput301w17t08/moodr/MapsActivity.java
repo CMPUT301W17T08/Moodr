@@ -31,6 +31,9 @@ import java.util.ArrayList;
 
 import static com.cmput301w17t08.moodr.R.id.map;
 
+/**
+ * This activity pulls out Google Map API and can get current location
+ */
 
 public class MapsActivity extends AppCompatActivity
         implements

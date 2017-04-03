@@ -21,6 +21,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+
+/**
+ * This activity pulls out Google Map API and shows your friends' latest mood with markers on Map
+ */
+
+
 public class MapsLatestActivity extends AppCompatActivity  implements
         GoogleMap.OnMyLocationButtonClickListener,
         OnMapReadyCallback,

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 /**
  * User class, holds information relaevant to the current user.
- * TODO: Outdated, get rid of email and perhaps password,
  */
 public class User {
     private String name;

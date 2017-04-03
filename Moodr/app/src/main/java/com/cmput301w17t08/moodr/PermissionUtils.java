@@ -1,7 +1,7 @@
 package com.cmput301w17t08.moodr;
 
 /**
- * Created by Maurice on 2017-03-28.
+ * This class handles the permission check/request that the MapActivity needs
  */
 
 import android.Manifest;

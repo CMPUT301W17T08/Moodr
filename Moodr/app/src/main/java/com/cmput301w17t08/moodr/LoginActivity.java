@@ -29,9 +29,10 @@ import java.util.Comparator;
 
 
 /**
- * A login screen that offers login via user/password.
- * Current issue: Screen does not exit immediately, user must manually press the back button on
- * the phone.
+ * A login screen that offers login via username
+ * There is also a "sign up" option below the login button. Once you enter an unuse username
+ *  and click "Sign up". A new account would be signed for you and the app would login with you
+ *  new account immediately
  */
 public class LoginActivity extends AppCompatActivity {
 

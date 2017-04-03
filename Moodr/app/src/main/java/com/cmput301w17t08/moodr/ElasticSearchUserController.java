@@ -16,7 +16,7 @@ import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 
 /**
- *
+ * Handling elasticsearch user related queries
  */
 
 public class ElasticSearchUserController {

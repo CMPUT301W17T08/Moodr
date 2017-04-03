@@ -17,6 +17,7 @@ import java.io.OutputStreamWriter;
 
 /**
  * Created by Canopy on 2017-04-02.
+ * Saving Singleton here
  */
 
 public class SaveSingleton {

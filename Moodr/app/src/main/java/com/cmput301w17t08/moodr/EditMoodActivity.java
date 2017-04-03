@@ -53,6 +53,7 @@ import static android.os.Build.VERSION_CODES.M;
 /*
 *
 * EditMoodActivity class edits pre-existing mood and updates it onto elasticsearch server
+*  You also can edit your location of the mood
 *
  */
 

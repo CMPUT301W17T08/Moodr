@@ -20,6 +20,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+/**
+ * This activity shows the filtered moods on the map (the ones from your own profile)
+ */
+
+
+
+
+
+
 public class MapsProfileActivity  extends AppCompatActivity implements
         GoogleMap.OnMyLocationButtonClickListener,
         OnMapReadyCallback,
