@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -55,23 +57,12 @@ import java.util.UUID;
 
 
 public class AddMoodActivity extends AppCompatActivity {
-    private static final int SELECT_PICTURE = 100;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    private static final int RESULT_OPEN_CAMERA = 2;
+    private static final int byteLimit = 65536;
+
     private static final String TAG = "MainActivity";
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    /* When button for image is pressed */
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
-    /* When button for camera is pressed */
-    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            openCamera();
-        }
-    };
+
     private Coordinate coordinate = null;
     private ImageView imageView;
     private Button locationButton;
@@ -94,13 +85,6 @@ public class AddMoodActivity extends AppCompatActivity {
     private String situation;
     private String encodedImage;
 
-    public static String encodeImage(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] b = baos.toByteArray();
-        String temp = Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,16 +190,15 @@ public class AddMoodActivity extends AppCompatActivity {
 
 
         editTrigger = (EditText) findViewById(R.id.et_trigger);
+        imageView = (ImageView) findViewById(R.id.iv_imageview);
 
         // Open camera on button click and use for the picture
         btnOpenCamera = (Button) findViewById(R.id.btn_camera);
-        imageView = (ImageView) findViewById(R.id.iv_imageview);
         btnOpenCamera.setOnClickListener(btnOpenCameraPressed);
 
 
         // Get image file on button click
         btnChoosePhoto = (Button) findViewById(R.id.btn_picture);
-        imageView = (ImageView) findViewById(R.id.iv_imageview);
         btnChoosePhoto.setOnClickListener(btnChoosePhotoPressed);
 
         // Get user location on button click
@@ -289,19 +272,11 @@ public class AddMoodActivity extends AppCompatActivity {
             case R.id.action_add_complete:
                 // Create mood and send it right to elasticSearch
                 createMood(emotion, situation, trigger, encodedImage);
-                // Add the mood to MoodList
-                //finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    /* ------------------- Functions for image addition ------------------ */
-    /* ------------------------------------------------------------------- */
-    /* ------------------------------------------------------------------- */
-    /* ------------------------------------------------------------------- */
-    /* ------------------------------------------------------------------- */
 
     public void createMood(Emotion emotion, String situation, String trigger, String encodedImage) {
         // Grab owner
@@ -319,9 +294,6 @@ public class AddMoodActivity extends AppCompatActivity {
         boolean checkLimit = countLimit();
         mood.setTrigger(trigger);
 
-        // Set image encoded string
-        encodedImage = "SDFKDMKDM";  // PLACEHOLER
-        Log.d("ImageURL", encodedImage);
         mood.setImgUrl(encodedImage);
 
         // Check if limit is reached
@@ -350,7 +322,8 @@ public class AddMoodActivity extends AppCompatActivity {
                 }
                 finish();
             }
-        } else {
+        }
+        else {
             triggerError();
         }
 
@@ -388,79 +361,92 @@ public class AddMoodActivity extends AppCompatActivity {
         });
     }
 
+
+    /* ------------------- Functions for image addition ------------------ */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+
     public void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
-    }
-
-    /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-        }
-        cursor.close();
-        return res;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == 1) {
-            if (resultCode == RESULT_OK) {
-                if (requestCode == SELECT_PICTURE) {
-                    // Get the url from data
-                    Uri selectedImageUri = data.getData();
-                    if (null != selectedImageUri) {
-                        // Get the path from the Uri
-                        String path = getPathFromURI(selectedImageUri);
-                        Log.i(TAG, "Image Path : " + path);
-                        // Set the image in ImageView
-                        imageView.setImageURI(selectedImageUri);
-                    }
-                }
-            }
-        } else if (resultCode == 2) {
-            if (resultCode == Activity.RESULT_OK) {
-                Bundle extras = data.getExtras();
-                Bitmap bitmapImage = (Bitmap) extras.get("data");
-                imageView.setImageBitmap(bitmapImage);
-                saveToInternalStorage(bitmapImage);
-                encodedImage = encodeImage(bitmapImage);
-                Toast.makeText(getApplicationContext(), "Image Added", Toast.LENGTH_SHORT).show();
-
-            }
-        }
-    }
-
-    // http://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
-    public boolean saveToInternalStorage(Bitmap bitmapImage) {
-        try {
-            FileOutputStream fos = AddMoodActivity.this.openFileOutput("desiredFilename.png", Context.MODE_PRIVATE);
-
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
-
-            return true;
-        } catch (Exception e) {
-            Log.e("saveToInternalStorage()", e.getMessage());
-            return false;
-        }
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, RESULT_LOAD_IMAGE);
     }
 
     public void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, 2);
+            startActivityForResult(takePictureIntent, RESULT_OPEN_CAMERA);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        this.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            displayAndSetImage(picturePath);
+
+        }
+        if (requestCode == RESULT_OPEN_CAMERA && resultCode == RESULT_OK && null != data) {
+            Bundle extras = data.getExtras();
+            Bitmap photo = (Bitmap) extras.get("data");
+            encodedImage = encodeImage(photo);
+            Double imageSize = 4*Math.ceil((encodedImage.length()/3));
+            if(imageSize > byteLimit){
+                Toast.makeText(AddMoodActivity.this, "File size is too large",Toast.LENGTH_SHORT).show();
+            }else{
+                imageView.setImageBitmap(photo);
+            }
+
+            Toast.makeText(AddMoodActivity.this, "Image Added",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private void displayAndSetImage(String imagePath) {
+        if (imagePath != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            imageView.setImageBitmap(bitmap);
+            encodedImage = encodeImage(bitmap);
+        } else {
+            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    /* When button for image is pressed */
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
+    /* When button for camera is pressed */
+    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            openCamera();
+        }
+    };
+
+
+    public static String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+
+
 
 
     /* Functions for character limit on trigger, 20 characters or 3 words */

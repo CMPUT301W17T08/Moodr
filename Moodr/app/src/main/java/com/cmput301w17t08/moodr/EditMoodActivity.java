@@ -3,6 +3,7 @@ package com.cmput301w17t08.moodr;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -55,13 +57,7 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class EditMoodActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final int SELECT_PICTURE = 100;
-    // When button for image is pressed
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
+
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
     Mood mood;
@@ -106,6 +102,8 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
             Log.d("Error", "Invalid mood index");
         }
 
+
+        editTrigger = (EditText) findViewById(R.id.et_trigger);
 
         // Create the spinner drop-down
         Spinner emotion_spinner = (Spinner) findViewById(R.id.sp_emotion);
@@ -218,33 +216,6 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        // Need to set limit of text field to 20 characters or 3 words
-//        http://stackoverflow.com/questions/28823898/android-how-to-set-maximum-word-limit-on-edittext
-        editTrigger = (EditText) findViewById(R.id.et_trigger);
-        String trig = mood.getTrigger();
-        if (trig != null) {
-            editTrigger.setText(mood.getTrigger());
-        }
-        editTrigger.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                int wordsLength = countWords(s.toString());// words.length;
-                // count == 0 means a new word is going to start
-                if (count == 0 && wordsLength >= 3) {
-                    setCharLimit(editTrigger, editTrigger.getText().length());
-                } else {
-                    removeFilter(editTrigger);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
 
         // Get image file on button click
         Button btn_choose_photo = (Button) findViewById(R.id.btn_picture);
@@ -337,6 +308,14 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
 
+    // When button for image is pressed
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
+
     /* Get the real path from the URI */
     public String getPathFromURI(Uri contentUri) {
         String res = null;
@@ -350,25 +329,6 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         return res;
     }
 
-    // Functions for character limit on trigger, 20 characters or 3 words
-    private int countWords(String s) {
-        String trim = s.trim();
-        if (trim.isEmpty())
-            return 0;
-        return trim.split("\\s+").length; // separate string around spaces
-    }
-
-    private void setCharLimit(EditText et, int max) {
-        filter = new InputFilter.LengthFilter(max);
-        et.setFilters(new InputFilter[]{filter});
-    }
-
-    private void removeFilter(EditText et) {
-        if (filter != null) {
-            et.setFilters(new InputFilter[0]);
-            filter = null;
-        }
-    }
 
     /* Gets new location and makes changex to the old one if need be */
     public void acquireLocation() {
@@ -404,22 +364,13 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         switch (item.getItemId()) {
             // X button
             case R.id.action_edit_cancel:
-//                Intent intent_cancel = new Intent(EditMoodActivity.this, MyProfileActivity.class);
-//                startActivity(intent_cancel);
                 finish();
                 return true;
-
             // Checkmark button
             case R.id.action_edit_complete:
                 // Edit mood and send it right to elasticSearch
-                trigger = editTrigger.getText().toString();
                 editMood();
-
                 setResult(RESULT_OK);
-
-//                Intent intent_complete = new Intent(EditMoodActivity.this, MyProfileActivity.class);
-//                startActivity(intent_complete);
-                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -434,21 +385,71 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         if (editCoordinate != null) {
             mood.setLocation(editCoordinate);
         }
+        trigger = editTrigger.getText().toString();
+        boolean checkLimit = countLimit();
         mood.setTrigger(trigger);
 
-        // Check if app is connected to a network.
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
-        if (null == activeNetwork) {
-            Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
-            CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
-        } else {
-            ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
-            updateMoodTask.execute(mood);
+        if (checkLimit) {
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
+            if (null == activeNetwork) {
+                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
+                CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
+            } else {
+                ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
+                updateMoodTask.execute(mood);
+            }
+            new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
+            finish();
         }
-        new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
+        else {
+            triggerError();
+        }
 
+    }
+
+
+    /* Functions for character limit on trigger, 20 characters or 3 words */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    public boolean countLimit() {
+        trigger = editTrigger.getText().toString();
+        int triggerLength = trigger.length();
+        int triggerWords = wordCount(trigger);
+        boolean flag = true;
+        if (triggerLength > 20 || triggerWords > 3) {
+            flag = false;
+        }
+        return flag;
+
+    }
+
+    public int wordCount(String s) {
+        String input = s.trim();
+        int words = input.isEmpty() ? 0 : input.split("\\s+").length;
+        return words;
+    }
+
+    public void triggerError() {
+        new AlertDialog.Builder(EditMoodActivity.this)
+                .setTitle("Limit Reached")
+                .setMessage("Please use only 3 words or 20 characters")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
 }

@@ -70,21 +70,22 @@ public class MapsProfileActivity  extends AppCompatActivity implements
 
         // https://www.youtube.com/watch?v=k253ec4m33A
         for (Mood mood: profileFilteredMoods){
-            Coordinate coordinate = mood.getLocation();
-            if (coordinate == null){
-                Toast.makeText(this, "Error grabbing locations", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                double mlat = coordinate.getLat();
-                double mlon = coordinate.getLon();
-                LatLng myLatLng = new LatLng(mlat, mlon);
+            if (mood.getLocation() != null) {
+                Coordinate coordinate = mood.getLocation();
+                if (coordinate == null) {
+                    Toast.makeText(this, "Error grabbing locations", Toast.LENGTH_SHORT).show();
+                } else {
+                    double mlat = coordinate.getLat();
+                    double mlon = coordinate.getLon();
+                    LatLng myLatLng = new LatLng(mlat, mlon);
 
-                mMap.addMarker(new MarkerOptions()
-                        .title(mood.getUsername())
-                        .snippet("Mood: " + mood.getEmotion())
-                        .position(myLatLng));
+                    mMap.addMarker(new MarkerOptions()
+                            .title(mood.getUsername())
+                            .snippet("Mood: " + mood.getEmotion())
+                            .position(myLatLng));
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 0.1f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 0.1f));
+                }
             }
 
         }
