@@ -329,6 +329,88 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
         return res;
     }
 
+
+    /* Gets new location and makes changex to the old one if need be */
+    public void acquireLocation() {
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ActivityCompat.checkSelfPermission(EditMoodActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(EditMoodActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+            }
+        });
+    }
+
+    // Creates the actionbar at the top
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Adds the icons to the action bar is it present
+        getMenuInflater().inflate(R.menu.menu_edit_mood, menu);
+        return true;
+    }
+
+    // When one of the buttons are selected
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // X button
+            case R.id.action_edit_cancel:
+                finish();
+                return true;
+            // Checkmark button
+            case R.id.action_edit_complete:
+                // Edit mood and send it right to elasticSearch
+                editMood();
+                setResult(RESULT_OK);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Edit the mood
+    public void editMood() {
+        mood.setDate(editDate_copy);
+        mood.setEmotion(emotion);
+        mood.setSituation(situation);
+//        mood.setImgUrl(); // FOR SAL // NEED IMAGE ENCODED STRING
+        if (editCoordinate != null) {
+            mood.setLocation(editCoordinate);
+        }
+        trigger = editTrigger.getText().toString();
+        boolean checkLimit = countLimit();
+        mood.setTrigger(trigger);
+
+        if (checkLimit) {
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
+            if (null == activeNetwork) {
+                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
+                CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
+            } else {
+                ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
+                updateMoodTask.execute(mood);
+            }
+            new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
+            finish();
+        }
+        else {
+            triggerError();
+        }
+
+    }
+
+
     /* Functions for character limit on trigger, 20 characters or 3 words */
     /* ------------------------------------------------------------------- */
     /* ------------------------------------------------------------------- */
@@ -368,91 +450,6 @@ public class EditMoodActivity extends AppCompatActivity implements DatePickerDia
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-
-    /* Gets new location and makes changex to the old one if need be */
-    public void acquireLocation() {
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ActivityCompat.checkSelfPermission(EditMoodActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(EditMoodActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
-            }
-        });
-    }
-
-    // Creates the actionbar at the top
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Adds the icons to the action bar is it present
-        getMenuInflater().inflate(R.menu.menu_edit_mood, menu);
-        return true;
-    }
-
-    // When one of the buttons are selected
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // X button
-            case R.id.action_edit_cancel:
-
-                finish();
-                return true;
-
-            // Checkmark button
-            case R.id.action_edit_complete:
-                // Edit mood and send it right to elasticSearch
-                editMood();
-
-                setResult(RESULT_OK);
-
-
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    // Edit the mood
-    public void editMood() {
-        mood.setDate(editDate_copy);
-        mood.setEmotion(emotion);
-        mood.setSituation(situation);
-//        mood.setImgUrl(); // FOR SAL // NEED IMAGE ENCODED STRING
-        if (editCoordinate != null) {
-            mood.setLocation(editCoordinate);
-        }
-        trigger = editTrigger.getText().toString();
-        boolean checkLimit = countLimit();
-        mood.setTrigger(trigger);
-
-        if (checkLimit) {
-            // Check if app is connected to a network.
-            ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            CurrentUserSingleton.getInstance().getMyMoodList().edit(index, mood);
-            if (null == activeNetwork) {
-                Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
-                CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(2, mood);
-            } else {
-                ElasticSearchMoodController.UpdateMoodTask updateMoodTask = new ElasticSearchMoodController.UpdateMoodTask();
-                updateMoodTask.execute(mood);
-            }
-            new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
-        }
-        else {
-            triggerError();
-        }
-
     }
 
 }
