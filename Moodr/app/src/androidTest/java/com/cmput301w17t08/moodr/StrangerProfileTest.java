@@ -35,13 +35,14 @@ public class StrangerProfileTest extends ActivityInstrumentationTestCase2<Strang
     }
 
     public void testLoad(){
-        solo.searchText("Sally"); // should be the title
+        solo.searchText("Sally");
     }
 
     public void testFollow(){
         solo.clickOnButton("Add");
         solo.searchText("Pending");
     }
+
 
     @Override
     public void tearDown() throws Exception{

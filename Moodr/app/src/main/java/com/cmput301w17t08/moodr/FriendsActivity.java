@@ -58,6 +58,8 @@ public class FriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
+        //set up tool bar and fragment adapter
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         new NavDrawerSetup(this, toolbar).setupNav();
@@ -88,7 +90,7 @@ public class FriendsActivity extends AppCompatActivity {
 
 
 
-
+// fragment adapter
     public static class AppSectionsPagerAdapter extends FragmentStatePagerAdapter {
         int mNumOfTabs;
         public AppSectionsPagerAdapter(FragmentManager fm, int NumOfTabs) {
@@ -121,6 +123,7 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
 
+    // first fragment
     public static class FriendsFragment extends Fragment {
         ListView friendsList;
         ListView pendingList;
@@ -130,6 +133,7 @@ public class FriendsActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             return inflater.inflate(R.layout.fragment_friends, container, false);}
 
+        // this makes sure everytime the fragment is resumed, its lists are udpated
         @Override
         public void onResume(){
             super.onResume();
@@ -148,27 +152,25 @@ public class FriendsActivity extends AppCompatActivity {
                 }
             }, 1000);
 
-
-
         }
+
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+
+            // sets up adapter for page
             updateUser(getActivity());
             friendsList = (ListView) view.findViewById(R.id.curFriends_list);
             pendingList = (ListView) view.findViewById(R.id.pending_list);
-
-
-
-
-
 
             friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
             friendsList.setAdapter(friendsAdapter);
 
             pendingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, modPending);
             pendingList.setAdapter(pendingAdapter);
+
+            // setup onClick methods
 
             friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -191,34 +193,11 @@ public class FriendsActivity extends AppCompatActivity {
 
         }
 
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if (requestCode == 1) {
-                if (resultCode == RESULT_OK){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            friendsAdapter.notifyDataSetChanged();
-                            pendingAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-            }
-            else if (requestCode == 2){
-                if (resultCode == RESULT_OK){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            pendingAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-            }
-        }
 
     }
 
 
+    // this is second fragment, used for search friends
     public static class SearchFragment extends Fragment{
 
 
@@ -231,26 +210,23 @@ public class FriendsActivity extends AppCompatActivity {
         public void onViewCreated(View view, Bundle savedInstanceState){
             super.onViewCreated(view,savedInstanceState);
 
+            // get some views
             searchBar = (EditText)view.findViewById(R.id.search_bar);
             ImageView searchIcon = (ImageView)view.findViewById(R.id.search_icon);
             ImageView cancelIcon = (ImageView)view.findViewById(R.id.cancel_icon);
-
             searchReturnList = (ListView) view.findViewById(R.id.search_return_list);
-
 
 
 
             searchIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    // this performs a search based on text in searchBar
+                    // then show the result in listView
                     String search_string=searchBar.getText().toString();
                     searchResults=searchUser(search_string, getActivity());
-
                     searchResults.removeAll(Collections.singleton(null));
-
                     searchReturnList.setAdapter(new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults));
-
 
                 }
             });
@@ -258,7 +234,7 @@ public class FriendsActivity extends AppCompatActivity {
             cancelIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    // this clears searchBar and listView
                     searchBar.setText("");
                     searchResults = new ArrayList<String>();
                     searchReturnList.setAdapter(new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults));
@@ -270,7 +246,7 @@ public class FriendsActivity extends AppCompatActivity {
             searchReturnList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v,int position,long id){
-                    // go into search return stranger profile
+                    // go into profiles
                     Intent intent = new Intent(getActivity(), StrangerProfile.class);
                     intent.putExtra("name", searchResults.get(position));
                     startActivityForResult(intent, 1);
@@ -308,10 +284,11 @@ public class FriendsActivity extends AppCompatActivity {
         return userNameList;
     }
 
+    // modify the strings
     private static ArrayList<String> pendingTomodPending(ArrayList<String> P){
         ArrayList<String> B = new ArrayList<String>();
         for(String a:P){
-            B.add("Pending: "+ a);
+            B.add(a + " would like to be your friend.");
         }
         return B;
     }
