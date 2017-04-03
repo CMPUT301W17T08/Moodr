@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 setCurrentUser(UserName);
                 SaveSingleton saveSingleton = new SaveSingleton(getApplicationContext());
                 saveSingleton.LoadOfflineActionsSingleton(); // load offlineActionsSingleton from disk.
+                new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                 startActivity(intent);
@@ -96,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                         CurrentUserSingleton.getInstance().reset();
                         setCurrentUser(UserName);
                         saveUsernameInFile(UserName); // save username for auto login
+                        new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                         Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                         startActivity(intent);
@@ -123,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (!validUser(UserName)) {
                         createUser(UserName);
                         saveUsernameInFile(UserName); // save username for auto login
+                        new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                         Intent intent = new Intent(LoginActivity.this, MyProfileActivity.class);
                         startActivity(intent);
                     } else {
