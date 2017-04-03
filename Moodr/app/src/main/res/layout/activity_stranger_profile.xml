@@ -38,6 +38,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/follow"
                     android:id="@+id/stranger_button1"/>
+
+                <Button
+                    android:id="@+id/stranger_button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/follow" />
             </LinearLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
