@@ -24,11 +24,10 @@ import java.util.Locale;
  * profile pages, latest list, and in viewing stories.
  */
 public class ViewMoodFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
 
-    // TODO: Rename and change types of parameters
+
     private Mood mood;
 
     public ViewMoodFragment() {
@@ -42,7 +41,7 @@ public class ViewMoodFragment extends Fragment {
      * @param param1 Parameter 1.
      * @return A new instance of fragment ViewMoodFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static ViewMoodFragment newInstance(Mood param1) {
         ViewMoodFragment fragment = new ViewMoodFragment();
         Bundle args = new Bundle();
