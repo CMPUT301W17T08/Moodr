@@ -144,6 +144,7 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             if (null != activeNetwork) {
                 CurrentUserSingleton.getInstance().getMyOfflineActions().syncAction();
+                new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 Toast.makeText(getApplicationContext(), "Synchronization completed.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -185,6 +186,7 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
                     stories.remove(i);
                     notificationAdapter.notifyDataSetChanged();
                     new ElasticSearchUserController.UpdateUserTask().execute(user);
+                    new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 }
                 else{
                     Toast.makeText(MyProfileActivity.this, "Cannot view story while offline.", Toast.LENGTH_SHORT).show();

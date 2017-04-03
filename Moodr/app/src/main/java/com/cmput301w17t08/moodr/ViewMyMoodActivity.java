@@ -14,8 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 /**
@@ -74,6 +72,7 @@ public class ViewMyMoodActivity extends AppCompatActivity{
             ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
             deleteMoodTask.execute(mood);
         }
+        new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
     }
 
     /**

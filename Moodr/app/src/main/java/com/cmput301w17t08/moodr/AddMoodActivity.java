@@ -310,6 +310,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
                 Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
+                new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 finish();
             } else {
                 ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
@@ -318,6 +319,7 @@ public class AddMoodActivity extends AppCompatActivity {
                     String moodId = addMoodTask.get();
                     mood.setId(moodId);
                     CurrentUserSingleton.getInstance().getMyMoodList().add(mood);
+                    new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
                 } catch (Exception e) {
                     Log.i("Error", "Error getting moods out of async object");
                 }
