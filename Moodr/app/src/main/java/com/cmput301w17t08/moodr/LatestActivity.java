@@ -62,6 +62,11 @@ public class LatestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Go to map activity", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(LatestActivity.this, MapsLatestActivity.class);
+                // Send filtered list to the map activity
+                intent.putExtra("filteredList", latestMoods);
+                startActivity(intent);
             }
         });
 

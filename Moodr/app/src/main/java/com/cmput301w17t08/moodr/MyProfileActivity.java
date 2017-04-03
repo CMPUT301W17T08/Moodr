@@ -70,6 +70,11 @@ public class MyProfileActivity extends Profile implements AddStory.OnCompleteLis
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Go to map activity", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(MyProfileActivity.this, MapsProfileActivity.class);
+                // Send filtered list to the map activity
+                intent.putExtra("profileFilteredList", moods);
+                startActivity(intent);
             }
         });
     }
