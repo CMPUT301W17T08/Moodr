@@ -381,92 +381,69 @@ public class AddMoodActivity extends AppCompatActivity {
     }
 
 
+    public void chooseImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, RESULT_LOAD_IMAGE);
+    }
 
-//
-//    /* When button for camera is pressed */
-//    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            openCamera();
-//        }
-//    };
-//
-//    public void chooseImage() {
-//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(intent, RESULT_LOAD_IMAGE);
-//    }
-//
-//    public void openCamera() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, RESULT_OPEN_CAMERA);
-//        }
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        this.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-//            Uri selectedImage = data.getData();
-//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String picturePath = cursor.getString(columnIndex);
-//            cursor.close();
-//            displayAndSetImage(picturePath);
-//
-//        }
-//        if (requestCode == RESULT_OPEN_CAMERA && resultCode == RESULT_OK && null != data) {
-//            Bundle extras = data.getExtras();
-//            Bitmap photo = (Bitmap) extras.get("data");
-//            encodedImage = encodeImage(photo);
-//            Double imageSize = 4*Math.ceil((encodedImage.length()/3));
-//            if(imageSize > byteLimit){
-//                Toast.makeText(AddMoodActivity.this, "File size is too large",Toast.LENGTH_SHORT).show();
-//            }else{
-//                imageView.setImageBitmap(photo);
-//            }
-//
-//            Toast.makeText(AddMoodActivity.this, "Image Added",Toast.LENGTH_SHORT).show();
-//
-//        }
-//    }
-//
-//    private void displayAndSetImage(String imagePath) {
-//        if (imagePath != null) {
-//            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-//            imageView.setImageBitmap(bitmap);
-//            encodedImage = encodeImage(bitmap);
-//        } else {
-//            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//
-//    /* When button for image is pressed */
-//    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            chooseImage();
-//        }
-//    };
-//    /* When button for camera is pressed */
-//    public View.OnClickListener btnOpenCameraPressed = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            openCamera();
-//        }
-//    };
-//
-//
-//    public static String encodeImage(Bitmap bitmap) {
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-//        byte[] b = baos.toByteArray();
-//        String temp = Base64.encodeToString(b, Base64.DEFAULT);
-//        return temp;
-//    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        this.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            displayAndSetImage(picturePath);
+
+        }
+        if (requestCode == RESULT_OPEN_CAMERA && resultCode == RESULT_OK && null != data) {
+            Bundle extras = data.getExtras();
+            Bitmap photo = (Bitmap) extras.get("data");
+            encodedImage = encodeImage(photo);
+            Double imageSize = 4*Math.ceil((encodedImage.length()/3));
+            if(imageSize > byteLimit){
+                Toast.makeText(AddMoodActivity.this, "File size is too large",Toast.LENGTH_SHORT).show();
+            }else{
+                imageView.setImageBitmap(photo);
+            }
+
+            Toast.makeText(AddMoodActivity.this, "Image Added",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private void displayAndSetImage(String imagePath) {
+        if (imagePath != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            imageView.setImageBitmap(bitmap);
+            encodedImage = encodeImage(bitmap);
+        } else {
+            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    /* When button for image is pressed */
+    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            chooseImage();
+        }
+    };
+
+
+    public static String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
 
 
 
