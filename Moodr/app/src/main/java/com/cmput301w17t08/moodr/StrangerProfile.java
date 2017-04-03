@@ -6,24 +6,24 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
  * This activity is a stranger's profile. This shows no moods and only allows the user to follow
- * the user if not already pending.
- *
+ * the user if not already pending. Loads one of two fragments depending on whether the user
+ * is pending or a total stranger.
+ * <p>
  * If this user has requested to follow the logged in user, it will give the option to accept
  * or decline instead.
- * */
+ */
 public class StrangerProfile extends AppCompatActivity {
     private boolean status;
     private Button follow;
@@ -39,102 +39,21 @@ public class StrangerProfile extends AppCompatActivity {
 
         final String name = getIntent().getStringExtra("name");
 
-//        setTitle(name);
-//
-//        follow = (Button) findViewById(R.id.follow);
-//
-//        status = false;
-//
-//        try {
-//            status  = checkPending(name);
-//        }
-//        catch(Exception e){
-//            Log.d("Error", "Error getting user pending list from Elastic Search");
-//        }
-//
-//        if (status){
-//            follow.setText("Pending");
-//        }
-//
-//        follow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (!status){
-//                    try {
-//                        addPending(name);
-//                        follow.setText("Pending");
-//                    }
-//                    catch(Exception e){
-//                        Log.d("Error", "Error following user");
-//                    }
-//
-//                }
-//            }
-//        });
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-    }
 
-    /**
-     * Checks if there is already a pending request for the user.
-     * @param name of user pending
-     * @return Boolean value. Whether if there is a pending request for the user.
-     * @throws Exception
-     */
-
-    private boolean checkPending(String name) throws Exception{ // change to more specific exception later.
-        // Check if app is connected to a network.
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (null == activeNetwork) {
-            Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
+        if (CurrentUserSingleton.getInstance().getUser().getPending().contains(name)) {
+            // accept or decline
+            transaction.add(PendingFragment.newInstance(name), null);
         } else {
-            ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-            getUserTask.execute(name);
-            try {
-                User user2 = getUserTask.get().get(0); // get first user from result
-                String currentUsername = CurrentUserSingleton.getInstance().getUser().getName();
-                return user2.getPending().contains(currentUsername);
-            } catch (Exception e) {
-                Log.d("Error", "Unable to get user from elastic search");
-                throw new Exception();
-            }
+            // add
+            transaction.add(AddFragment.newInstance(name), null);
         }
 
-        return false;
+        transaction.commit();
     }
 
-    /**
-     * adds pending request for a given user.
-     * @param name of user to send request to.
-     * @throws Exception
-     */
-
-    private void addPending(String name) throws Exception {
-        // Check if app is connected to a network.
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (null == activeNetwork) {
-            Toast.makeText(getApplicationContext(), "Unable to send request when offline.", Toast.LENGTH_SHORT).show();
-        } else {
-            User user2;
-
-            ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-            getUserTask.execute(name);
-
-            try {
-                user2 = getUserTask.get().get(0); // get first user from result
-            } catch (Exception e) {
-                Log.d("Error", "Unable to get user from elastic search");
-                throw new Exception();
-            }
-
-            user2.addPending(CurrentUserSingleton.getInstance().getUser().getName());
-
-            // update on elastic search
-            ElasticSearchUserController.UpdateUserTask updateUserTask = new ElasticSearchUserController.UpdateUserTask();
-            updateUserTask.execute(user2);
-        }
-    }
 
     public static class PendingFragment extends Fragment {
         private static final String ARG_user = "username";
@@ -143,12 +62,20 @@ public class StrangerProfile extends AppCompatActivity {
         public PendingFragment() {
         }
 
-        public static PendingFragment newInstance(int username) {
+        public static PendingFragment newInstance(String username) {
             PendingFragment fragment = new PendingFragment();
             Bundle args = new Bundle();
-            args.putSerializable(ARG_user, username);
+            args.putString(ARG_user, username);
             fragment.setArguments(args);
             return fragment;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            if (getArguments() != null) {
+                user = getArguments().getString(ARG_user);
+            }
         }
 
         @Override
@@ -167,7 +94,7 @@ public class StrangerProfile extends AppCompatActivity {
             accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // accept the request.
+                    acceptRequest(user);
                     activity.finish();
                 }
             });
@@ -175,14 +102,148 @@ public class StrangerProfile extends AppCompatActivity {
             decline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // decline the request.
+                    declineRequest(user);
                     activity.finish();
                 }
             });
-
         }
+
+        public void acceptRequest(String user) {
+            User usr = CurrentUserSingleton.getInstance().getUser();
+            usr.addFriend(user);
+            usr.removePending(user);
+
+            new ElasticSearchUserController.UpdateUserTask().execute(usr);
+        }
+
+        public void declineRequest(String user) {
+            User usr = CurrentUserSingleton.getInstance().getUser();
+            usr.removePending(user);
+            new ElasticSearchUserController.UpdateUserTask().execute(usr);
+        }
+
     }
 
 
+    public static class AddFragment extends Fragment {
+        private static final String ARG_user = "username";
+        private String user;
 
+        public AddFragment() {
+        }
+
+        public static AddFragment newInstance(String username) {
+            AddFragment fragment = new AddFragment();
+            Bundle args = new Bundle();
+            args.putString(ARG_user, username);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            if (getArguments() != null) {
+                user = getArguments().getString(ARG_user);
+            }
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            final Activity activity = getActivity();
+            LinearLayout container = (LinearLayout) activity.findViewById(R.id.button_container);
+            boolean pending = false;
+
+
+            Button add = (Button) activity.findViewById(R.id.stranger_button1);
+            if (!checkPending(user)) {
+                add.setText("Add");
+                add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addUser(user);
+                        getActivity().finish();
+                    }
+                });
+            } else {
+                add.setText("Pending");
+            }
+
+
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    activity.finish();
+                }
+            });
+        }
+
+        /**
+         * Checks if there is already a pending request for the user.
+         *
+         * @param name of user pending
+         * @return Boolean value. Whether if there is a pending request for the user.
+         * @throws Exception
+         */
+        private boolean checkPending(String name) { // change to more specific exception later.
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getActivity().getApplicationContext()
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (null == activeNetwork) {
+                Toast.makeText(getActivity(), "You are offline.", Toast.LENGTH_SHORT).show();
+            } else {
+                ElasticSearchUserController.GetUserTask getUserTask =
+                        new ElasticSearchUserController.GetUserTask();
+                getUserTask.execute(name);
+                try {
+                    User user2 = getUserTask.get().get(0); // get first user from result
+                    String currentUsername = CurrentUserSingleton.getInstance().getUser().getName();
+                    return user2.getPending().contains(currentUsername);
+                } catch (Exception e) {
+                    Log.d("Error", "Unable to get user from elastic search");
+                }
+            }
+            return false;
+        }
+
+        /**
+         * adds pending request for a given user.
+         *
+         * @param name of user to send request to.
+         * @throws Exception
+         */
+        private void addUser(String name) {
+            // Check if app is connected to a network.
+            ConnectivityManager cm = (ConnectivityManager) getActivity()
+                    .getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (null == activeNetwork) {
+                Toast.makeText(getActivity()
+                        .getApplicationContext(), "Unable to send request when offline.", Toast.LENGTH_SHORT).show();
+            } else {
+                User user2 = new User();
+
+                ElasticSearchUserController.GetUserTask getUserTask
+                        = new ElasticSearchUserController.GetUserTask();
+                getUserTask.execute(name);
+
+                try {
+                    user2 = getUserTask.get().get(0); // get first user from result
+                } catch (Exception e) {
+                    Log.d("Error", "Unable to get user from elastic search");
+                }
+
+                user2.addPending(CurrentUserSingleton.getInstance().getUser().getName());
+
+                // update on elastic search
+                ElasticSearchUserController.UpdateUserTask updateUserTask
+                        = new ElasticSearchUserController.UpdateUserTask();
+                updateUserTask.execute(user2);
+            }
+        }
+
+    }
 }
