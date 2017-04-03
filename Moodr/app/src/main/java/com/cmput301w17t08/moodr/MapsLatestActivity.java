@@ -75,22 +75,23 @@ public class MapsLatestActivity extends AppCompatActivity  implements
         enableMyLocation();
 
         // https://www.youtube.com/watch?v=k253ec4m33A
-        for (Mood mood: latestFilteredMoods){
-            Coordinate coordinate = mood.getLocation();
-            if (coordinate == null){
-                Toast.makeText(this, "Error grabbing location", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                double mlat = coordinate.getLat();
-                double mlon = coordinate.getLon();
-                LatLng myLatLng = new LatLng(mlat, mlon);
+        for (Mood mood: latestFilteredMoods) {
+            if (mood.getLocation() != null) {
+                Coordinate coordinate = mood.getLocation();
+                if (coordinate == null) {
+                    Toast.makeText(this, "Error grabbing location", Toast.LENGTH_SHORT).show();
+                } else {
+                    double mlat = coordinate.getLat();
+                    double mlon = coordinate.getLon();
+                    LatLng myLatLng = new LatLng(mlat, mlon);
 
-                mMap.addMarker(new MarkerOptions()
-                        .title(mood.getUsername())
-                        .snippet("Mood: " + mood.getEmotion())
-                        .position(myLatLng));
+                    mMap.addMarker(new MarkerOptions()
+                            .title(mood.getUsername())
+                            .snippet("Mood: " + mood.getEmotion())
+                            .position(myLatLng));
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 0f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 0f));
+                }
             }
         }
     }
