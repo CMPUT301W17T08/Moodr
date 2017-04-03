@@ -1,17 +1,27 @@
 package com.cmput301w17t08.moodr;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
+
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+
 
 public class MapsActivity extends AppCompatActivity
         implements
@@ -34,6 +44,7 @@ public class MapsActivity extends AppCompatActivity
 
     private GoogleMap mMap;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +66,43 @@ public class MapsActivity extends AppCompatActivity
 
         mMap.setOnMyLocationButtonClickListener(this);
         enableMyLocation();
+
+        Location location = new Location(mMap.getMyLocation());
+        double current_latitude = location.getLatitude();
+        double current_longitude = location.getLongitude();
+
+        // Get all users within 5 km
+        ElasticSearchMoodController.GetNearByMoodsTask getNearByMoodsTask
+                = new ElasticSearchMoodController.GetNearByMoodsTask();
+
+        ArrayList<Mood> moods = new ArrayList<>();
+        getNearByMoodsTask.execute(current_latitude, current_longitude);
+        try {
+            moods.addAll(getNearByMoodsTask.get());
+        } catch (Exception e) {
+            Log.d("Error", "Error getting moods from elastic search.");
+        }
+
+        for (Mood mood: moods) {
+            if (mood.getLocation() != null) {
+                Coordinate coordinate = mood.getLocation();
+                if (coordinate == null) {
+                    Toast.makeText(this, "Error grabbing location", Toast.LENGTH_SHORT).show();
+                } else {
+                    double mlat = coordinate.getLat();
+                    double mlon = coordinate.getLon();
+                    LatLng myLatLng = new LatLng(mlat, mlon);
+
+                    mMap.addMarker(new MarkerOptions()
+                            .title(mood.getUsername())
+                            .snippet("Mood: " + mood.getEmotion())
+                            .position(myLatLng));
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 0f));
+                }
+            }
+        }
+
     }
 
     /**
@@ -116,16 +164,5 @@ public class MapsActivity extends AppCompatActivity
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
 
+
 }
-
-
-//    ElasticSearchMoodController.GetNearByMoodsTask getNearByMoodsTask
-//            = new ElasticSearchMoodController.GetNearByMoodsTask();
-//    ArrayList<Mood> moods = new ArrayList<>();
-//      getNearByMoodsTask.execute( current_latitude, current_longitude);
-//        try{
-//        moods.addAll(getNearByMoodsTask.get());
-//        }
-//        catch(Exception e){
-//        Log.d("Error", "Error getting moods from elastic search.");
-//        }
