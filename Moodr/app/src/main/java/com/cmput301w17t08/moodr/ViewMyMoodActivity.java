@@ -14,8 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 /**
@@ -23,7 +21,7 @@ import android.widget.Toast;
  * user can choose to edit or delete the mood. On delete, the user is returned to the list of their
  * moods.
  */
-public class ViewMyMoodActivity extends AppCompatActivity{
+public class ViewMyMoodActivity extends AppCompatActivity {
 
     Mood mood;
     int index;
@@ -44,8 +42,7 @@ public class ViewMyMoodActivity extends AppCompatActivity{
         // if for whatever reason the mood index does not exist.
         try {
             mood = CurrentUserSingleton.getInstance().getMyMoodList().getMood(index);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.d("Error", "Invalid mood index");
         }
 
@@ -59,7 +56,7 @@ public class ViewMyMoodActivity extends AppCompatActivity{
     /**
      * deletes the current mood the user is viewing.
      */
-    private void deleteMood(){
+    private void deleteMood() {
 
         // Check if app is connected to a network.
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -68,8 +65,7 @@ public class ViewMyMoodActivity extends AppCompatActivity{
         if (null == activeNetwork) {
             Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
             CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(3, mood);
-        }
-        else {
+        } else {
             //update on server
             ElasticSearchMoodController.DeleteMoodTask deleteMoodTask = new ElasticSearchMoodController.DeleteMoodTask();
             deleteMoodTask.execute(mood);
@@ -79,7 +75,7 @@ public class ViewMyMoodActivity extends AppCompatActivity{
     /**
      * starts EditMoodActivity to allow the user to edit the mood.
      */
-    private void editMood(){
+    private void editMood() {
         Intent intent = new Intent(this, EditMoodActivity.class);
         intent.putExtra("index", index);
         startActivity(intent);

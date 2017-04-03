@@ -3,11 +3,9 @@ package com.cmput301w17t08.moodr;
 import java.util.ArrayList;
 
 /**
- *
  * When offline the app will place any new added/edited/deleted moods onto an array stored within
  * the device storage. When the device goes back online, this list is compared with the list
  * on elasticsearch and changes are made accordingly.
- *
  */
 
 public class OfflineMode {
@@ -65,7 +63,7 @@ public class OfflineMode {
         return allActions.size();
     }
 
-    public void syncAction(){
+    public void syncAction() {
         int index = 0;
         for (Integer action : allActions) {
             Mood mood = getCorrespondingMoodByIndex(index);

@@ -4,15 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by kirsten on 01/04/17.
+ * This class stores the data required for a story.
  */
 
-public class Story implements Serializable{
+public class Story implements Serializable {
     private String owner;
     private String name;
     private ArrayList<Mood> moodList;
 
-    public Story(String owner, String name){
+    public Story(String owner, String name) {
         this.owner = owner;
         this.name = name;
         moodList = new ArrayList<>();
@@ -22,20 +22,20 @@ public class Story implements Serializable{
         moodList.addAll(mood);
     }
 
-    public ArrayList<Mood> getMoodList(){
+    public ArrayList<Mood> getMoodList() {
         return moodList;
     }
 
-    public String getOwner(){
+    public String getOwner() {
         return owner;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return owner + " shared " + name + " with you!";
     }
 }

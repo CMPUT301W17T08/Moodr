@@ -39,13 +39,13 @@ public class LoginActivity extends AppCompatActivity {
      * Id to identity READ_CONTACTS permission request.
      */
 
+    private static final String FILENAME = "AutoLogin.sav";
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
 
     protected EditText loginText;
     private String UserName;
-    private  static final String FILENAME = "AutoLogin.sav";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (null == activeNetwork) {
                     Toast.makeText(getApplicationContext(), "You are offline.", Toast.LENGTH_SHORT).show();
                 } else {
-                    if(validUser(UserName)){
+                    if (validUser(UserName)) {
                         CurrentUserSingleton.getInstance().reset();
                         setCurrentUser(UserName);
                         saveUsernameInFile(UserName); // save username for auto login
@@ -119,46 +119,43 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validUser(String username){
+    private boolean validUser(String username) {
         ArrayList<User> userList = new ArrayList<User>();
         ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
         getUserTask.execute(username);
 
-        try{
+        try {
             userList = getUserTask.get();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Log.i("Error", "Error getting users out of async object");
         }
 
-        if (userList.size() == 0){
+        if (userList.size() == 0) {
             return false;
         }
 
         return true;
     }
 
-    private boolean createUser(String Username){
+    private boolean createUser(String Username) {
         try {
             CurrentUserSingleton.getInstance().reset();
             User user = new User(Username);
             ElasticSearchUserController.AddUserTask addUserTask = new ElasticSearchUserController.AddUserTask();
             addUserTask.execute(user);
-            try{
+            try {
                 String userId = addUserTask.get();
                 CurrentUserSingleton.getInstance().getUser().setUser_Id(userId);
-                Toast.makeText(getApplicationContext(), "New user created" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "New user created", Toast.LENGTH_SHORT).show();
 
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 Log.i("Error", "Error getting user out of async object");
             }
 
             CurrentUserSingleton.getInstance().getUser().setName(Username);
 
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.i("Error", "Failed to create the User");
             Toast.makeText(getApplicationContext(),
                     "Can not create user. Internet connection Error",
@@ -167,16 +164,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void setCurrentUser(String username){
+    private void setCurrentUser(String username) {
         // populate all current user info here.
         ElasticSearchUserController.GetUserTask getUserTask
                 = new ElasticSearchUserController.GetUserTask();
         getUserTask.execute(username);
         User user = new User();
-        try{
+        try {
             user = getUserTask.get().get(0);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Log.d("ERROR", "Error getting user from elastic search");
         }
         CurrentUserSingleton singleton = CurrentUserSingleton.getInstance();
@@ -187,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
                 = new ElasticSearchMoodController.GetMoodTask();
         ArrayList<Mood> moods = new ArrayList<>();
         getMoodTask.execute(user.getName());
-        try{
+        try {
             moods.addAll(getMoodTask.get());
             Collections.sort(moods, new Comparator<Mood>() {
                 @Override
@@ -195,8 +191,7 @@ public class LoginActivity extends AppCompatActivity {
                     return t1.getDate().compareTo(mood.getDate());
                 }
             });
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Log.d("Error", "Error getting moods from elastic search.");
         }
         MoodList userMoods = CurrentUserSingleton.getInstance().getMyMoodList();
@@ -205,7 +200,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Loads Last username for auto login from file.
-     * @exception FileNotFoundException if the  file is not created.
+     *
+     * @throws FileNotFoundException if the  file is not created.
      */
     private void loadUsernameFromFile() {
         try {
@@ -218,12 +214,13 @@ public class LoginActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             UserName = null;
         } catch (IOException e) {
-            throw  new RuntimeException();
+            throw new RuntimeException();
         }
     }
 
     /**
      * Saves username in file in JSON format.
+     *
      * @throws FileNotFoundException if folder not exists.
      */
     private void saveUsernameInFile(String username) {
@@ -231,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fos));
             Gson gson = new Gson();
-            gson.toJson(username,out);
+            gson.toJson(username, out);
             out.flush();
             fos.close();
         } catch (FileNotFoundException e) {

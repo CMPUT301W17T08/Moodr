@@ -55,10 +55,10 @@ public class Profile extends AppCompatActivity {
                 try {
                     unfollowUser(name);
                     finish();
+                } catch (Exception e) {
                 }
-                catch(Exception e){
-                }
-        }});
+            }
+        });
 
 
         moodsListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -71,7 +71,7 @@ public class Profile extends AppCompatActivity {
 
     }
 
-    protected void setFilter(Filter filter){
+    protected void setFilter(Filter filter) {
         this.filter = filter;
     }
 
@@ -106,10 +106,10 @@ public class Profile extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.filter_all:
                 filter.filter("");
                 break;
@@ -157,11 +157,11 @@ public class Profile extends AppCompatActivity {
 
     /**
      * view details of mood.
-     * @param mood to view
      *
+     * @param mood to view
      */
 
-    private void goToMood(Mood mood){
+    private void goToMood(Mood mood) {
         Intent intent = new Intent(this, ViewFriendMoodActivity.class);
         intent.putExtra("mood", mood);
         startActivity(intent);
@@ -174,15 +174,14 @@ public class Profile extends AppCompatActivity {
      * @param user the user
      * @return a list of moods
      */
-    protected ArrayList<Mood> loadPosts(String user){
+    protected ArrayList<Mood> loadPosts(String user) {
         ArrayList<Mood> moods = new ArrayList<>();
         // Check if app is connected to a network.
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null == activeNetwork) {
             Toast.makeText(getApplicationContext(), "Unable to load moods from database.", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             ElasticSearchMoodController.GetMoodTask getMoodTask
                     = new ElasticSearchMoodController.GetMoodTask();
             getMoodTask.execute(user);
@@ -204,18 +203,18 @@ public class Profile extends AppCompatActivity {
 
     /**
      * Allows the user to unfollow this person
+     *
      * @param name of person to be unfollowed
      * @throws Exception
      */
 
-    private void unfollowUser(String name) throws Exception{
+    private void unfollowUser(String name) throws Exception {
         // Check if app is connected to a network.
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null == activeNetwork) {
             Toast.makeText(getApplicationContext(), "Unable to unfollow when offline.", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             // remove from own list
             CurrentUserSingleton.getInstance().getUser().removeFriend(name);
             // update on ElasticSearch - implement later

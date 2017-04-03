@@ -12,8 +12,6 @@ import android.widget.ListView;
 
 import com.robotium.solo.Solo;
 
-import junit.framework.TestCase;
-
 /*
 06.02 View Friend Profile
  */
@@ -44,15 +42,6 @@ public class FriendProfileTest extends ActivityInstrumentationTestCase2<Profile>
         solo.assertCurrentActivity("Wrong Activity", ViewFriendMoodActivity.class);
     }
 
-//    public void testUnfollow(){
-//        solo.assertCurrentActivity("Wrong Activity", Profile.class);
-//
-//        solo.clickOnButton("Unfollow");
-//
-//        solo.assertCurrentActivity("Wrong Activity", FriendsActivity.class);
-//
-//        assert(CurrentUserSingleton.getInstance().getUser().getFriends().contains(name));
-//    }
 
     public void testFilter() {
         View view = solo.getView(R.id.filter_menu);

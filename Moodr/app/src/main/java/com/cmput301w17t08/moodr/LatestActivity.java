@@ -23,10 +23,8 @@ import java.util.ArrayList;
 
 
 /**
- *
  * This activity displays the latest mood of all friends on the user's friends list. It finds
  * the latest moods using elastic search.
- *
  */
 public class LatestActivity extends AppCompatActivity {
     private LatestMoodListAdapter adapter;
@@ -69,11 +67,12 @@ public class LatestActivity extends AppCompatActivity {
 
     /**
      * Gets the latest moods of all friends of the user.
+     *
      * @return a list of moods
      */
 
-    private ArrayList<Mood> getLatest(){
-        ArrayList<String> friendsList= currentUser.getFriends();
+    private ArrayList<Mood> getLatest() {
+        ArrayList<String> friendsList = currentUser.getFriends();
         ArrayList<Mood> latest = new ArrayList<>();
 
         // Check if app is connected to a network.
@@ -97,7 +96,7 @@ public class LatestActivity extends AppCompatActivity {
     /**
      * Reloads the latest mood list.
      */
-    private void refreshMoods(){
+    private void refreshMoods() {
         latestMoods.clear();
         latestMoods.addAll(getLatest());
         adapter.notifyDataSetChanged();
@@ -105,9 +104,10 @@ public class LatestActivity extends AppCompatActivity {
 
     /**
      * goes to the mood selected
+     *
      * @param mood the mood selected
      */
-    private void goToMood(Mood mood){
+    private void goToMood(Mood mood) {
         Intent intent = new Intent(this, ViewFriendMoodActivity.class);
         intent.putExtra("mood", mood);
 
@@ -155,7 +155,6 @@ public class LatestActivity extends AppCompatActivity {
         });
         return true;
     }
-
 
 
     @Override

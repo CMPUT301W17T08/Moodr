@@ -3,7 +3,6 @@ package com.cmput301w17t08.moodr;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 
-
 import com.robotium.solo.Solo;
 /**
  * Created by kskwong on 3/13/17.
