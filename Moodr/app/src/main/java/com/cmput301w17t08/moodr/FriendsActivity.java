@@ -37,12 +37,14 @@ public class FriendsActivity extends AppCompatActivity {
 
 
     public static AppSectionsPagerAdapter adapter;
-    public static String search_string;
+//    public static String search_string;
     public static ArrayList<String> searchResults;
     public static ArrayAdapter<String> resultAdapter;
     public static ArrayList<String> curFriends;
     public static ArrayList<String> Pending;
     public static ArrayList<String> modPending;
+    public static EditText searchBar;
+    public static ListView searchReturnList;
 
 
 
@@ -127,9 +129,22 @@ public class FriendsActivity extends AppCompatActivity {
             ListView friendsList = (ListView) view.findViewById(R.id.curFriends_list);
             ListView pendingList = (ListView) view.findViewById(R.id.pending_list);
 
+
+
             curFriends = CurrentUserSingleton.getInstance().getUser().getFriends();
+
+            curFriends.removeAll(Collections.singleton(null));
             Pending = CurrentUserSingleton.getInstance().getUser().getPending();
+
+
+            Pending.removeAll(Collections.singleton(null));
             modPending = pendingTomodPending(Pending);
+
+
+
+
+
+
 
 
             ArrayAdapter<String> friendsAdapter = new ArrayAdapter<String>(getActivity(), R.layout.friends_activity_list_item, curFriends);
@@ -176,40 +191,35 @@ public class FriendsActivity extends AppCompatActivity {
         public void onViewCreated(View view, Bundle savedInstanceState){
             super.onViewCreated(view,savedInstanceState);
 
-            final EditText searchBar = (EditText)view.findViewById(R.id.search_bar);
-            searchBar.setText("");
+            searchBar = (EditText)view.findViewById(R.id.search_bar);
             ImageView searchIcon = (ImageView)view.findViewById(R.id.search_icon);
             ImageView cancelIcon = (ImageView)view.findViewById(R.id.cancel_icon);
-            searchResults = new ArrayList<String>();
 
-            resultAdapter = new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults);
-            ListView searchReturnList = (ListView) view.findViewById(R.id.search_return_list);
-            searchReturnList.setAdapter(resultAdapter);
+            searchReturnList = (ListView) view.findViewById(R.id.search_return_list);
+
+
+
 
             searchIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(searchBar.getText().toString().isEmpty()){
-                        search_string="";
-                        searchResults = new ArrayList<String>();
-                        resultAdapter.notifyDataSetChanged();
-                    }
-                    else{
-                        search_string=searchBar.getText().toString();
-                        searchResults=searchUser(search_string);
-                        resultAdapter.notifyDataSetChanged();
+                    String search_string=searchBar.getText().toString();
+                    searchResults=searchUser(search_string);
 
-                    }
+                    searchResults.removeAll(Collections.singleton(null));
+
+                    searchReturnList.setAdapter(new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults));
+
                 }
             });
 
             cancelIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    search_string="";
+
                     searchBar.setText("");
                     searchResults = new ArrayList<String>();
-                    resultAdapter.notifyDataSetChanged();
+                    searchReturnList.setAdapter(new ArrayAdapter<String>(getActivity(),R.layout.friends_activity_list_item,searchResults));
                 }
             });
 
@@ -234,9 +244,10 @@ public class FriendsActivity extends AppCompatActivity {
     private static ArrayList<String>searchUser(String name){
         ArrayList<User> userList = new ArrayList<User>();
         ElasticSearchUserController.GetUserTask getUserTask = new ElasticSearchUserController.GetUserTask();
-        getUserTask.execute(name);
+
 
         try{
+            getUserTask.execute(name);
             userList = getUserTask.get();
         }
         catch(Exception e){
