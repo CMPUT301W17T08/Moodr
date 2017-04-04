@@ -107,7 +107,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="               "
+            android:text="                         "
             />
 
         <Button
@@ -116,13 +116,6 @@
             android:id="@+id/btn_camera"
             android:text="Camera"
             />
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_picture"
-            android:text="Gallery"
 
 
             />

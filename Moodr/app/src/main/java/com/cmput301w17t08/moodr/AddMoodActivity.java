@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -13,10 +12,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -38,9 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,16 +49,13 @@ import java.util.UUID;
 
 
 public class AddMoodActivity extends AppCompatActivity {
-    private static final int RESULT_LOAD_IMAGE = 1;
-    private static final int RESULT_OPEN_CAMERA = 2;
-    private static final int byteLimit = 65536;
+
 
     private static final String TAG = "MainActivity";
 
     private Coordinate coordinate = null;
     private ImageView imageView;
     private Button locationButton;
-    private Button btnChoosePhoto;
     private Button btnOpenCamera;
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -73,14 +65,12 @@ public class AddMoodActivity extends AppCompatActivity {
     private EditText editTrigger;
     private InputFilter filter;
     private String selected_emotion;
-    private Date date;
     private String owner;
-    private int id;
     private Emotion emotion;
-    private String imgUrl;
     private String trigger;
     private String situation;
-    private String encodedImage ="";
+    private String encodedImage = "";
+    private Bitmap imageToDisplay;
 
 
     @Override
@@ -91,11 +81,9 @@ public class AddMoodActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Bundle extras = getIntent().getExtras();
-
-        if (extras != null) {
-            encodedImage = extras.getString("addcam");
-        }
+        editTrigger = (EditText) findViewById(R.id.et_trigger);
+        imageView = (ImageView) findViewById(R.id.iv_imageview);
+        locationText = (TextView) findViewById(R.id.tv_location);
 
         new NavDrawerSetup(this, toolbar).setupNav();
 
@@ -139,6 +127,23 @@ public class AddMoodActivity extends AppCompatActivity {
         emotion_spinner.setAdapter(emotionAdapter);
         situation_spinner.setAdapter(situationAdapter);
 
+        if (getIntent().getSerializableExtra("addcam") != null) {
+            Mood mood = (Mood) getIntent().getSerializableExtra("addcam");
+            encodedImage = mood.getImgUrl();
+            if (encodedImage != "") {
+                imageToDisplay = decodeImage(encodedImage);
+                imageView.setImageBitmap(imageToDisplay);
+            }
+            editTrigger.setText(mood.getTrigger());
+            if (mood.getLocation() != null) {
+                locationText.setText(mood.getLocation().getLat().toString() + " " + mood.getLocation().getLon().toString());
+            }
+            int emotion_spinner_position = emotionAdapter.getPosition(mood.getEmotion().getName());
+            emotion_spinner.setSelection(emotion_spinner_position);
+
+            int situation_spinner_position = situationAdapter.getPosition(mood.getSituation());
+            situation_spinner.setSelection(situation_spinner_position);
+        }
 
         emotion_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -192,21 +197,16 @@ public class AddMoodActivity extends AppCompatActivity {
         });
 
 
-        editTrigger = (EditText) findViewById(R.id.et_trigger);
-        imageView = (ImageView) findViewById(R.id.iv_imageview);
 
         // Open camera on button click and use for the picture
         btnOpenCamera = (Button) findViewById(R.id.btn_camera);
         btnOpenCamera.setOnClickListener(btnOpenCameraPressed);
 
 
-        // Get image file on button click
-        btnChoosePhoto = (Button) findViewById(R.id.btn_picture);
-        //btnChoosePhoto.setOnClickListener(btnChoosePhotoPressed);
 
         // Get user location on button click
         locationButton = (Button) findViewById(R.id.btn_location);
-        locationText = (TextView) findViewById(R.id.tv_location);
+
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -268,7 +268,8 @@ public class AddMoodActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // X button
             case R.id.action_add_cancel:
-                finish();
+                Intent intent = new Intent(AddMoodActivity.this, MyProfileActivity.class);
+                startActivity(intent);
                 return true;
 
             // Checkmark button
@@ -313,7 +314,8 @@ public class AddMoodActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "This mood will be saved in database once Moodr has internet connection.", Toast.LENGTH_SHORT).show();
                 CurrentUserSingleton.getInstance().getMyOfflineActions().addAction(1, mood);
                 new SaveSingleton(getApplicationContext()).SaveSingletons(); // save singleton to disk.
-                finish();
+                Intent intent = new Intent(AddMoodActivity.this, MyProfileActivity.class);
+                startActivity(intent);
             } else {
                 ElasticSearchMoodController.AddMoodTask addMoodTask = new ElasticSearchMoodController.AddMoodTask();
                 addMoodTask.execute(mood);
@@ -325,7 +327,9 @@ public class AddMoodActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.i("Error", "Error getting moods out of async object");
                 }
-                finish();
+
+                Intent intent = new Intent(AddMoodActivity.this, MyProfileActivity.class);
+                startActivity(intent);
             }
         }
         else {
@@ -382,82 +386,31 @@ public class AddMoodActivity extends AppCompatActivity {
     };
 
     public void openCamera() {
+        owner = CurrentUserSingleton.getInstance().getUser().getName();
+        // Create the mood
+        Mood mood = new Mood(owner, emotion);
+        mood.setSituation(situation);
+        if (coordinate != null) {
+            mood.setLocation(coordinate);
+        }
+        trigger = editTrigger.getText().toString();
+        mood.setTrigger(trigger);
+
         Intent intent = new Intent(AddMoodActivity.this,Camera.class);
-        intent.putExtra("add", 1);
+        intent.putExtra("add", mood);
         startActivity(intent);
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, RESULT_OPEN_CAMERA);
-//        }
     }
 
-
-    public void chooseImage() {
-//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(intent, RESULT_LOAD_IMAGE);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        this.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            displayAndSetImage(picturePath);
-
-        }
-        if (requestCode == RESULT_OPEN_CAMERA && resultCode == RESULT_OK && null != data) {
-            Bundle extras = data.getExtras();
-            Bitmap photo = (Bitmap) extras.get("data");
-            encodedImage = encodeImage(photo);
-            Double imageSize = 4*Math.ceil((encodedImage.length()/3));
-            if(imageSize > byteLimit){
-                Toast.makeText(AddMoodActivity.this, "File size is too large",Toast.LENGTH_SHORT).show();
-            }else{
-                imageView.setImageBitmap(photo);
-            }
-
-            Toast.makeText(AddMoodActivity.this, "Image Added",Toast.LENGTH_SHORT).show();
-
+    public static Bitmap decodeImage(String imageString) {
+        try {
+            byte[] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
         }
     }
-
-    private void displayAndSetImage(String imagePath) {
-        if (imagePath != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            imageView.setImageBitmap(bitmap);
-            encodedImage = encodeImage(bitmap);
-        } else {
-            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    /* When button for image is pressed */
-    public View.OnClickListener btnChoosePhotoPressed = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            chooseImage();
-        }
-    };
-
-
-    public static String encodeImage(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] b = baos.toByteArray();
-        String temp = Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
-
-
-
 
 
     /* Functions for character limit on trigger, 20 characters or 3 words */

@@ -12,12 +12,22 @@ import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 
+/*
+*
+* Camera activity can be accessed by AddMoodActivity or EditActivity.
+* User can take a picture in here and send the picture AddMoodActivity or EditActivity.
+ */
+
+
+
 public class Camera extends AppCompatActivity {
 
     Button btnOpenCamera;
     ImageView imageView;
     int i;
     String encodedImage = "";
+    Mood mood;
+    int edit_index;
 
 
     @Override
@@ -25,8 +35,15 @@ public class Camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        if (getIntent().getIntExtra("add", -1) == 1) {
+        // from add activity
+        if (getIntent().getSerializableExtra("add") != null) {
+            mood = (Mood) getIntent().getSerializableExtra("add");
             i = 1;
+            // from edit activity
+        } else if (getIntent().getSerializableExtra("edit") != null) {
+            mood = (Mood) getIntent().getSerializableExtra("edit");
+            edit_index = getIntent().getIntExtra("edit_index", -1);
+            i = 2;
         }
 
         imageView = (ImageView) findViewById(R.id.image);
@@ -45,8 +62,12 @@ public class Camera extends AppCompatActivity {
     public void back (View view) {
         if (i == 1) {
             Intent intent = new Intent(Camera.this, AddMoodActivity.class);
-                intent.putExtra("addcam", encodedImage);
-
+            intent.putExtra("addcam", mood);
+            startActivity(intent);
+        } else if (i == 2) {
+            Intent intent = new Intent(Camera.this, EditMoodActivity.class);
+            intent.putExtra("edit_index_cam", edit_index);
+            intent.putExtra("editcam", mood);
             startActivity(intent);
         }
     }
@@ -57,6 +78,7 @@ public class Camera extends AppCompatActivity {
         Bitmap bitmap = (Bitmap)data.getExtras().get("data");
         imageView.setImageBitmap(bitmap);
         encodedImage = encodeImage(bitmap);
+        mood.setImgUrl(encodedImage);
     }
 
     public static String encodeImage(Bitmap bitmap) {
