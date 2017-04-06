@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.location.Location;
+//import android.location.LocationListener;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -35,6 +37,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +51,7 @@ import java.util.UUID;
  */
 
 
-public class AddMoodActivity extends AppCompatActivity {
+public class AddMoodActivity extends AppCompatActivity implements LocationListener {
 
 
     private static final String TAG = "MainActivity";
@@ -72,6 +75,8 @@ public class AddMoodActivity extends AppCompatActivity {
     private String encodedImage = "";
     private Bitmap imageToDisplay;
 
+
+    private LocationManager mLocManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,62 +202,42 @@ public class AddMoodActivity extends AppCompatActivity {
         });
 
 
-
         // Open camera on button click and use for the picture
         btnOpenCamera = (Button) findViewById(R.id.btn_camera);
         btnOpenCamera.setOnClickListener(btnOpenCameraPressed);
-
 
 
         // Get user location on button click
         locationButton = (Button) findViewById(R.id.btn_location);
 
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                locationText.setText(location.getLatitude() + " " + location.getLongitude());
-                if (coordinate != null) {
-                    coordinate.setLat(location.getLatitude());
-                    coordinate.setLon(location.getLongitude());
-                } else {
-                    coordinate = new Coordinate(location.getLatitude(), location.getLongitude());
-                }
+        mLocManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-            }
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_LOW);
+        String provider = mLocManager.getBestProvider(criteria, true);
 
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
-            }
-
-        };
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{
-                        android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                        android.Manifest.permission.INTERNET
-                }, 10);
-                return;
-            }
-        } else {
-            acquireLocation();
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+        Location location = mLocManager.getLastKnownLocation(provider);
 
+        if (location == null) {
+            mLocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        } else {
+            Log.e("TAG", "GPS is on, location is: " + location.toString());
+            setCoordinates(location);
+        }
     }
+
+
 
     // Creates the actionbar at the top
     @Override
@@ -294,6 +279,8 @@ public class AddMoodActivity extends AppCompatActivity {
             mood.setLocation(coordinate);
         }
 
+        Log.d("LOCATION", "Location is: " + coordinate);
+
         trigger = editTrigger.getText().toString();
         boolean checkLimit = countLimit();
         mood.setTrigger(trigger);
@@ -331,8 +318,7 @@ public class AddMoodActivity extends AppCompatActivity {
                 Intent intent = new Intent(AddMoodActivity.this, MyProfileActivity.class);
                 startActivity(intent);
             }
-        }
-        else {
+        } else {
             triggerError();
         }
 
@@ -396,7 +382,7 @@ public class AddMoodActivity extends AppCompatActivity {
         trigger = editTrigger.getText().toString();
         mood.setTrigger(trigger);
 
-        Intent intent = new Intent(AddMoodActivity.this,Camera.class);
+        Intent intent = new Intent(AddMoodActivity.this, Camera.class);
         intent.putExtra("add", mood);
         startActivity(intent);
     }
@@ -453,4 +439,43 @@ public class AddMoodActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
+
+    /*                    Functions for map updating                       */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+    /* ------------------------------------------------------------------- */
+
+    private void setCoordinates(Location location) {
+        Log.e("SET", "setting, location is: " + location.getLatitude() + "and" + location.getLongitude());
+        if (coordinate != null) {
+            coordinate.setLat(location.getLatitude());
+            coordinate.setLon(location.getLongitude());
+        }
+        else {
+            coordinate = new Coordinate(location.getLatitude(), location.getLongitude());
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            setCoordinates(location);
+            mLocManager.removeUpdates(this);
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+    }
+
 }

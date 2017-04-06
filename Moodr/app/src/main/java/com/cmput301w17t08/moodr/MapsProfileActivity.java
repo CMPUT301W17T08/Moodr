@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This activity shows the filtered moods on the map (the ones from your own profile)
@@ -78,6 +80,9 @@ public class MapsProfileActivity  extends AppCompatActivity implements
         enableMyLocation();
 
         // https://www.youtube.com/watch?v=k253ec4m33A
+
+
+
         for (Mood mood: profileFilteredMoods){
             if (mood.getLocation() != null) {
                 Coordinate coordinate = mood.getLocation();
@@ -88,10 +93,10 @@ public class MapsProfileActivity  extends AppCompatActivity implements
                     double mlon = coordinate.getLon();
                     LatLng myLatLng = new LatLng(mlat, mlon);
 
-                    mMap.addMarker(new MarkerOptions()
-                            .title(mood.getUsername())
-                            .snippet("Mood: " + mood.getEmotion())
-                            .position(myLatLng));
+                        mMap.addMarker(new MarkerOptions()
+                                .title(mood.getUsername())
+                                .snippet("Mood: " + mood.getEmotion())
+                                .position(myLatLng));
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 0.1f));
                 }
