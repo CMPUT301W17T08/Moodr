@@ -2,7 +2,9 @@ package com.cmput301w17t08.moodr;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -88,35 +91,52 @@ public class MapsActivity extends AppCompatActivity
         mMap.setOnMyLocationButtonClickListener(this);
         enableMyLocation();
 
-        
-        // Get all users within 5 km
-        ElasticSearchMoodController.GetNearByMoodsTask getNearByMoodsTask
-                = new ElasticSearchMoodController.GetNearByMoodsTask();
+        // http://stackoverflow.com/questions/18425141/android-google-maps-api-v2-zoom-to-current-location
+        // 04-03-2017 11:40pm
+        Location location = null;
 
-        ArrayList<Mood> moods = new ArrayList<>();
-        getNearByMoodsTask.execute(current_Latitude, current_Longitude);
-        try {
-            moods.addAll(getNearByMoodsTask.get());
-        } catch (Exception e) {
-            Log.d("Error", "Error getting moods from elastic search.");
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        try{
+            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+        }
+        catch (SecurityException e){
+            Toast.makeText(this, "Location permission denied.", Toast.LENGTH_SHORT).show();
         }
 
-        for (Mood mood : moods) {
-            if (mood.getLocation() != null) {
-                Coordinate coordinate = mood.getLocation();
-                if (coordinate == null) {
-                    Toast.makeText(this, "Error grabbing location", Toast.LENGTH_SHORT).show();
-                } else {
-                    double mlat = coordinate.getLat();
-                    double mlon = coordinate.getLon();
-                    LatLng myLatLng = new LatLng(mlat, mlon);
+        if (location != null) {
 
-                    mMap.addMarker(new MarkerOptions()
-                            .title(mood.getUsername())
-                            .snippet("Mood: " + mood.getEmotion())
-                            .position(myLatLng));
+            // Get all users within 5 km
+            ElasticSearchMoodController.GetNearByMoodsTask getNearByMoodsTask
+                    = new ElasticSearchMoodController.GetNearByMoodsTask();
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 0f));
+            current_Latitude = location.getLatitude();
+            current_Longitude = location.getLongitude();
+
+            ArrayList<Mood> moods = new ArrayList<>();
+            getNearByMoodsTask.execute(current_Latitude, current_Longitude);
+            try {
+                moods.addAll(getNearByMoodsTask.get());
+            } catch (Exception e) {
+                Log.d("Error", "Error getting moods from elastic search.");
+            }
+
+            for (Mood mood : moods) {
+                if (mood.getLocation() != null) {
+                    Coordinate coordinate = mood.getLocation();
+                    if (coordinate == null) {
+                        Toast.makeText(this, "Error grabbing location", Toast.LENGTH_SHORT).show();
+                    } else {
+                        double mlat = coordinate.getLat();
+                        double mlon = coordinate.getLon();
+                        LatLng myLatLng = new LatLng(mlat, mlon);
+
+                        mMap.addMarker(new MarkerOptions()
+                                .title(mood.getUsername())
+                                .snippet("Mood: " + mood.getEmotion())
+                                .position(myLatLng));
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 0f));
+                    }
                 }
             }
         }
